@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Weapon/Sword.h"
+#include "Weapon/RangeWeapons/Gun.h"
 
-ASword::ASword()
+AGun::AGun()
 {
-    
+
 }
 

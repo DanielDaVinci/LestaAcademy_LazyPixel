@@ -6,9 +6,6 @@
 #include "UObject/Object.h"
 #include "BaseAbility.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class MAINPROJECT_API UBaseAbility : public UObject
 {

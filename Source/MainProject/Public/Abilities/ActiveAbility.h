@@ -7,13 +7,11 @@
 #include "UObject/Object.h"
 #include "ActiveAbility.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class MAINPROJECT_API UActiveAbility : public UBaseAbility
 {
     GENERATED_BODY()
 
-    virtual void Activate();
+public:
+    virtual void Activate() {};
 };

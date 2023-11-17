@@ -3,19 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ActiveAbility.h"
+#include "Abilities/ActiveAbility.h"
 #include "UObject/Object.h"
 #include "DashAbility.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class MAINPROJECT_API UDashAbility : public UActiveAbility
 {
     GENERATED_BODY()
 
-    ACharacter* Character;
-    
+public:
     virtual void Activate() override;
 };

@@ -7,9 +7,6 @@
 #include "UObject/Object.h"
 #include "PassiveAbility.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class MAINPROJECT_API UPassiveAbility : public UBaseAbility
 {
