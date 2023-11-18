@@ -10,8 +10,8 @@ ABaseWeapon::ABaseWeapon()
     pSceneComponent = CreateDefaultSubobject<USceneComponent>("SceneComponent");
     SetRootComponent(pSceneComponent);
 
-    pStaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("WeaponMesh");
-    pStaticMeshComponent->SetupAttachment(GetRootComponent());
+    pSkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>("WeaponMesh");
+    pSkeletalMeshComponent->SetupAttachment(GetRootComponent());
 }
 
 

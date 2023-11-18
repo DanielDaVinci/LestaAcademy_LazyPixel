@@ -9,6 +9,7 @@
 class UAbilityComponent;
 class UCameraComponent;
 class USpringArmComponent;
+class UWeaponComponent;
 
 UCLASS()
 class MAINPROJECT_API APlayerCharacter : public ABaseCharacter
@@ -27,6 +28,9 @@ protected:
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName="CameraComponent")
     UAbilityComponent* pAbilityComponent;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName = "WeaponComponent")
+    UWeaponComponent* pWeaponComponent; 
 
     virtual void BeginPlay() override;
 

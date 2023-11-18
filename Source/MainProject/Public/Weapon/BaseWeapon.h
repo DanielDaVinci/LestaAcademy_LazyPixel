@@ -35,6 +35,6 @@ protected:
     USceneComponent* pSceneComponent;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components", DisplayName="StaticMeshComponent")
-    UStaticMeshComponent* pStaticMeshComponent;
+    USkeletalMeshComponent* pSkeletalMeshComponent;
     
 };
