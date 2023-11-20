@@ -13,5 +13,5 @@ class MAINPROJECT_API UActiveAbility : public UBaseAbility
     GENERATED_BODY()
 
 public:
-    virtual void Activate() {};
+    virtual void Activate();
 };

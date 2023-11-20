@@ -6,6 +6,7 @@
 #include "Camera/CameraComponent.h"
 #include "Character/Player/Components/AbilityComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Character/Player/Components/WeaponComponent.h"
 #include "Character/Player/Components/HealthComponent.h"
 #include "Components/TextRenderComponent.h"
 
@@ -21,6 +22,8 @@ APlayerCharacter::APlayerCharacter()
     pCameraComponent->SetupAttachment(pSpringArmComponent);
 
     pAbilityComponent = CreateDefaultSubobject<UAbilityComponent>("AbilityComponent");
+
+    pWeaponComponent = CreateDefaultSubobject<UWeaponComponent>("WeaponComponent");
 
     pHealthComponent = CreateDefaultSubobject<UHealthComponent>("HealthComponent");
 

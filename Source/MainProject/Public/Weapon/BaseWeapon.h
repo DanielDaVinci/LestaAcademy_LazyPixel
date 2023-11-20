@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "BaseWeapon.generated.h"
 
+class UBoxComponent;
+
 UCLASS()
 class MAINPROJECT_API ABaseWeapon : public AActor
 {
@@ -18,6 +20,10 @@ public:
     float GetAttackSpeed() const { return attackSpeed; }
     float GetRange() const { return range; }
     
+    // public, ������ ��� ������������� �� Notify � WeaponComponent
+    UFUNCTION()
+    void OnOffCollision();
+
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="WeaponProperties")
     int damage;
@@ -35,6 +41,17 @@ protected:
     USceneComponent* pSceneComponent;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components", DisplayName="StaticMeshComponent")
-    UStaticMeshComponent* pStaticMeshComponent;
+    USkeletalMeshComponent* pSkeletalMeshComponent;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName = "BoxComponent")
+    UBoxComponent* pBoxCollision;
+
+    // ��������, ���� ����� ����� ������������� � Sword, ���� ��� ����� ������� �����. ����������, ����� � pBoxComponent ����������� OnBeginOverlap
+    UFUNCTION()
+    void OnMeleeWeaponOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+        UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+private:
+    void InitBoxCollision();
     
 };
