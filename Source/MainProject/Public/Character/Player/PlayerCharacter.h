@@ -12,6 +12,7 @@ class USpringArmComponent;
 class UWeaponComponent;
 class UHealthComponent;
 class UTextRenderComponent;
+class UWeaponComponent;
 
 UCLASS()
 class MAINPROJECT_API APlayerCharacter : public ABaseCharacter
@@ -39,7 +40,7 @@ protected:
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName="HealthComponent")
     UTextRenderComponent* pHealthTextComponent;
-    
+
     virtual void BeginPlay() override;
 
 public:

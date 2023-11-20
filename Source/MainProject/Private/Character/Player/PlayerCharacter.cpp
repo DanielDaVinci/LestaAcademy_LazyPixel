@@ -9,6 +9,7 @@
 #include "Character/Player/Components/WeaponComponent.h"
 #include "Character/Player/Components/HealthComponent.h"
 #include "Components/TextRenderComponent.h"
+#include "Character/Player/Components/WeaponComponent.h"
 
 APlayerCharacter::APlayerCharacter()
 {
