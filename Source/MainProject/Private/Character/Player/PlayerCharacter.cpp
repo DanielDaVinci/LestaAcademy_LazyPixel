@@ -6,6 +6,8 @@
 #include "Camera/CameraComponent.h"
 #include "Character/Player/Components/AbilityComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Character/Player/Components/HealthComponent.h"
+#include "Components/TextRenderComponent.h"
 
 APlayerCharacter::APlayerCharacter()
 {
@@ -19,17 +21,31 @@ APlayerCharacter::APlayerCharacter()
     pCameraComponent->SetupAttachment(pSpringArmComponent);
 
     pAbilityComponent = CreateDefaultSubobject<UAbilityComponent>("AbilityComponent");
+
+    pHealthComponent = CreateDefaultSubobject<UHealthComponent>("HealthComponent");
+
+    pHealthTextComponent = CreateDefaultSubobject<UTextRenderComponent>("HealthTextComponent");
+    pHealthTextComponent->SetupAttachment(GetRootComponent());
 }
 
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+    check(pHealthComponent);
+    check(pHealthTextComponent);
 }
 
 void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+    CheckHealthValue();
+}
+
+void APlayerCharacter::CheckHealthValue() const
+{
+    const auto Health = pHealthComponent->GetHealth();
+    pHealthTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
 }
 

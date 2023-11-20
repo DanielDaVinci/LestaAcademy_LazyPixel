@@ -2,3 +2,8 @@
 
 
 #include "Abilities/ActiveAbility.h"
+
+void UActiveAbility::Activate()
+{
+    
+}

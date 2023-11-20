@@ -9,6 +9,8 @@
 class UAbilityComponent;
 class UCameraComponent;
 class USpringArmComponent;
+class UHealthComponent;
+class UTextRenderComponent;
 
 UCLASS()
 class MAINPROJECT_API APlayerCharacter : public ABaseCharacter
@@ -28,8 +30,17 @@ protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName="CameraComponent")
     UAbilityComponent* pAbilityComponent;
 
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName="HealthComponent")
+    UHealthComponent* pHealthComponent;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName="HealthComponent")
+    UTextRenderComponent* pHealthTextComponent;
+    
     virtual void BeginPlay() override;
 
 public:
     virtual void Tick(float DeltaTime) override;
+
+private:
+    void CheckHealthValue() const;
 };
