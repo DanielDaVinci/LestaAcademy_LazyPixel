@@ -34,18 +34,21 @@ void APlayerCharacter::BeginPlay()
 
     check(pHealthComponent);
     check(pHealthTextComponent);
+    
+    OnTakeAnyDamage.AddDynamic(this, &APlayerCharacter::CheckHealthValue);
 }
 
 void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-    CheckHealthValue();
 }
 
-void APlayerCharacter::CheckHealthValue() const
+void APlayerCharacter::CheckHealthValue(AActor* DamageActor, float Damage, const UDamageType* DamageType, AController* InstigateBy,
+    AActor* DamageCauser)
 {
     const auto Health = pHealthComponent->GetHealth();
     pHealthTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
 }
+
+
 
