@@ -6,6 +6,10 @@
       <Path>.clang-format</Path>
       <Path>.gitattributes</Path>
       <Path>.gitignore</Path>
+      <Path>Source/MainProject/Private/AI</Path>
+      <Path>Source/MainProject/Private/Animations</Path>
+      <Path>Source/MainProject/Public/AI</Path>
+      <Path>Source/MainProject/Public/Animations</Path>
     </explicitIncludes>
     <explicitExcludes />
   </component>

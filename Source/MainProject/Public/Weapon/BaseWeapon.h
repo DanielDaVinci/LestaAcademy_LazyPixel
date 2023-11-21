@@ -41,7 +41,7 @@ protected:
     USceneComponent* pSceneComponent;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components", DisplayName="StaticMeshComponent")
-    USkeletalMeshComponent* pSkeletalMeshComponent;
+    UStaticMeshComponent* PStaticMeshComponent;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName = "BoxComponent")
     UBoxComponent* pBoxCollision;

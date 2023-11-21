@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Camera/CameraComponent.h"
 #include "Character/BaseCharacter.h"
 #include "PlayerCharacter.generated.h"
 
@@ -21,6 +22,9 @@ class MAINPROJECT_API APlayerCharacter : public ABaseCharacter
 
 public:
     APlayerCharacter();
+
+    FVector2D GetCameraForwardVector2D() const { return FVector2D(pCameraComponent->GetForwardVector()).GetSafeNormal(); }
+    FVector2D GetCameraRightVector2D() const { return FVector2D(pCameraComponent->GetRightVector()).GetSafeNormal(); }
 
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName="SpringArmComponent")

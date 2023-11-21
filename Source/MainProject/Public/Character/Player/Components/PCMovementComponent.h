@@ -8,6 +8,8 @@
 #include "PCMovementComponent.generated.h"
 
 
+class APlayerCharacter;
+
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class MAINPROJECT_API UPCMovementComponent : public UActorComponent
 {
@@ -17,13 +19,23 @@ public:
     UPCMovementComponent();
 
 protected:
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement")
+    float RotationSpeed = 500.0f;
+
     virtual void BeginPlay() override;
 
+public:
+    virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
 private:
+    FVector m_inputDirection{0.0f, 0.0f, 0.0f};
+
     void BindInput();
 
     void MoveForward(float Amount);
     void MoveRight(float Amount);
 
-    ACharacter* GetCharacter() const;
+    void RotateToInputDirection(float DeltaTime);
+
+    APlayerCharacter* GetCharacter() const;
 };

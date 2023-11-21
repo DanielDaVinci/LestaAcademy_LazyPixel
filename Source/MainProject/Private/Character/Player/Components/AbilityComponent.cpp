@@ -9,13 +9,13 @@
 
 UAbilityComponent::UAbilityComponent()
 {
-	PrimaryComponentTick.bCanEverTick = false;
+    PrimaryComponentTick.bCanEverTick = false;
 }
 
 
 void UAbilityComponent::BeginPlay()
 {
-	Super::BeginPlay();
+    Super::BeginPlay();
 
     BindInput();
 }
@@ -29,7 +29,7 @@ void UAbilityComponent::BindInput()
     const auto playerController = Cast<ABasePlayerController>(charater->GetController());
     if (!playerController)
         return;
-    
+
     playerController->OnDash.AddUObject(this, &UAbilityComponent::UseDash);
 }
 
@@ -39,7 +39,5 @@ void UAbilityComponent::UseDash()
     if (!character)
         return;
 
-    character->LaunchCharacter(character->GetActorForwardVector() * 2000.0f, true, false);
+    character->LaunchCharacter(character->GetMesh()->GetRightVector() * 2000.0f, true, false);
 }
-
-
