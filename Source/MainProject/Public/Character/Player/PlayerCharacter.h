@@ -40,9 +40,6 @@ protected:
     UWeaponComponent* pWeaponComponent; 
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName="HealthComponent")
-    UHealthComponent* pHealthComponent;
-
-    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName="HealthComponent")
     UTextRenderComponent* pHealthTextComponent;
 
     virtual void PostInitializeComponents() override;

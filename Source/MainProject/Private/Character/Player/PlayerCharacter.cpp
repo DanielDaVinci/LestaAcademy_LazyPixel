@@ -26,8 +26,6 @@ APlayerCharacter::APlayerCharacter()
 
     pWeaponComponent = CreateDefaultSubobject<UWeaponComponent>("WeaponComponent");
 
-    pHealthComponent = CreateDefaultSubobject<UHealthComponent>("HealthComponent");
-
     pHealthTextComponent = CreateDefaultSubobject<UTextRenderComponent>("HealthTextComponent");
     pHealthTextComponent->SetupAttachment(GetRootComponent());
 }

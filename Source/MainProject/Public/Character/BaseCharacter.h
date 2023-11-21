@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "BaseCharacter.generated.h"
 
+class UHealthComponent;
+
 UCLASS()
 class MAINPROJECT_API ABaseCharacter : public ACharacter
 {
@@ -15,9 +17,12 @@ public:
 	ABaseCharacter();
 
 protected:
-	virtual void BeginPlay() override;
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName="HealthComponent")
+    UHealthComponent* pHealthComponent;
 
-public:	
-	virtual void Tick(float DeltaTime) override;
+    virtual void BeginPlay() override;
+
+public:
+    virtual void Tick(float DeltaTime) override;
 
 };

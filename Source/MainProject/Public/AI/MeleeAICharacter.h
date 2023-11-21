@@ -3,14 +3,16 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Character/BaseCharacter.h"
 #include "GameFramework/Character.h"
 #include "MeleeAICharacter.generated.h"
 
 UCLASS()
-class MAINPROJECT_API AMeleeAICharacter : public ACharacter
+class MAINPROJECT_API AMeleeAICharacter : public ABaseCharacter
 {
     GENERATED_BODY()
 
 public:
     AMeleeAICharacter(const FObjectInitializer& ObjInit);
+
 };
