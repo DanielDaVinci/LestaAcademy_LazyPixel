@@ -21,38 +21,14 @@ APlayerCharacter::APlayerCharacter()
 
     pCameraComponent = CreateDefaultSubobject<UCameraComponent>("CameraComponent");
     pCameraComponent->SetupAttachment(pSpringArmComponent);
-
-    pAbilityComponent = CreateDefaultSubobject<UAbilityComponent>("AbilityComponent");
-
-    pWeaponComponent = CreateDefaultSubobject<UWeaponComponent>("WeaponComponent");
-
-    pHealthComponent = CreateDefaultSubobject<UHealthComponent>("HealthComponent");
-
-    pHealthTextComponent = CreateDefaultSubobject<UTextRenderComponent>("HealthTextComponent");
-    pHealthTextComponent->SetupAttachment(GetRootComponent());
-}
-
-void APlayerCharacter::PostInitializeComponents()
-{
-    Super::PostInitializeComponents();
-    
-    pHealthComponent->OnHealthChanged.AddUObject(this, &APlayerCharacter::CheckHealthValue);
 }
 
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-
-    check(pHealthComponent);
-    check(pHealthTextComponent);
 }
 
 void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-}
-
-void APlayerCharacter::CheckHealthValue(float Health)
-{
-    pHealthTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
 }

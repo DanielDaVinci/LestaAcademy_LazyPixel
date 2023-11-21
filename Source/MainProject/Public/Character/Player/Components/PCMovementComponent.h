@@ -30,12 +30,30 @@ public:
 private:
     FVector m_inputDirection{0.0f, 0.0f, 0.0f};
 
+    /** Binding movement input */
     void BindInput();
 
+    /**
+     * Add movement input to forward camera direction
+     * @param Amount Forward input value
+     */
     void MoveForward(float Amount);
+
+    /**
+     * Add movement input to right camera direction
+     * @param Amount Right input value
+     */
     void MoveRight(float Amount);
 
+    /**
+     * Smooth rotate mesh to movement direction
+     * @param DeltaTime Actor delta time tick
+     */
     void RotateToInputDirection(float DeltaTime);
 
+    /**
+     * Returns current player character
+     * @return Pointer of current player character
+     */
     APlayerCharacter* GetCharacter() const;
 };

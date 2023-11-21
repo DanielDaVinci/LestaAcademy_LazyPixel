@@ -6,6 +6,11 @@
 #include "GameFramework/Character.h"
 #include "BaseCharacter.generated.h"
 
+class UTextRenderComponent;
+class UHealthComponent;
+class UWeaponComponent;
+class UAbilityComponent;
+
 UCLASS()
 class MAINPROJECT_API ABaseCharacter : public ACharacter
 {
@@ -15,9 +20,26 @@ public:
 	ABaseCharacter();
 
 protected:
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName="AbilityComponent")
+    UAbilityComponent* pAbilityComponent;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName = "WeaponComponent")
+    UWeaponComponent* pWeaponComponent; 
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName="HealthComponent")
+    UHealthComponent* pHealthComponent;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName="HealthTextComponent")
+    UTextRenderComponent* pHealthTextComponent;
+
+    virtual void PostInitializeComponents() override;
+    
 	virtual void BeginPlay() override;
 
 public:	
 	virtual void Tick(float DeltaTime) override;
 
+private:
+    UFUNCTION()
+    void CheckHealthValue(float Health);
 };

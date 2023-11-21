@@ -6,8 +6,16 @@
 #include "UObject/Object.h"
 #include "BaseAbility.generated.h"
 
-UCLASS()
+class ABaseCharacter;
+
+UCLASS(Blueprintable)
 class MAINPROJECT_API UBaseAbility : public UObject
 {
     GENERATED_BODY()
+
+public:
+    virtual void Init(ABaseCharacter* Character) {}
+
+protected:
+    virtual UWorld* GetWorld() const override;
 };

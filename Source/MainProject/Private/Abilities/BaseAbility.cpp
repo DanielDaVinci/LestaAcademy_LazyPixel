@@ -2,3 +2,14 @@
 
 
 #include "Abilities/BaseAbility.h"
+
+UWorld* UBaseAbility::GetWorld() const
+{
+    if (GIsEditor && !GIsPlayInEditorWorld)
+        return nullptr;
+    
+    if (GetOuter())
+        return GetOuter()->GetWorld();
+    
+    return nullptr;
+}

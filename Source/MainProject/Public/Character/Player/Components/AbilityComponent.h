@@ -7,6 +7,10 @@
 #include "AbilityComponent.generated.h"
 
 
+class UDashAbility;
+class UPassiveAbility;
+class UActiveAbility;
+
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class MAINPROJECT_API UAbilityComponent : public UActorComponent
 {
@@ -16,13 +20,39 @@ public:
     UAbilityComponent();
 
 protected:
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Ability")
+    TArray<TSubclassOf<UActiveAbility>> activeAbilityClasses;
 
-    // TODO(Сделать лист абилок)
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Ability")
+    TArray<TSubclassOf<UPassiveAbility>> passiveAbilityClasses;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Ability")
+    TSubclassOf<UDashAbility> dashAbilityClass;
     
     virtual void BeginPlay() override;
 
 private:
+    UPROPERTY()
+    TArray<UActiveAbility*> m_activeAbilities;
+
+    UPROPERTY()
+    TArray<UPassiveAbility*> m_passiveAbilities;
+
+    UPROPERTY()
+    UDashAbility* m_dashAbility;
+
+    /** Initialize active abilities */
+    void InitActiveAbility();
+    
+    /** Initialize passive abilities */
+    void InitPassiveAbility();
+
+    /** Initialize dash ability */
+    void InitDashAbility();
+
+    /** Binding abilities input */
     void BindInput();
 
+    /** Use dash on character in game */
     void UseDash();
 };

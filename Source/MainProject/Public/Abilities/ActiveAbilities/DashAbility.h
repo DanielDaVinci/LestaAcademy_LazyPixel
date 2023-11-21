@@ -13,5 +13,15 @@ class MAINPROJECT_API UDashAbility : public UActiveAbility
     GENERATED_BODY()
 
 public:
-    virtual void Activate() override;
+    virtual void Init(ABaseCharacter* Character) override;
+
+protected:
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dash")
+    float dashImpulse = 2000.0f;
+
+    virtual bool NativeActivate() override;
+    
+private:
+    UPROPERTY()
+    ABaseCharacter* m_character;
 };
