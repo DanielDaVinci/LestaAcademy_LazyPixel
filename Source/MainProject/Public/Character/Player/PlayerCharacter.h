@@ -13,7 +13,6 @@ class USpringArmComponent;
 class UWeaponComponent;
 class UHealthComponent;
 class UTextRenderComponent;
-class UWeaponComponent;
 
 UCLASS()
 class MAINPROJECT_API APlayerCharacter : public ABaseCharacter
@@ -55,4 +54,6 @@ public:
 private:
     UFUNCTION()
     void CheckHealthValue(float Health);
+
+    void OnDeath();
 };

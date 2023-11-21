@@ -6,7 +6,6 @@
 #include "Character/BaseCharacter.h"
 #include "Character/Player/BasePlayerController.h"
 #include "Kismet/GameplayStatics.h"
-#include "Components/BoxComponent.h"
 #include "Animations/MeleeAtackAnimNotifyState.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogWeaponComponent, All, All);
@@ -20,30 +19,23 @@ void UWeaponComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-    if (!GetCharacter() || !GetController())
+    if (!GetCharacter())
         return;
-
-    // Пока никакого функционала(даже оружия в руке), если владелец компонента не игрок
-    if (m_pCharacter->GetController() != m_pPlayerController)
-        return;
-
+    
     SpawnWeapon();
+    // For AI only spawnWeapon
+    const auto pPlayerController = Cast<ABasePlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+    if (m_pCharacter->GetController() != pPlayerController)
+        return;
+
+    pPlayerController->OnAttack.AddUObject(this, &UWeaponComponent::LightAttack);
     InitAnimations();
-    m_pPlayerController->OnAttack.AddUObject(this, &UWeaponComponent::LightAttack);
 }
 
 bool UWeaponComponent::GetCharacter() 
 {
     m_pCharacter = Cast<ABaseCharacter>(GetOwner());
     if (!m_pCharacter)
-        return false;
-    return true;
-}
-
-bool UWeaponComponent::GetController() 
-{
-    m_pPlayerController = Cast<ABasePlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
-    if (!m_pPlayerController)
         return false;
     return true;
 }
@@ -57,15 +49,13 @@ void UWeaponComponent::SpawnWeapon()
 
     FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, false);
     m_pWeapon->AttachToComponent(m_pCharacter->GetMesh(), AttachmentRules, WeaponAttachPointName);
-
-    GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, TEXT("Spawn Weapon!"));
 }
 
 void UWeaponComponent::InitAnimations() 
 {
-    if (!pLightAttackAnimMontage) return;
+    if (!m_pWeapon->GetAttackMontage()) return;
 
-    const auto NotifyEvents = pLightAttackAnimMontage->Notifies;
+    const auto NotifyEvents = m_pWeapon->GetAttackMontage()->Notifies;
     for (auto NotifyEvent : NotifyEvents)
     {
         auto MeleeNotifyState = Cast<UMeleeAttackAnimNotifyState>(NotifyEvent.NotifyStateClass);
@@ -80,11 +70,6 @@ void UWeaponComponent::InitAnimations()
 void UWeaponComponent::LightAttack() 
 {
     UE_LOG(LogWeaponComponent, Display, TEXT("LightAttack!"));
-    PlayAnimMontage(pLightAttackAnimMontage);
-}
-
-void UWeaponComponent::PlayAnimMontage(UAnimMontage* Montage) 
-{
-    m_pCharacter->PlayAnimMontage(Montage);
+    m_pCharacter->PlayAnimMontage(m_pWeapon->GetAttackMontage());
 }
 

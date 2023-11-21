@@ -7,7 +7,7 @@
 #include "MeleeAtackAnimNotifyState.generated.h"
 
 
-DECLARE_MULTICAST_DELEGATE(FOnMeleeAttackNotifySignature);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnMeleeAttackNotifySignature, USkeletalMeshComponent*);
 
 UCLASS()
 class MAINPROJECT_API UMeleeAttackAnimNotifyState : public UAnimNotifyState

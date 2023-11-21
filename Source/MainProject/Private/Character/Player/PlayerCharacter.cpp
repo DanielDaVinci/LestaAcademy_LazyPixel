@@ -9,7 +9,6 @@
 #include "Character/Player/Components/WeaponComponent.h"
 #include "Character/Player/Components/HealthComponent.h"
 #include "Components/TextRenderComponent.h"
-#include "Character/Player/Components/WeaponComponent.h"
 
 APlayerCharacter::APlayerCharacter()
 {
@@ -37,6 +36,7 @@ void APlayerCharacter::PostInitializeComponents()
     Super::PostInitializeComponents();
     
     pHealthComponent->OnHealthChanged.AddUObject(this, &APlayerCharacter::CheckHealthValue);
+    pHealthComponent->OnDeath.AddUObject(this, &APlayerCharacter::OnDeath);
 }
 
 void APlayerCharacter::BeginPlay()
@@ -55,4 +55,9 @@ void APlayerCharacter::Tick(float DeltaTime)
 void APlayerCharacter::CheckHealthValue(float Health)
 {
     pHealthTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
+}
+
+void APlayerCharacter::OnDeath() 
+{
+    GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Yellow, TEXT("Player is dead"));
 }

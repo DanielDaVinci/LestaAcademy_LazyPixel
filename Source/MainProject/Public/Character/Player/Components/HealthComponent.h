@@ -6,7 +6,8 @@
 #include "Components/ActorComponent.h"
 #include "HealthComponent.generated.h"
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnHealthChanged, float)
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnHealthChanged, float);
+DECLARE_MULTICAST_DELEGATE(FOnDeath);
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class MAINPROJECT_API UHealthComponent : public UActorComponent
@@ -19,6 +20,11 @@ public:
     FOnHealthChanged OnHealthChanged;
 
     float GetHealth() const { return m_health; }
+
+    UFUNCTION(BlueprintCallable)
+    bool IsDead() const { return m_health <= 0; }
+
+    FOnDeath OnDeath;
 
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ClampMin = "0.0", ClampMax = "1000.0"))
