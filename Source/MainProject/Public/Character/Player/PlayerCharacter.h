@@ -45,6 +45,8 @@ protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName="HealthComponent")
     UTextRenderComponent* pHealthTextComponent;
 
+    virtual void PostInitializeComponents() override;
+    
     virtual void BeginPlay() override;
 
 public:
@@ -52,6 +54,5 @@ public:
 
 private:
     UFUNCTION()
-    void CheckHealthValue(AActor* DamageActor, float Damage, const UDamageType* DamageType,
-        AController* InstigateBy, AActor* DamageCauser);
+    void CheckHealthValue(float Health);
 };

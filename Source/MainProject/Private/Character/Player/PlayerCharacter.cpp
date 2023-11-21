@@ -32,14 +32,19 @@ APlayerCharacter::APlayerCharacter()
     pHealthTextComponent->SetupAttachment(GetRootComponent());
 }
 
+void APlayerCharacter::PostInitializeComponents()
+{
+    Super::PostInitializeComponents();
+    
+    pHealthComponent->OnHealthChanged.AddUObject(this, &APlayerCharacter::CheckHealthValue);
+}
+
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
     check(pHealthComponent);
     check(pHealthTextComponent);
-    
-    OnTakeAnyDamage.AddDynamic(this, &APlayerCharacter::CheckHealthValue);
 }
 
 void APlayerCharacter::Tick(float DeltaTime)
@@ -47,9 +52,7 @@ void APlayerCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void APlayerCharacter::CheckHealthValue(AActor* DamageActor, float Damage, const UDamageType* DamageType, AController* InstigateBy,
-    AActor* DamageCauser)
+void APlayerCharacter::CheckHealthValue(float Health)
 {
-    const auto Health = pHealthComponent->GetHealth();
     pHealthTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
 }

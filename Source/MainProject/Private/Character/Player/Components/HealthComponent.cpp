@@ -13,7 +13,7 @@ void UHealthComponent::BeginPlay()
 {
 	Super::BeginPlay();
     
-    m_health = maxHealth;
+    SetHealth(maxHealth);
 
     if(AActor* ComponentOwner = GetOwner())
     {
@@ -24,6 +24,12 @@ void UHealthComponent::BeginPlay()
 void UHealthComponent::OnTakeAnyDamage(AActor* DamageActor, float Damage, const UDamageType* DamageType,
         AController* InstigateBy, AActor* DamageCauser)
 {
-    m_health -= Damage;
+    SetHealth(m_health - Damage);
+}
+
+void UHealthComponent::SetHealth(float Health)
+{
+    m_health = FMath::Clamp(Health, 0.0, maxHealth);
+    OnHealthChanged.Broadcast(m_health);
 }
 
