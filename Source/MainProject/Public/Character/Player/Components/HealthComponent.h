@@ -26,5 +26,9 @@ protected:
 
 private:
     float m_health = 0.0f;
+
+    UFUNCTION()
+    void OnTakeAnyDamage(AActor* DamageActor, float Damage, const UDamageType* DamageType,
+        AController* InstigateBy, AActor* DamageCauser);
 	
 };

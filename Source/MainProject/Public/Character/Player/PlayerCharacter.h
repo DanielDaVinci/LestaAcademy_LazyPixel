@@ -51,5 +51,7 @@ public:
     virtual void Tick(float DeltaTime) override;
 
 private:
-    void CheckHealthValue() const;
+    UFUNCTION()
+    void CheckHealthValue(AActor* DamageActor, float Damage, const UDamageType* DamageType,
+        AController* InstigateBy, AActor* DamageCauser);
 };
