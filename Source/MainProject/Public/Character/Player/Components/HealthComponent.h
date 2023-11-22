@@ -18,13 +18,12 @@ public:
     UHealthComponent();
 
     FOnHealthChanged OnHealthChanged;
+    FOnDeath OnDeath;
 
     float GetHealth() const { return m_health; }
 
     UFUNCTION(BlueprintCallable)
     bool IsDead() const { return m_health <= 0; }
-
-    FOnDeath OnDeath;
 
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ClampMin = "0.0", ClampMax = "1000.0"))

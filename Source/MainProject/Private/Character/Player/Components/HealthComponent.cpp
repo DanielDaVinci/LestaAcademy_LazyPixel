@@ -36,5 +36,10 @@ void UHealthComponent::SetHealth(float Health)
 {
     m_health = FMath::Clamp(Health, 0.0, maxHealth);
     OnHealthChanged.Broadcast(m_health);
+
+    if (FMath::IsNearlyZero(m_health))
+    {
+        OnDeath.Broadcast();
+    }
 }
 

@@ -6,9 +6,6 @@
 #include "AIController.h"
 #include "MeleeAIController.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class MAINPROJECT_API AMeleeAIController : public AAIController
 {
@@ -16,4 +13,8 @@ class MAINPROJECT_API AMeleeAIController : public AAIController
 
 public:
     void AttackPlayer();
+
+protected:
+
+    virtual void OnPossess(APawn* InPawn) override;
 };

@@ -12,16 +12,20 @@
 UCLASS()
 class MAINPROJECT_API UMoveToPlayerTask : public UBTTaskNode
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
 
 public:
     UMoveToPlayerTask();
+    
     virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
+
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
     FBlackboardKeySelector DistanceKey;
+    
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
     FBlackboardKeySelector PlayerKey;
+    
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
-    float Threshold;
+    float Threshold = 200.0f;
 };

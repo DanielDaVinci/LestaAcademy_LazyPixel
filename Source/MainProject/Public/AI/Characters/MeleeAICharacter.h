@@ -3,16 +3,18 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Character/BaseCharacter.h"
-#include "GameFramework/Character.h"
+#include "AIBaseCharacter.h"
 #include "MeleeAICharacter.generated.h"
 
+class UBehaviorTree;
+
 UCLASS()
-class MAINPROJECT_API AMeleeAICharacter : public ABaseCharacter
+class MAINPROJECT_API AMeleeAICharacter : public AAIBaseCharacter
 {
     GENERATED_BODY()
 
 public:
-    AMeleeAICharacter(const FObjectInitializer& ObjInit);
+    AMeleeAICharacter();
 
+    virtual void OnDeath() override;
 };

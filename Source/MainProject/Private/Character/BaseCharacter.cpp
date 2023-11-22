@@ -25,6 +25,7 @@ void ABaseCharacter::PostInitializeComponents()
     Super::PostInitializeComponents();
 
     pHealthComponent->OnHealthChanged.AddUObject(this, &ABaseCharacter::CheckHealthValue);
+    pHealthComponent->OnDeath.AddUObject(this, &ABaseCharacter::OnDeath);
 }
 
 void ABaseCharacter::BeginPlay()
