@@ -34,6 +34,9 @@ void UAbilityComponent::InitActiveAbility()
     
     for (auto activeAbilityClass: activeAbilityClasses)
     {
+        if (!activeAbilityClass)
+            continue;
+        
         const auto activeAbility = NewObject<UActiveAbility>(this, activeAbilityClass);
         if (!activeAbility)
             continue;
@@ -51,6 +54,9 @@ void UAbilityComponent::InitPassiveAbility()
     
     for (auto passiveAbilityClass: passiveAbilityClasses)
     {
+        if (!passiveAbilityClass)
+            continue;
+        
         const auto passiveAbility = NewObject<UPassiveAbility>(this, passiveAbilityClass);
         if (!passiveAbility)
             continue;
@@ -62,6 +68,9 @@ void UAbilityComponent::InitPassiveAbility()
 
 void UAbilityComponent::InitDashAbility()
 {
+    if (!dashAbilityClass)
+        return;
+    
     m_dashAbility = NewObject<UDashAbility>(this, dashAbilityClass);
     if (!m_dashAbility)
         return;
