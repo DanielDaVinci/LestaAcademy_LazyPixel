@@ -20,13 +20,15 @@ public:
     float GetAttackSpeed() const { return attackSpeed; }
     float GetRange() const { return range; }
     
-    // public, ������ ��� ������������� �� Notify � WeaponComponent
+    // public, потому что подписывается на Notify в WeaponComponent
     UFUNCTION()
-    void OnOffCollision();
+    void OnOffCollision(USkeletalMeshComponent* MeshComp);
+
+    UAnimMontage* GetAttackMontage() { return attackAnimation; }
 
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="WeaponProperties")
-    int damage;
+    int32 damage;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="WeaponProperties")
     float attackSpeed;
@@ -35,7 +37,7 @@ protected:
     float range;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Animation")
-    TSubclassOf<UAnimMontage> attackAnimationClass;
+    UAnimMontage* attackAnimation;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components", DisplayName="SceneComponent")
     USceneComponent* pSceneComponent;
@@ -46,7 +48,7 @@ protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName = "BoxComponent")
     UBoxComponent* pBoxCollision;
 
-    // ��������, ���� ����� ����� ������������� � Sword, ���� ��� ����� ������� �����. ����������, ����� � pBoxComponent ����������� OnBeginOverlap
+    // Возможно, этот метод нужно реализовывать в Sword, пока для теста оставлю здесь. Вызывается, когда у pBoxComponent срабатывает OnBeginOverlap
     UFUNCTION()
     void OnMeleeWeaponOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
         UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);

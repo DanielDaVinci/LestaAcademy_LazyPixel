@@ -3,6 +3,14 @@
 
 #include "Weapon/BaseWeapon.h"
 #include "Components/BoxComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Engine/DamageEvents.h"
+// #include "GameFramework/Character.h"
+//#include "Character/Player/PlayerCharacter.h"
+//#include "Engine/EngineTypes.h"
+
+
+DEFINE_LOG_CATEGORY_STATIC(LogBaseWeapon, All, All);
 
 ABaseWeapon::ABaseWeapon()
 {
@@ -27,34 +35,36 @@ void ABaseWeapon::InitBoxCollision()
     pBoxCollision->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
     pBoxCollision->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
     pBoxCollision->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
-    
-    ///////////////////////////////////////////////////////////////////////////////
-    // !!!!! ��� ������������ ������ ��������� � ��� ����������� ������ ����� !!!!!
-    pBoxCollision->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldStatic, ECollisionResponse::ECR_Overlap);
-    ///////////////////////////////////////////////////////////////////////////////
 }
 
 void ABaseWeapon::OnMeleeWeaponOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
     int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-    GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, TEXT("Weapon Overlap Event!"));
+    OtherActor->TakeDamage(damage, FDamageEvent(), UGameplayStatics::GetPlayerController(GetWorld(), 0), this);
+    UE_LOG(LogBaseWeapon, Display, TEXT("Damage dealt: %d"), damage);
 }
 
-void ABaseWeapon::OnOffCollision()
+void ABaseWeapon::OnOffCollision(USkeletalMeshComponent* MeshComp)
 {
     if (!pBoxCollision) return;
 
+    /* Не знаю как получить указатель на Character, все способы - nullptr*/
+    /*const auto Player = Cast<ACharacter>(GetOwner()); 
+    USkeletalMeshComponent* a = Player->GetMesh();*/
+    
+    /*APlayerCharacter* Player = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+    if (Player->GetMesh() != MeshComp)
+        return;*/
+
     if (pBoxCollision->GetCollisionEnabled() == ECollisionEnabled::NoCollision)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, TEXT("Weapon Collision ON!"));
+        UE_LOG(LogBaseWeapon, Display, TEXT("Collision ON!"));
         pBoxCollision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
     }
     else
     {
-        GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, TEXT("Weapon Collision OFF!"));
+        UE_LOG(LogBaseWeapon, Display, TEXT("Collision OFF!"));
         pBoxCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     }
-
-    
 }
 
