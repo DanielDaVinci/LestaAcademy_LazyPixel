@@ -5,6 +5,7 @@
 
 #include "AIController.h"
 #include "AI/MeleeAIController.h"
+#include "Character/Player/Components/HealthComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 

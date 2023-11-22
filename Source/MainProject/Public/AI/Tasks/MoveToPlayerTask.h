@@ -20,4 +20,8 @@ public:
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
     FBlackboardKeySelector DistanceKey;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
+    FBlackboardKeySelector PlayerKey;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
+    float Threshold;
 };

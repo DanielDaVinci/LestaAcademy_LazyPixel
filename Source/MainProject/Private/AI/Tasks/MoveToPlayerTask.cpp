@@ -4,14 +4,13 @@
 #include "AI/Tasks/MoveToPlayerTask.h"
 
 #include "AIController.h"
-#include "ClassViewerFilter.h"
-#include "AI/Tasks/AttackPlayerTask.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 UMoveToPlayerTask::UMoveToPlayerTask()
 {
     NodeName = "Move To Player";
+    Threshold = 200;
 }
 
 EBTNodeResult::Type UMoveToPlayerTask::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
@@ -29,8 +28,13 @@ EBTNodeResult::Type UMoveToPlayerTask::ExecuteTask(UBehaviorTreeComponent& Owner
     
     const auto Distance = FVector::Dist(Controller->GetNavAgentLocation(), PlayerPawn->GetActorLocation());
     Blackboard->SetValueAsFloat(DistanceKey.SelectedKeyName, Distance);
+    Blackboard->SetValueAsObject(PlayerKey.SelectedKeyName, PlayerPawn);
 
     Controller->MoveToActor(PlayerPawn);
+    
+    if (Distance < Threshold)
+        return EBTNodeResult::Failed;
+
     return EBTNodeResult::Succeeded;
 }
 
