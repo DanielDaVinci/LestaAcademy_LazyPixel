@@ -8,6 +8,7 @@
 
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnMeleeAttackNotifySignature, USkeletalMeshComponent*);
+DECLARE_MULTICAST_DELEGATE(FOnMeleeAttackDamageSignature);
 
 UCLASS()
 class MAINPROJECT_API UMeleeAttackAnimNotifyState : public UAnimNotifyState
@@ -19,4 +20,5 @@ public:
     virtual void NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference) override;
 
     FOnMeleeAttackNotifySignature FOnMeleeAttackNotify;
+    FOnMeleeAttackDamageSignature FOnMeleeAttackDamageNotify;
 };

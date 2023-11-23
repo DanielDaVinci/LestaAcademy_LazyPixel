@@ -62,6 +62,7 @@ void UWeaponComponent::InitAnimations()
         if (MeleeNotifyState)
         {
             MeleeNotifyState->FOnMeleeAttackNotify.AddUObject(m_pWeapon, &ABaseWeapon::OnOffCollision);
+            MeleeNotifyState->FOnMeleeAttackDamageNotify.AddUObject(m_pWeapon, &ABaseWeapon::OnDamageAllOverlapedActors);
             break;
         }
     }
@@ -73,3 +74,7 @@ void UWeaponComponent::LightAttack()
     m_pCharacter->PlayAnimMontage(m_pWeapon->GetAttackMontage());
 }
 
+void UWeaponComponent::DisableMeleeCollision()
+{
+    m_pWeapon->DisableCollision(m_pCharacter->GetMesh());
+}

@@ -17,6 +17,9 @@ class MAINPROJECT_API UWeaponComponent : public UActorComponent
 public:	
 	UWeaponComponent();
 
+    UFUNCTION()
+    void DisableMeleeCollision();
+
 protected:
     UPROPERTY(EditDefaultsOnly, Category = "Weapon")
     TSubclassOf<ABaseWeapon> WeaponClass;

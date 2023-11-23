@@ -22,6 +22,13 @@ public:
     
     UFUNCTION()
     void OnOffCollision(USkeletalMeshComponent* MeshComp);
+
+    UFUNCTION()
+    void DisableCollision(USkeletalMeshComponent* MeshComp);
+
+    UFUNCTION()
+    void OnDamageAllOverlapedActors();
+
     UAnimMontage* GetAttackMontage() { return attackAnimation; }
 
 protected:
@@ -51,6 +58,7 @@ protected:
         UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 private:
-    void InitBoxCollision();
-    
+    TArray<AActor*> EnemyActors;
+
+    void InitBoxCollision(); 
 };

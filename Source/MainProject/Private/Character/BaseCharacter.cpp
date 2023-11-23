@@ -26,6 +26,7 @@ void ABaseCharacter::PostInitializeComponents()
 
     pHealthComponent->OnHealthChanged.AddUObject(this, &ABaseCharacter::CheckHealthValue);
     pHealthComponent->OnDeath.AddUObject(this, &ABaseCharacter::OnDeath);
+    pHealthComponent->OnDeath.AddUObject(pWeaponComponent, &UWeaponComponent::DisableMeleeCollision);
 }
 
 void ABaseCharacter::BeginPlay()

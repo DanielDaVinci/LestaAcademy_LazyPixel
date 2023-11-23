@@ -42,8 +42,7 @@ void ABaseWeapon::OnMeleeWeaponOverlap(UPrimitiveComponent* OverlappedComponent,
     if (OtherActor->GetClass() == Character->GetClass())
         return;
 
-    OtherActor->TakeDamage(damage, FDamageEvent(), UGameplayStatics::GetPlayerController(GetWorld(), 0), this);
-    UE_LOG(LogBaseWeapon, Display, TEXT("Damage %d to actor %s"), damage, *(OtherActor->GetName()));
+    EnemyActors.AddUnique(OtherActor);
 }
 
 void ABaseWeapon::OnOffCollision(USkeletalMeshComponent* MeshComp)
@@ -53,13 +52,38 @@ void ABaseWeapon::OnOffCollision(USkeletalMeshComponent* MeshComp)
 
     if (pBoxCollision->GetCollisionEnabled() == ECollisionEnabled::NoCollision)
     {
-        UE_LOG(LogBaseWeapon, Display, TEXT("Collision ON!"));
+        //UE_LOG(LogBaseWeapon, Display, TEXT("Collision ON!"));
         pBoxCollision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
     }
     else
     {
-        UE_LOG(LogBaseWeapon, Display, TEXT("Collision OFF!"));
+        //UE_LOG(LogBaseWeapon, Display, TEXT("Collision OFF!"));
         pBoxCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     }
+}
+
+void ABaseWeapon::DisableCollision(USkeletalMeshComponent* MeshComp) 
+{
+    if (!pBoxCollision || (GetOwner() != MeshComp->GetOwner()))
+        return;
+
+    // Temporary dummy for testing, protect player character from disabling overlap events
+    if (UGameplayStatics::GetPlayerCharacter(GetWorld(), 0) == Cast<ACharacter>(GetOwner()))
+    {
+        UE_LOG(LogBaseWeapon, Display, TEXT("Player is dead!"));
+        return;
+    }
+
+    pBoxCollision->SetGenerateOverlapEvents(0);
+}
+
+void ABaseWeapon::OnDamageAllOverlapedActors()
+{
+    for (auto Actor : EnemyActors)
+    {
+        Actor->TakeDamage(damage, FDamageEvent(), UGameplayStatics::GetPlayerController(GetWorld(), 0), this);
+        UE_LOG(LogBaseWeapon, Display, TEXT("Damage %d to actor %s"), damage, *(Actor->GetName()));
+    }
+    EnemyActors.Empty();
 }
 
