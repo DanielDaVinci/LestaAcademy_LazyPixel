@@ -20,10 +20,8 @@ public:
     float GetAttackSpeed() const { return attackSpeed; }
     float GetRange() const { return range; }
     
-    // public, потому что подписывается на Notify в WeaponComponent
     UFUNCTION()
     void OnOffCollision(USkeletalMeshComponent* MeshComp);
-
     UAnimMontage* GetAttackMontage() { return attackAnimation; }
 
 protected:
@@ -48,7 +46,6 @@ protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName = "BoxComponent")
     UBoxComponent* pBoxCollision;
 
-    // Возможно, этот метод нужно реализовывать в Sword, пока для теста оставлю здесь. Вызывается, когда у pBoxComponent срабатывает OnBeginOverlap
     UFUNCTION()
     void OnMeleeWeaponOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
         UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);

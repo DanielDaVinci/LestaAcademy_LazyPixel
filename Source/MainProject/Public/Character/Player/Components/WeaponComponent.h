@@ -25,7 +25,7 @@ protected:
     FName WeaponAttachPointName = "rhWeaponSocket";
 
 	virtual void BeginPlay() override;
-	
+
 private:
     ABaseCharacter* m_pCharacter;
     ABaseWeapon* m_pWeapon;

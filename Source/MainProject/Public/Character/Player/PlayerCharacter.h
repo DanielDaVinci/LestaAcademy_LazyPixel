@@ -7,13 +7,8 @@
 #include "Character/BaseCharacter.h"
 #include "PlayerCharacter.generated.h"
 
-class UAbilityComponent;
 class UCameraComponent;
 class USpringArmComponent;
-class UWeaponComponent;
-class UHealthComponent;
-class UTextRenderComponent;
-class UWeaponComponent;
 
 UCLASS()
 class MAINPROJECT_API APlayerCharacter : public ABaseCharacter

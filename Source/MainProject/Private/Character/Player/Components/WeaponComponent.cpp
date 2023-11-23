@@ -23,13 +23,11 @@ void UWeaponComponent::BeginPlay()
         return;
     
     SpawnWeapon();
-    // For AI only spawnWeapon
-    const auto pPlayerController = Cast<ABasePlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
-    if (m_pCharacter->GetController() != pPlayerController)
-        return;
-
-    pPlayerController->OnAttack.AddUObject(this, &UWeaponComponent::LightAttack);
     InitAnimations();
+
+    const auto pPlayerController = Cast<ABasePlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+    if (m_pCharacter->GetController() == pPlayerController)
+        pPlayerController->OnAttack.AddUObject(this, &UWeaponComponent::LightAttack);
 }
 
 bool UWeaponComponent::GetCharacter() 
@@ -49,11 +47,13 @@ void UWeaponComponent::SpawnWeapon()
 
     FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, false);
     m_pWeapon->AttachToComponent(m_pCharacter->GetMesh(), AttachmentRules, WeaponAttachPointName);
+    m_pWeapon->SetOwner(m_pCharacter);
 }
 
 void UWeaponComponent::InitAnimations() 
 {
-    if (!m_pWeapon->GetAttackMontage()) return;
+    if (!m_pWeapon || !m_pWeapon->GetAttackMontage())
+        return;
 
     const auto NotifyEvents = m_pWeapon->GetAttackMontage()->Notifies;
     for (auto NotifyEvent : NotifyEvents)

@@ -4,12 +4,7 @@
 #include "Character/Player/PlayerCharacter.h"
 
 #include "Camera/CameraComponent.h"
-#include "Character/Player/Components/AbilityComponent.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "Character/Player/Components/WeaponComponent.h"
-#include "Character/Player/Components/HealthComponent.h"
-#include "Components/TextRenderComponent.h"
-#include "Character/Player/Components/WeaponComponent.h"
 
 APlayerCharacter::APlayerCharacter()
 {
