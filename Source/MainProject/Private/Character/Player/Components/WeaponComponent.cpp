@@ -5,7 +5,6 @@
 #include "Weapon/BaseWeapon.h"
 #include "Character/BaseCharacter.h"
 #include "Character/Player/BasePlayerController.h"
-#include "Kismet/GameplayStatics.h"
 #include "Animations/MeleeAtackAnimNotifyState.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogWeaponComponent, All, All);
@@ -19,35 +18,28 @@ void UWeaponComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-    if (!GetCharacter())
-        return;
+    ACharacter* Character = Cast<ABaseCharacter>(GetOwner());
+    if (!(Character)) return;
     
     SpawnWeapon();
     InitAnimations();
 
-    const auto pPlayerController = Cast<ABasePlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
-    if (m_pCharacter->GetController() == pPlayerController)
+    const auto pPlayerController = Cast<ABasePlayerController>(Character->GetController());
+    if (pPlayerController)
         pPlayerController->OnAttack.AddUObject(this, &UWeaponComponent::LightAttack);
-}
-
-bool UWeaponComponent::GetCharacter() 
-{
-    m_pCharacter = Cast<ABaseCharacter>(GetOwner());
-    if (!m_pCharacter)
-        return false;
-    return true;
 }
 
 void UWeaponComponent::SpawnWeapon()
 {
-    if (!GetWorld()) return;
+    ACharacter* Character = Cast<ABaseCharacter>(GetOwner());
+    if (!Character || ! GetWorld()) return;    
 
 	m_pWeapon = GetWorld()->SpawnActor<ABaseWeapon>(WeaponClass);
     if (!m_pWeapon) return;
 
     FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, false);
-    m_pWeapon->AttachToComponent(m_pCharacter->GetMesh(), AttachmentRules, WeaponAttachPointName);
-    m_pWeapon->SetOwner(m_pCharacter);
+    m_pWeapon->AttachToComponent(Character->GetMesh(), AttachmentRules, WeaponAttachPointName);
+    m_pWeapon->SetOwner(Character);
 }
 
 void UWeaponComponent::InitAnimations() 
@@ -55,6 +47,7 @@ void UWeaponComponent::InitAnimations()
     if (!m_pWeapon || !m_pWeapon->GetAttackMontage())
         return;
 
+    m_pWeapon->GetAttackMontage()->RateScale = m_pWeapon->GetAttackSpeed();
     const auto NotifyEvents = m_pWeapon->GetAttackMontage()->Notifies;
     for (auto NotifyEvent : NotifyEvents)
     {
@@ -70,11 +63,18 @@ void UWeaponComponent::InitAnimations()
 
 void UWeaponComponent::LightAttack() 
 {
+    ACharacter* Character = Cast<ABaseCharacter>(GetOwner());
+    if (!Character) return;
+
     UE_LOG(LogWeaponComponent, Display, TEXT("LightAttack!"));
-    m_pCharacter->PlayAnimMontage(m_pWeapon->GetAttackMontage());
+    Character->PlayAnimMontage(m_pWeapon->GetAttackMontage());
+    //m_pWeapon->GetAttackMontage()->
 }
 
 void UWeaponComponent::DisableMeleeCollision()
 {
-    m_pWeapon->DisableCollision(m_pCharacter->GetMesh());
+    ACharacter* Character = Cast<ABaseCharacter>(GetOwner());
+    if (!Character) return;
+
+    m_pWeapon->DisableCollision(Character->GetMesh());
 }

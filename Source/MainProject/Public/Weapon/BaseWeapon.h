@@ -36,7 +36,7 @@ protected:
     int32 damage;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="WeaponProperties")
-    float attackSpeed;
+    float attackSpeed = 3;
     
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="WeaponProperties")
     float range;
