@@ -6,6 +6,8 @@
 #include "BehaviorTree/BTDecorator.h"
 #include "EqualValueDecorator.generated.h"
 
+enum EAIStates : uint8;
+
 UCLASS()
 class MAINPROJECT_API UEqualValueDecorator : public UBTDecorator
 {
@@ -19,7 +21,7 @@ protected:
     FBlackboardKeySelector targetKey;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
-    bool targetValue;
+    TEnumAsByte<EAIStates> targetValue;
     
     virtual bool CalculateRawConditionValue(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) const override;
 };

@@ -4,8 +4,11 @@
 #include "AI/Services/FindPlayerService.h"
 
 #include "AIController.h"
+#include "..\..\..\Public\AI\States\AIStates.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Kismet/GameplayStatics.h"
+
+enum EAIStates : uint8;
 
 UFindPlayerService::UFindPlayerService()
 {
@@ -21,27 +24,24 @@ void UFindPlayerService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* Node
         if (player)
         {
             blackboard->SetValueAsObject(playerActorKey.SelectedKeyName, player);
-            
-            float distance = FVector::Dist(OwnerComp.GetAIOwner()->GetPawn()->GetActorLocation(), player->GetActorLocation());
-            blackboard->SetValueAsFloat(distanceKey.SelectedKeyName, distance);
-            
-            if (distance <= attackDistance)
-            {
-                blackboard->SetValueAsBool(canAttackKey.SelectedKeyName, true);
-                blackboard->SetValueAsBool(canMoveKey.SelectedKeyName, false);
-            }
-            else if (distance <= moveDistance)
-            {
-                blackboard->SetValueAsBool(canAttackKey.SelectedKeyName, false);
-                blackboard->SetValueAsBool(canMoveKey.SelectedKeyName, true);
-            }
-            else
-            {
-                blackboard->SetValueAsBool(canAttackKey.SelectedKeyName, false);
-                blackboard->SetValueAsBool(canMoveKey.SelectedKeyName, false);
-            }
+
+            m_currentDistance = FVector::Dist(OwnerComp.GetAIOwner()->GetPawn()->GetActorLocation(), player->GetActorLocation());
+            blackboard->SetValueAsFloat(distanceKey.SelectedKeyName, m_currentDistance);
+
+            blackboard->SetValueAsEnum(aiStateKey.SelectedKeyName, CalculateState());
         }
     }
     
     Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
+}
+
+EAIStates UFindPlayerService::CalculateState() const
+{
+    if (m_currentDistance <= attackDistance)
+        return Attack;
+
+    if (m_currentDistance >= attackDistance && m_currentDistance < aggroDistance)
+        return Chase;
+
+    return Idle;
 }

@@ -17,7 +17,7 @@ bool UEqualValueDecorator::CalculateRawConditionValue(UBehaviorTreeComponent& Ow
     if (!blackboard)
         return false;
 
-    const bool value = blackboard->GetValueAsBool(targetKey.SelectedKeyName);
+    const auto value = blackboard->GetValueAsEnum(targetKey.SelectedKeyName);
 
     return value == targetValue;
 }
