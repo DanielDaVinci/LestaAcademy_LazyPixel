@@ -3,7 +3,8 @@
 
 #include "AI/Characters/AIBaseCharacter.h"
 
-AAIBaseCharacter::AAIBaseCharacter()
+AAIBaseCharacter::AAIBaseCharacter(const FObjectInitializer& ObjInit)
+    : Super(ObjInit)
 {
     AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 }

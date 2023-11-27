@@ -9,7 +9,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 
 
-AMeleeAICharacter::AMeleeAICharacter()
+AMeleeAICharacter::AMeleeAICharacter(const FObjectInitializer& ObjInit)
+    : Super(ObjInit)
 {
     AIControllerClass = AMeleeAIController::StaticClass();
     bUseControllerRotationYaw = false;
@@ -18,17 +19,17 @@ AMeleeAICharacter::AMeleeAICharacter()
     {
         GetCharacterMovement()->bUseControllerDesiredRotation = true;
     }
-    
+
 }
 
 void AMeleeAICharacter::OnDeath()
 {
     Super::OnDeath();
-    
+
     GetCharacterMovement()->DisableMovement();
-    
+
     GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECR_Ignore);
-    
+
     GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
     GetMesh()->SetSimulatePhysics(true);
 }

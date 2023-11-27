@@ -7,7 +7,7 @@
 #include "BasePlayerController.generated.h"
 
 class UAttackComponent;
-class UPCMovementComponent;
+class UPlayerMovementComponent;
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnMoveForwardSignature, float);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnMoveRightSignature, float);
@@ -24,6 +24,7 @@ class MAINPROJECT_API ABasePlayerController : public APlayerController
 public:
     ABasePlayerController();
 
+#pragma region delegates
     FOnMoveForwardSignature OnMoveForward;
     FOnMoveRightSignature OnMoveRight;
 
@@ -31,13 +32,9 @@ public:
     FOnHardAttackSignature OnHardAttack;
     FOnDashSignature OnDash;
     FOnInteractSignature OnInteract;
+#pragma endregion delegates
 
-protected:
-    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName="MovementComponent")
-    UPCMovementComponent* pPCMovementComponent;
-
-    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName="AttackComponent")
-    UAttackComponent* pAttackComponent;
+    FVector2D GetMouseVector() const;
 
 public:
     virtual void SetupInputComponent() override;

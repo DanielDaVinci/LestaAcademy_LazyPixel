@@ -3,13 +3,23 @@
 
 #include "Character/Player/BasePlayerController.h"
 
-#include "Character/Player/Components/AttackComponent.h"
-#include "Character/Player/Components/PCMovementComponent.h"
-
 ABasePlayerController::ABasePlayerController()
 {
-    pPCMovementComponent = CreateDefaultSubobject<UPCMovementComponent>("MovementComponent");
-    pAttackComponent = CreateDefaultSubobject<UAttackComponent>("AttackComponent");
+    bShowMouseCursor = true;
+}
+
+FVector2D ABasePlayerController::GetMouseVector() const
+{
+    FIntVector2 viewportSize;
+    GetViewportSize(viewportSize.X, viewportSize.Y);
+
+    FVector2D mousePosition;
+    GetMousePosition(mousePosition.X, mousePosition.Y);
+
+    return FVector2D(
+        mousePosition.X - viewportSize.X / 2,
+        viewportSize.Y / 2 - mousePosition.Y
+        );
 }
 
 void ABasePlayerController::SetupInputComponent()

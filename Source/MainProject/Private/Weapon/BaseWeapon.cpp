@@ -48,7 +48,7 @@ void ABaseWeapon::OnMeleeWeaponOverlap(UPrimitiveComponent* OverlappedComponent,
 void ABaseWeapon::OnOffCollision(USkeletalMeshComponent* MeshComp)
 {
     if (!pBoxCollision || (GetOwner() != MeshComp->GetOwner()))
-        return;
+        return; 
 
     if (pBoxCollision->GetCollisionEnabled() == ECollisionEnabled::NoCollision)
     {
