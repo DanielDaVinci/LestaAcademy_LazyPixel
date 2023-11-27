@@ -4,11 +4,13 @@
 #include "Character/Player/PlayerCharacter.h"
 
 #include "Camera/CameraComponent.h"
+#include "Character/Player/Components/PlayerMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 
-APlayerCharacter::APlayerCharacter()
+APlayerCharacter::APlayerCharacter(const FObjectInitializer& ObjInit)
+    : Super(ObjInit.SetDefaultSubobjectClass<UPlayerMovementComponent>(ACharacter::CharacterMovementComponentName))
 {
-	PrimaryActorTick.bCanEverTick = true;
+    PrimaryActorTick.bCanEverTick = true;
 
     pSpringArmComponent = CreateDefaultSubobject<USpringArmComponent>("SpringArmComponent");
     pSpringArmComponent->SetupAttachment(GetRootComponent());
@@ -20,10 +22,10 @@ APlayerCharacter::APlayerCharacter()
 
 void APlayerCharacter::BeginPlay()
 {
-	Super::BeginPlay();
+    Super::BeginPlay();
 }
 
 void APlayerCharacter::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaTime);
+    Super::Tick(DeltaTime);
 }

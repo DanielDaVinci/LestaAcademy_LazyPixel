@@ -13,7 +13,7 @@ class MAINPROJECT_API AAIBaseCharacter : public ABaseCharacter
 	GENERATED_BODY()
 
 public:
-    AAIBaseCharacter();
+    AAIBaseCharacter(const FObjectInitializer& ObjInit);
     
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "AI")
     UBehaviorTree* BehaviorTreeAsset;

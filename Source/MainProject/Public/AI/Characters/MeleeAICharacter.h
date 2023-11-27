@@ -14,7 +14,7 @@ class MAINPROJECT_API AMeleeAICharacter : public AAIBaseCharacter
     GENERATED_BODY()
 
 public:
-    AMeleeAICharacter();
+    AMeleeAICharacter(const FObjectInitializer& ObjInit);
 
     virtual void OnDeath() override;
 };

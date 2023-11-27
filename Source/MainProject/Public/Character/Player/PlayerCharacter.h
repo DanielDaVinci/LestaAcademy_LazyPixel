@@ -16,7 +16,7 @@ class MAINPROJECT_API APlayerCharacter : public ABaseCharacter
     GENERATED_BODY()
 
 public:
-    APlayerCharacter();
+    APlayerCharacter(const FObjectInitializer& ObjInit);
     
     FVector2D GetCameraForwardVector2D() const { return FVector2D(pCameraComponent->GetForwardVector()).GetSafeNormal(); }
     FVector2D GetCameraRightVector2D() const { return FVector2D(pCameraComponent->GetRightVector()).GetSafeNormal(); }

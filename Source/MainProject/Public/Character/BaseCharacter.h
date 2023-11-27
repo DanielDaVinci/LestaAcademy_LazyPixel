@@ -17,7 +17,7 @@ class MAINPROJECT_API ABaseCharacter : public ACharacter
 	GENERATED_BODY()
 
 public:
-	ABaseCharacter();
+	ABaseCharacter(const FObjectInitializer& ObjInit);
 
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName="AbilityComponent")
