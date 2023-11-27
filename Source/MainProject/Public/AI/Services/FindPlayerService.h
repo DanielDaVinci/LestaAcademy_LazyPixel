@@ -6,6 +6,8 @@
 #include "BehaviorTree/BTService.h"
 #include "FindPlayerService.generated.h"
 
+enum EAIStates : uint8;
+
 UCLASS()
 class MAINPROJECT_API UFindPlayerService : public UBTService
 {
@@ -22,16 +24,17 @@ protected:
     FBlackboardKeySelector distanceKey;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
-    float moveDistance = 500.0f;
+    float aggroDistance = 500.0f;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
     float attackDistance = 150.0f;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
-    FBlackboardKeySelector canMoveKey;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
-    FBlackboardKeySelector canAttackKey;
     
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
+    FBlackboardKeySelector aiStateKey;
+
     virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
+
+private:
+    EAIStates CalculateState() const;
+    float m_currentDistance;
 };
