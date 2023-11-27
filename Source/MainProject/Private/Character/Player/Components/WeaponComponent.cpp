@@ -18,8 +18,8 @@ void UWeaponComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-    ACharacter* Character = Cast<ABaseCharacter>(GetOwner());
-    if (!(Character)) return;
+    ABaseCharacter* Character = Cast<ABaseCharacter>(GetOwner());
+    if (!Character) return;
     
     SpawnWeapon();
     InitAnimations();
@@ -31,10 +31,10 @@ void UWeaponComponent::BeginPlay()
 
 void UWeaponComponent::SpawnWeapon()
 {
-    ACharacter* Character = Cast<ABaseCharacter>(GetOwner());
+    ABaseCharacter* Character = Cast<ABaseCharacter>(GetOwner());
     if (!Character || ! GetWorld()) return;    
 
-	m_pWeapon = GetWorld()->SpawnActor<ABaseWeapon>(WeaponClass);
+    m_pWeapon = GetWorld()->SpawnActor<ABaseWeapon>(WeaponClass);
     if (!m_pWeapon) return;
 
     FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, false);
@@ -63,17 +63,19 @@ void UWeaponComponent::InitAnimations()
 
 void UWeaponComponent::LightAttack() 
 {
-    ACharacter* Character = Cast<ABaseCharacter>(GetOwner());
+    ABaseCharacter* Character = Cast<ABaseCharacter>(GetOwner());
     if (!Character) return;
 
+    if (Character->GetMesh()->GetAnimInstance()->Montage_IsPlaying(m_pWeapon->GetAttackMontage()))
+        return;
+ 
     UE_LOG(LogWeaponComponent, Display, TEXT("LightAttack!"));
     Character->PlayAnimMontage(m_pWeapon->GetAttackMontage());
-    //m_pWeapon->GetAttackMontage()->
 }
 
 void UWeaponComponent::DisableMeleeCollision()
 {
-    ACharacter* Character = Cast<ABaseCharacter>(GetOwner());
+    ABaseCharacter* Character = Cast<ABaseCharacter>(GetOwner());
     if (!Character) return;
 
     m_pWeapon->DisableCollision(Character->GetMesh());

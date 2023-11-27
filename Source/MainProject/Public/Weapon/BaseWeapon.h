@@ -35,7 +35,7 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="WeaponProperties")
     int32 damage;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="WeaponProperties")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "WeaponProperties", meta = (ClampMin = "0.0", ClampMax = "10.0"))
     float attackSpeed = 3;
     
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="WeaponProperties")
