@@ -19,6 +19,8 @@ class MAINPROJECT_API ABaseCharacter : public ACharacter
 public:
 	ABaseCharacter(const FObjectInitializer& ObjInit);
 
+    virtual void Tick(float DeltaTime) override;
+
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName="AbilityComponent")
     UAbilityComponent* pAbilityComponent;
@@ -31,17 +33,15 @@ protected:
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName="HealthTextComponent")
     UTextRenderComponent* pHealthTextComponent;
-
+    
     virtual void PostInitializeComponents() override;
     
 	virtual void BeginPlay() override;
 
     virtual void OnDeath() {}
 
-public:	
-	virtual void Tick(float DeltaTime) override;
-
 private:
     UFUNCTION()
     void CheckHealthValue(float Health);
+        
 };

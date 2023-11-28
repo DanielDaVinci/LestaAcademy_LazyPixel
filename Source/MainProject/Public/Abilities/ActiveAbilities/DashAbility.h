@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Abilities/ActiveAbility.h"
-#include "UObject/Object.h"
+#include "Components/CapsuleComponent.h"
 #include "DashAbility.generated.h"
 
 class UPlayerMovementComponent;
@@ -21,9 +21,21 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dash")
     float dashImpulse = 2000.0f;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dash")
+    float dashTime = 0.2f;
+
     virtual bool NativeActivate() override;
 
 private:
+    FTimerHandle m_dashTimerHandle;
+    float m_dashTime;
 
+    void TickDashLifeTimer();
+    
+protected:
     UPlayerMovementComponent* GetPlayerMovementComponent() const;
+
+private:
+    UPROPERTY()
+    UCapsuleComponent* m_capsuleComponent;
 };

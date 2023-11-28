@@ -25,6 +25,8 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ActiveAbility", meta = (ClampMin="1"))
     int activationAmount = 1;
 
+    float m_timerTimeUpdate = 0.01;
+    
     /**
      * Called when activation is possible
      * @return Is activation successful
@@ -33,8 +35,7 @@ protected:
 
 private:
     FTimerHandle m_reloadTimerHandle;
-    float m_timerTimeUpdate = 0.01;
-
+    
     float m_currentReloadTime;
     float m_currentActivationAmount;
 
