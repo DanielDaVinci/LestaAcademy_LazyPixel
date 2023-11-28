@@ -17,7 +17,7 @@ public:
     virtual void Init(ABaseCharacter* Character);
 
 protected:
-    ABaseCharacter* GetCharacter() const { return m_character; };
+    ABaseCharacter* GetCharacter() const { return m_character; }
 
 private:
     UPROPERTY()
