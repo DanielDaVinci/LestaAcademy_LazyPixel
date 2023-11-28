@@ -52,7 +52,7 @@ void UPCMovementComponent::MoveRight(float Amount)
     const auto character = GetCharacter();
     if (!character)
         return;
-
+    
     m_inputDirection.X = Amount;
     character->AddMovementInput(FVector(character->GetCameraRightVector2D(), 0.0f), Amount);
 }

@@ -2,7 +2,6 @@
 
 
 #include "Character/BaseCharacter.h"
-
 #include "Character/Player/Components/AbilityComponent.h"
 #include "Character/Player/Components/HealthComponent.h"
 #include "Character/Player/Components/WeaponComponent.h"
@@ -30,19 +29,19 @@ void ABaseCharacter::PostInitializeComponents()
 }
 
 void ABaseCharacter::BeginPlay()
-{
-    Super::BeginPlay();
-
-    check(pHealthComponent);
-    check(pHealthTextComponent);
-
-}
-
-void ABaseCharacter::Tick(float DeltaTime)
-{
+ {
+     Super::BeginPlay();
+ 
+     check(pHealthComponent);
+     check(pHealthTextComponent);
+ 
+ }
+ 
+ void ABaseCharacter::Tick(float DeltaTime)
+ {
     Super::Tick(DeltaTime);
-
-}
+    
+ }
 
 void ABaseCharacter::CheckHealthValue(float Health)
 {
