@@ -26,16 +26,11 @@ protected:
 
     virtual bool NativeActivate() override;
 
+    void OnDashEnd();
+    
 private:
     FTimerHandle m_dashTimerHandle;
-    float m_dashTime;
-
-    void TickDashLifeTimer();
     
 protected:
     UPlayerMovementComponent* GetPlayerMovementComponent() const;
-
-private:
-    UPROPERTY()
-    UCapsuleComponent* m_capsuleComponent;
 };
