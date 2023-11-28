@@ -7,6 +7,8 @@
 #include "UObject/Object.h"
 #include "DashAbility.generated.h"
 
+class UPlayerMovementComponent;
+
 UCLASS()
 class MAINPROJECT_API UDashAbility : public UActiveAbility
 {
@@ -20,8 +22,8 @@ protected:
     float dashImpulse = 2000.0f;
 
     virtual bool NativeActivate() override;
-    
+
 private:
-    UPROPERTY()
-    ABaseCharacter* m_character;
+
+    UPlayerMovementComponent* GetPlayerMovementComponent() const;
 };

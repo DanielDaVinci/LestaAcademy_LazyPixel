@@ -3,6 +3,11 @@
 
 #include "Abilities/BaseAbility.h"
 
+void UBaseAbility::Init(ABaseCharacter* Character)
+{
+    m_character = Character;
+}
+
 UWorld* UBaseAbility::GetWorld() const
 {
     if (GIsEditor && !GIsPlayInEditorWorld)

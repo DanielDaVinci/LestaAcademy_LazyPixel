@@ -14,7 +14,14 @@ class MAINPROJECT_API UBaseAbility : public UObject
     GENERATED_BODY()
 
 public:
-    virtual void Init(ABaseCharacter* Character) {}
+    virtual void Init(ABaseCharacter* Character);
+
+protected:
+    ABaseCharacter* GetCharacter() const { return m_character; };
+
+private:
+    UPROPERTY()
+    ABaseCharacter* m_character = nullptr;
 
 protected:
     virtual UWorld* GetWorld() const override;

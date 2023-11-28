@@ -4,26 +4,33 @@
 #include "Abilities/ActiveAbilities/DashAbility.h"
 
 #include "Character/BaseCharacter.h"
+#include "Character/Player/Components/PlayerMovementComponent.h"
 #include "GameFramework/Character.h"
 
 void UDashAbility::Init(ABaseCharacter* Character)
 {
     Super::Init(Character);
 
-    m_character = Character;
 }
 
 bool UDashAbility::NativeActivate()
 {
-    Super::NativeActivate();
-
-    if (!m_character)
+    const auto character = GetCharacter();
+    if (!character)
         return false;
 
-    if (m_character->GetVelocity().IsNearlyZero())
+    const auto pmComponent = GetPlayerMovementComponent();
+    if (!pmComponent)
         return false;
     
-    m_character->LaunchCharacter(m_character->GetVelocity().GetSafeNormal() * dashImpulse, true, false);
-    return true;
+    FVector launchDirection = pmComponent->InputDirToWorldDir(pmComponent->GetInputDirection());
+
+    character->LaunchCharacter(launchDirection * dashImpulse, true, false);
+    
+    return Super::NativeActivate();;
 }
 
+UPlayerMovementComponent* UDashAbility::GetPlayerMovementComponent() const
+{
+    return GetCharacter() ? Cast<UPlayerMovementComponent>(GetCharacter()->GetMovementComponent()) : nullptr;
+}

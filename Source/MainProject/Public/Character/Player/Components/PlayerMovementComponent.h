@@ -51,12 +51,18 @@ private:
      */
     void RotateToInputDirection(float DeltaTime);
 
+public:
     /**
      * Convert camera direction axes to character direction axes
      * @param InputDirection Normalized vector directed along camera axes
      * @return Normalized vector converted to character axes
      */
     FVector InputDirToWorldDir(FVector2D InputDirection) const;
+
+    /**
+     * @return 
+     */
+    FVector2D GetInputDirection() const { return m_inputDirection; };
 
 private:
     bool m_bCanRotation = true;
@@ -84,7 +90,7 @@ private:
 
 public:
     float GetDeceleration() const { return m_currentDeceleration; }
-    
+
     void SetDeceleration(float Deceleration);
 
 private:
