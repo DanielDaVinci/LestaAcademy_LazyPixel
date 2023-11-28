@@ -17,11 +17,11 @@ ABaseWeapon::ABaseWeapon()
     pSceneComponent = CreateDefaultSubobject<USceneComponent>("SceneComponent");
     SetRootComponent(pSceneComponent);
 
-    PStaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("WeaponMesh");
-    PStaticMeshComponent->SetupAttachment(GetRootComponent());
+    pWeaponMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("WeaponMeshComponent");
+    pWeaponMeshComponent->SetupAttachment(GetRootComponent());
 
     pBoxCollision = CreateDefaultSubobject<UBoxComponent>("BoxCollision");
-    pBoxCollision->SetupAttachment(PStaticMeshComponent);
+    pBoxCollision->SetupAttachment(pWeaponMeshComponent);
     InitBoxCollision();
 }
 
@@ -48,8 +48,9 @@ void ABaseWeapon::OnMeleeWeaponOverlap(UPrimitiveComponent* OverlappedComponent,
 void ABaseWeapon::OnOffCollision(USkeletalMeshComponent* MeshComp)
 {
     if (!pBoxCollision || (GetOwner() != MeshComp->GetOwner()))
-        return; 
-
+        return;
+    
+    
     if (pBoxCollision->GetCollisionEnabled() == ECollisionEnabled::NoCollision)
     {
         //UE_LOG(LogBaseWeapon, Display, TEXT("Collision ON!"));

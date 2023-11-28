@@ -8,6 +8,21 @@
 
 class UBoxComponent;
 
+USTRUCT(BlueprintType)
+struct FComboElement
+{
+    GENERATED_BODY()
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Animation")
+    UAnimMontage* attackAnimation;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Damage")
+    float damage = 50.0f;
+    
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement", meta=(ClampMin="0.0", ClampMax="1.0"))
+    float deceleration = 0.0;
+};
+
 UCLASS()
 class MAINPROJECT_API ABaseWeapon : public AActor
 {
@@ -16,7 +31,7 @@ class MAINPROJECT_API ABaseWeapon : public AActor
 public:
     ABaseWeapon();
 
-    int GetDamage() const { return damage; }
+    float GetDamage() const { return damage; }
     float GetAttackSpeed() const { return attackSpeed; }
     float GetRange() const { return range; }
     
@@ -32,23 +47,26 @@ public:
     UAnimMontage* GetAttackMontage() { return attackAnimation; }
 
 protected:
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="WeaponProperties")
-    int32 damage;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="WeaponProperties", meta=(ClampMin="0.0"))
+    float damage = 100.0f;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "WeaponProperties", meta = (ClampMin = "0.0", ClampMax = "10.0"))
     float attackSpeed = 3;
     
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="WeaponProperties")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="WeaponProperties", meta=(ClampMin="0.0"))
     float range;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Animation")
     UAnimMontage* attackAnimation;
 
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Attack")
+    TArray<FComboElement> Combos;
+
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components", DisplayName="SceneComponent")
     USceneComponent* pSceneComponent;
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components", DisplayName="StaticMeshComponent")
-    UStaticMeshComponent* PStaticMeshComponent;
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components", DisplayName="WeaponMeshComponent")
+    UStaticMeshComponent* pWeaponMeshComponent;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName = "BoxComponent")
     UBoxComponent* pBoxCollision;
@@ -58,6 +76,7 @@ protected:
         UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 private:
+    UPROPERTY()
     TArray<AActor*> EnemyActors;
 
     void InitBoxCollision(); 

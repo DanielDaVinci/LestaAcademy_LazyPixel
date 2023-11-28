@@ -6,6 +6,8 @@
 #include "Character/BaseCharacter.h"
 #include "Character/Player/BasePlayerController.h"
 #include "Animations/MeleeAtackAnimNotifyState.h"
+#include "Character/Player/PlayerCharacter.h"
+#include "Character/Player/Components/PlayerMovementComponent.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogWeaponComponent, All, All);
 
@@ -54,8 +56,8 @@ void UWeaponComponent::InitAnimations()
         auto MeleeNotifyState = Cast<UMeleeAttackAnimNotifyState>(NotifyEvent.NotifyStateClass);
         if (MeleeNotifyState)
         {
-            MeleeNotifyState->FOnMeleeAttackNotify.AddUObject(m_pWeapon, &ABaseWeapon::OnOffCollision);
-            MeleeNotifyState->FOnMeleeAttackDamageNotify.AddUObject(m_pWeapon, &ABaseWeapon::OnDamageAllOverlapedActors);
+            MeleeNotifyState->FOnMeleeAttackNotify.AddUObject(this, &UWeaponComponent::OnStartAttackState);
+            MeleeNotifyState->FOnMeleeAttackDamageNotify.AddUObject(this, &UWeaponComponent::OnEndAttackState);
             break;
         }
     }
@@ -68,14 +70,45 @@ void UWeaponComponent::LightAttack()
 
     if (Character->GetMesh()->GetAnimInstance()->Montage_IsPlaying(m_pWeapon->GetAttackMontage()))
         return;
+
+    const auto pmComponent = GetPlayerMovementComponent();
+    if (!pmComponent)
+        return;
+
+    FRotator viewRotation = pmComponent->GetMouseViewDirection().Rotation();
+    pmComponent->FixCharacterRotation(viewRotation);
+    pmComponent->SetDeceleration(0.5f);
  
     UE_LOG(LogWeaponComponent, Display, TEXT("LightAttack!"));
     Character->PlayAnimMontage(m_pWeapon->GetAttackMontage());
 }
 
+void UWeaponComponent::OnStartAttackState(USkeletalMeshComponent* MeshComp)
+{
+    m_pWeapon->OnOffCollision(MeshComp);
+}
+
+void UWeaponComponent::OnEndAttackState()
+{
+    const auto pmComponent = GetPlayerMovementComponent();
+    if (!pmComponent)
+        return;
+
+    m_pWeapon->OnDamageAllOverlapedActors();
+    
+    pmComponent->SetDeceleration(0.0f);
+    pmComponent->UnfixCharacterRotation();
+}
+
+UPlayerMovementComponent* UWeaponComponent::GetPlayerMovementComponent() const
+{
+    const auto character = Cast<ACharacter>(GetOwner());
+    return character ? Cast<UPlayerMovementComponent>(character->GetMovementComponent()) : nullptr;
+}
+
 void UWeaponComponent::DisableMeleeCollision()
 {
-    ABaseCharacter* Character = Cast<ABaseCharacter>(GetOwner());
+    const auto Character = Cast<ACharacter>(GetOwner());
     if (!Character) return;
 
     m_pWeapon->DisableCollision(Character->GetMesh());

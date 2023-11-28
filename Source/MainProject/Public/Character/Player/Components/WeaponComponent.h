@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "WeaponComponent.generated.h"
 
+class UPlayerMovementComponent;
 class ABaseWeapon;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -29,9 +30,15 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
+    UPROPERTY()
     ABaseWeapon* m_pWeapon;
 
     void SpawnWeapon();
     void InitAnimations();
     void LightAttack();
+
+    void OnStartAttackState(USkeletalMeshComponent* MeshComp);
+    void OnEndAttackState();
+
+    UPlayerMovementComponent* GetPlayerMovementComponent() const;
 };

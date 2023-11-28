@@ -1,17 +1,16 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "..\..\..\..\Public\Character\Player\Components\PlayerMovementComponent.h"
+#include "Character/Player/Components/PlayerMovementComponent.h"
 
-#include "Character/BaseCharacter.h"
 #include "Character/Player/BasePlayerController.h"
 #include "Character/Player/PlayerCharacter.h"
 
 UPlayerMovementComponent::UPlayerMovementComponent()
 {
     PrimaryComponentTick.bCanEverTick = true;
-    MaxAcceleration = 99999.9f;
-    BrakingDecelerationWalking = 99999.9f;
+    MaxAcceleration = 99999.0f;
+    BrakingDecelerationWalking = 99999.0f;
 }
 
 
@@ -19,6 +18,8 @@ void UPlayerMovementComponent::BeginPlay()
 {
     Super::BeginPlay();
 
+    m_maxSpeed = MaxWalkSpeed;
+    
     BindInput();
 }
 
@@ -106,6 +107,12 @@ void UPlayerMovementComponent::FixCharacterRotation(FRotator FixRotation)
 void UPlayerMovementComponent::UnfixCharacterRotation()
 {
     m_bCanRotation = true;
+}
+
+void UPlayerMovementComponent::SetDeceleration(float Deceleration)
+{
+    m_currentDeceleration = FMath::Clamp(Deceleration, 0.0f, 1.0f);
+    MaxWalkSpeed = m_maxSpeed * (1.0f - m_currentDeceleration);
 }
 
 APlayerCharacter* UPlayerMovementComponent::GetPlayerCharacter() const

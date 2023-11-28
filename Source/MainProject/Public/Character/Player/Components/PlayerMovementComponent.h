@@ -1,16 +1,15 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Lazy Pixel. All Rights Reserved.
 
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/ActorComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "PlayerMovementComponent.generated.h"
 
 class ABasePlayerController;
 class APlayerCharacter;
 
-UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
+UCLASS()
 class MAINPROJECT_API UPlayerMovementComponent : public UCharacterMovementComponent
 {
     GENERATED_BODY()
@@ -45,7 +44,6 @@ protected:
 
 private:
     FVector2D m_inputDirection = {0.0f, 0.0f};
-    bool m_bCanRotation = true;
 
     /**
      * Smooth rotate mesh to movement direction
@@ -59,6 +57,9 @@ private:
      * @return Normalized vector converted to character axes
      */
     FVector InputDirToWorldDir(FVector2D InputDirection) const;
+
+private:
+    bool m_bCanRotation = true;
 
 public:
     /**
@@ -77,7 +78,16 @@ public:
      */
     void UnfixCharacterRotation();
 
+private:
+    float m_maxSpeed;
+    float m_currentDeceleration = 0.0f;
+
 public:
+    float GetDeceleration() const { return m_currentDeceleration; }
+    
+    void SetDeceleration(float Deceleration);
+
+private:
     APlayerCharacter* GetPlayerCharacter() const;
 
     ABasePlayerController* GetPlayerController() const;
