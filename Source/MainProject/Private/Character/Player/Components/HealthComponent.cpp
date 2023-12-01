@@ -27,10 +27,6 @@ void UHealthComponent::OnTakeAnyDamage(AActor* DamageActor, float Damage, const 
     if (Damage <= 0.0f || IsDead()) return;
 
     SetHealth(m_health - Damage);
-
-    // OnDeath call 2 times
-    /*if (IsDead())
-        OnDeath.Broadcast();*/
 }
 
 void UHealthComponent::SetHealth(float Health)
