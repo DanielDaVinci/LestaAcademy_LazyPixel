@@ -11,6 +11,7 @@ class UPlayerMovementComponent;
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnMoveForwardSignature, float);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnMoveRightSignature, float);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnMouseMoveSignature, FVector2D);
 DECLARE_MULTICAST_DELEGATE(FOnAttackSignature);
 DECLARE_MULTICAST_DELEGATE(FOnHardAttackSignature);
 DECLARE_MULTICAST_DELEGATE(FOnDashSignature);
@@ -27,6 +28,7 @@ public:
 #pragma region delegates
     FOnMoveForwardSignature OnMoveForward;
     FOnMoveRightSignature OnMoveRight;
+    FOnMouseMoveSignature OnMouseMove;
 
     FOnAttackSignature OnAttack;
     FOnHardAttackSignature OnHardAttack;
@@ -35,6 +37,7 @@ public:
 #pragma endregion delegates
 
     FVector2D GetMouseVector() const;
+    FVector2D GetMaxMouseVector() const;
 
 public:
     virtual void SetupInputComponent() override;
@@ -42,6 +45,7 @@ public:
 private:
     void HandleMoveForward(float Amount);
     void HandleMoveRight(float Amount);
+    void HandleMouseMove(float Amount);
 
     void HandleAttack();
     void HandleHardAttack();

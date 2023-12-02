@@ -12,10 +12,12 @@ ARoom::ARoom()
 	PrimaryActorTick.bCanEverTick = false;
 
     pSceneComponent = CreateDefaultSubobject<USceneComponent>("SceneComponent");
+    pSceneComponent->SetMobility(EComponentMobility::Static);
     SetRootComponent(pSceneComponent);
 
     pRoomCollisionComponent = CreateDefaultSubobject<UBoxComponent>("RoomCollisionComponent");
     pRoomCollisionComponent->SetupAttachment(GetRootComponent());
+    pRoomCollisionComponent->SetMobility(EComponentMobility::Static);
     pRoomCollisionComponent->InitBoxExtent(FVector(300.0f, 300.0f, 50.0f));
     pRoomCollisionComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
     pRoomCollisionComponent->SetCollisionObjectType(ECC_WorldStatic);

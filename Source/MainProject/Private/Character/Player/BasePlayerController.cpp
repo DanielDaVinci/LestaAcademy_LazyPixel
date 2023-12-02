@@ -22,12 +22,21 @@ FVector2D ABasePlayerController::GetMouseVector() const
         );
 }
 
+FVector2D ABasePlayerController::GetMaxMouseVector() const
+{
+    FIntVector2 viewportSize;
+    GetViewportSize(viewportSize.X, viewportSize.Y);
+    
+    return FVector2D(viewportSize.X / 2, viewportSize.Y / 2);
+}
+
 void ABasePlayerController::SetupInputComponent()
 {
     Super::SetupInputComponent();
 
     InputComponent->BindAxis("MoveForward", this, &ABasePlayerController::HandleMoveForward);
     InputComponent->BindAxis("MoveRight", this, &ABasePlayerController::HandleMoveRight);
+    InputComponent->BindAxis("MouseMove", this, &ABasePlayerController::HandleMouseMove);
 
     InputComponent->BindAction("Attack", IE_Pressed, this, &ABasePlayerController::HandleAttack);
     InputComponent->BindAction("HardAttack", IE_Pressed, this, &ABasePlayerController::HandleHardAttack);
@@ -63,4 +72,9 @@ void ABasePlayerController::HandleDash()
 void ABasePlayerController::HandleInteract()
 {
     OnInteract.Broadcast();
+}
+
+void ABasePlayerController::HandleMouseMove(float Amount)
+{
+    OnMouseMove.Broadcast(GetMouseVector());
 }

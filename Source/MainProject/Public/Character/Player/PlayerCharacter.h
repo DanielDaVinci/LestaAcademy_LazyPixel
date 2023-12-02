@@ -7,6 +7,7 @@
 #include "Character/BaseCharacter.h"
 #include "PlayerCharacter.generated.h"
 
+class ABasePlayerController;
 class UCameraComponent;
 class USpringArmComponent;
 
@@ -32,5 +33,32 @@ protected:
 
 public:
     virtual void Tick(float DeltaTime) override;
+
+protected:
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
+    FVector2D maxCameraShiftOnMouseMove = { 500.0f, 300.0f };
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
+    UCurveVector* cameraMovementInterpolation;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
+    float interpolationFrequency = 0.01f;
+
+    void OnMouseMove(FVector2D MouseVector);
     
+private:
+    FVector m_currentCameraOffset;
+    FVector m_targetCameraOffset;
+
+    FTimerHandle m_cameraMovementTimer;
+    float m_currentTime;
+    float m_interpolationMinTime;
+    float m_interpolationMaxTime;
+
+    void StartCameraMovement();
+    void CameraMovementTimerUpdate();
+
+protected:
+
+    ABasePlayerController* GetPlayerController() const;
 };
