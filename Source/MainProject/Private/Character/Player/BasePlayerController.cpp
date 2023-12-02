@@ -29,9 +29,10 @@ void ABasePlayerController::SetupInputComponent()
     InputComponent->BindAxis("MoveForward", this, &ABasePlayerController::HandleMoveForward);
     InputComponent->BindAxis("MoveRight", this, &ABasePlayerController::HandleMoveRight);
 
-    InputComponent->BindAction("Attack", IE_Pressed, this, &ABasePlayerController::HandleAttack);
-    InputComponent->BindAction("HardAttack", IE_Pressed, this, &ABasePlayerController::HandleHardAttack);
+    InputComponent->BindAction("MeleeAttack", IE_Pressed, this, &ABasePlayerController::HandleMeleeAttack);
+    InputComponent->BindAction("RangeAttack", IE_Pressed, this, &ABasePlayerController::HandleRangeAttack);
     InputComponent->BindAction("Dash", IE_Pressed, this, &ABasePlayerController::HandleDash);
+    InputComponent->BindAction("CustomAbility", IE_Pressed, this, &ABasePlayerController::HandleDash);
     InputComponent->BindAction("Interact", IE_Pressed, this, &ABasePlayerController::HandleInteract);
 }
 
@@ -45,19 +46,24 @@ void ABasePlayerController::HandleMoveRight(float Amount)
     OnMoveRight.Broadcast(Amount);
 }
 
-void ABasePlayerController::HandleAttack()
+void ABasePlayerController::HandleMeleeAttack()
 {
-    OnAttack.Broadcast();
+    OnMeleeAttack.Broadcast();
 }
 
-void ABasePlayerController::HandleHardAttack()
+void ABasePlayerController::HandleRangeAttack()
 {
-    OnHardAttack.Broadcast();
+    OnRangeAttack.Broadcast();
 }
 
 void ABasePlayerController::HandleDash()
 {
     OnDash.Broadcast();
+}
+
+void ABasePlayerController::HandleCustomAbility()
+{
+    OnCustomAbility.Broadcast();
 }
 
 void ABasePlayerController::HandleInteract()

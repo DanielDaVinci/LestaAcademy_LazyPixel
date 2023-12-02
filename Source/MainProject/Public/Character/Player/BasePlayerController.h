@@ -11,9 +11,10 @@ class UPlayerMovementComponent;
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnMoveForwardSignature, float);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnMoveRightSignature, float);
-DECLARE_MULTICAST_DELEGATE(FOnAttackSignature);
-DECLARE_MULTICAST_DELEGATE(FOnHardAttackSignature);
+DECLARE_MULTICAST_DELEGATE(FOnMeleeAttackSignature);
+DECLARE_MULTICAST_DELEGATE(FOnRangeAttackSignature);
 DECLARE_MULTICAST_DELEGATE(FOnDashSignature);
+DECLARE_MULTICAST_DELEGATE(FOnCustomAbilitySignature);
 DECLARE_MULTICAST_DELEGATE(FOnInteractSignature);
 
 UCLASS()
@@ -28,9 +29,10 @@ public:
     FOnMoveForwardSignature OnMoveForward;
     FOnMoveRightSignature OnMoveRight;
 
-    FOnAttackSignature OnAttack;
-    FOnHardAttackSignature OnHardAttack;
+    FOnMeleeAttackSignature OnMeleeAttack;
+    FOnRangeAttackSignature OnRangeAttack;
     FOnDashSignature OnDash;
+    FOnCustomAbilitySignature OnCustomAbility;
     FOnInteractSignature OnInteract;
 #pragma endregion delegates
 
@@ -43,9 +45,10 @@ private:
     void HandleMoveForward(float Amount);
     void HandleMoveRight(float Amount);
 
-    void HandleAttack();
-    void HandleHardAttack();
+    void HandleMeleeAttack();
+    void HandleRangeAttack();
     void HandleDash();
+    void HandleCustomAbility();
 
     void HandleInteract();
 };
