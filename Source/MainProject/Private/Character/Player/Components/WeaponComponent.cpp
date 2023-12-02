@@ -90,12 +90,12 @@ void UWeaponComponent::OnStartAttackState(USkeletalMeshComponent* MeshComp)
 
 void UWeaponComponent::OnEndAttackState()
 {
+    m_pWeapon->OnDamageAllOverlapedActors();
+
     const auto pmComponent = GetPlayerMovementComponent();
     if (!pmComponent)
         return;
-
-    m_pWeapon->OnDamageAllOverlapedActors();
-    
+ 
     pmComponent->SetDeceleration(0.0f);
     pmComponent->UnfixCharacterRotation();
 }

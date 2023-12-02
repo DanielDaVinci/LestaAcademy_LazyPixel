@@ -83,7 +83,7 @@ void ABaseWeapon::OnDamageAllOverlapedActors()
     for (auto Actor : EnemyActors)
     {
         Actor->TakeDamage(damage, FDamageEvent(), UGameplayStatics::GetPlayerController(GetWorld(), 0), this);
-        UE_LOG(LogBaseWeapon, Display, TEXT("Damage %d to actor %s"), damage, *(Actor->GetName()));
+        UE_LOG(LogBaseWeapon, Display, TEXT("Damage %.f to actor %s"), damage, *(Actor->GetName()));
     }
     EnemyActors.Empty();
 }
