@@ -28,7 +28,7 @@ void UWeaponComponent::BeginPlay()
 
     const auto pPlayerController = Cast<ABasePlayerController>(Character->GetController());
     if (pPlayerController)
-        pPlayerController->OnAttack.AddUObject(this, &UWeaponComponent::LightAttack);
+        pPlayerController->OnMeleeAttack.AddUObject(this, &UWeaponComponent::MeleeAttack);
 }
 
 void UWeaponComponent::SpawnWeapon()
@@ -63,7 +63,7 @@ void UWeaponComponent::InitAnimations()
     }
 }
 
-void UWeaponComponent::LightAttack() 
+void UWeaponComponent::MeleeAttack() 
 {
     ABaseCharacter* Character = Cast<ABaseCharacter>(GetOwner());
     if (!Character) return;

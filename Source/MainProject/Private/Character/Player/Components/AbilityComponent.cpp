@@ -22,6 +22,7 @@ void UAbilityComponent::BeginPlay()
     InitActiveAbility();
     InitPassiveAbility();
     InitDashAbility();
+    InitCustomAbility();
     
     BindInput();
 }
@@ -82,17 +83,34 @@ void UAbilityComponent::InitDashAbility()
     m_dashAbility->Init(character);
 }
 
-void UAbilityComponent::BindInput()
+void UAbilityComponent::InitCustomAbility()
 {
-    const auto charater = Cast<ACharacter>(GetOwner());
-    if (!charater)
+    if (!customAbilityClass)
+        return;
+    
+    m_customAbility = NewObject<UActiveAbility>(this, customAbilityClass);
+    if (!m_customAbility)
         return;
 
-    const auto playerController = Cast<ABasePlayerController>(charater->GetController());
+    ABaseCharacter* character = Cast<ABaseCharacter>(GetOwner());
+    if (!character)
+        return;
+    
+    m_customAbility->Init(character);
+}
+
+void UAbilityComponent::BindInput()
+{
+    const auto Character = Cast<ACharacter>(GetOwner());
+    if (!Character)
+        return;
+
+    const auto playerController = Cast<ABasePlayerController>(Character->GetController());
     if (!playerController)
         return;
 
     playerController->OnDash.AddUObject(this, &UAbilityComponent::UseDash);
+    playerController->OnCustomAbility.AddUObject(this, &UAbilityComponent::UseCustomAbility);
 }
 
 void UAbilityComponent::UseDash()
@@ -101,4 +119,12 @@ void UAbilityComponent::UseDash()
         return;
 
     m_dashAbility->Activate();
+}
+
+void UAbilityComponent::UseCustomAbility()
+{
+    if (!m_customAbility)
+        return;
+
+    m_customAbility->Activate();
 }

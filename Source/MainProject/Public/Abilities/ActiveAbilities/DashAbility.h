@@ -24,6 +24,11 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dash")
     float dashTime = 0.2f;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Animation")
+    UAnimMontage* dashAnimation;
+
+    UPlayerMovementComponent* GetPlayerMovementComponent() const;
+
     virtual bool NativeActivate() override;
 
     void OnDashEnd();
@@ -31,6 +36,4 @@ protected:
 private:
     FTimerHandle m_dashTimerHandle;
     
-protected:
-    UPlayerMovementComponent* GetPlayerMovementComponent() const;
 };

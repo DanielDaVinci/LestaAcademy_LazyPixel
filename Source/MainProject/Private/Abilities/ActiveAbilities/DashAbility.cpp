@@ -22,17 +22,13 @@ bool UDashAbility::NativeActivate()
     if (GetWorld()->GetTimerManager().IsTimerActive(m_dashTimerHandle))
         return false;
 
+    character->PlayAnimMontage(dashAnimation);
     character->GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
     GetWorld()->GetTimerManager().SetTimer(m_dashTimerHandle, this, &UDashAbility::OnDashEnd, dashTime, false);
-
-    const auto pmComponent = GetPlayerMovementComponent();
-    if (!pmComponent)
-        return false;
-
-    const FVector launchDirection = pmComponent->InputDirToWorldDir(pmComponent->GetInputDirection());
-    character->LaunchCharacter(launchDirection * dashImpulse, true, false);
     
-    return Super::NativeActivate();;
+    character->LaunchCharacter(character->GetMesh()->GetRightVector().GetSafeNormal() * dashImpulse, true, false);
+    
+    return Super::NativeActivate();
 }
 
 UPlayerMovementComponent* UDashAbility::GetPlayerMovementComponent() const
@@ -42,11 +38,15 @@ UPlayerMovementComponent* UDashAbility::GetPlayerMovementComponent() const
 
 void UDashAbility::OnDashEnd()
 {
-    const auto capsule = GetCharacter() ? GetCharacter()->GetCapsuleComponent() : nullptr;
-    if (!capsule)
+    const auto character = GetCharacter();
+    if (!character)
         return;
+    
+    const auto capsule = character->GetCapsuleComponent();
         
     capsule->SetCollisionResponseToChannel(ECC_Pawn, ECR_Block);
+
+    character->StopAnimMontage(dashAnimation);
         
     GetWorld()->GetTimerManager().ClearTimer(m_dashTimerHandle);
 }

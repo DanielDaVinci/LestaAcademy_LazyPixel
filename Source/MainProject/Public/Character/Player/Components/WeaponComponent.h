@@ -35,7 +35,7 @@ private:
 
     void SpawnWeapon();
     void InitAnimations();
-    void LightAttack();
+    void MeleeAttack();
 
     void OnStartAttackState(USkeletalMeshComponent* MeshComp);
     void OnEndAttackState();

@@ -28,6 +28,9 @@ protected:
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Ability")
     TSubclassOf<UDashAbility> dashAbilityClass;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Ability")
+    TSubclassOf<UActiveAbility> customAbilityClass;
     
     virtual void BeginPlay() override;
 
@@ -41,6 +44,9 @@ private:
     UPROPERTY()
     UDashAbility* m_dashAbility;
 
+    UPROPERTY()
+    UActiveAbility* m_customAbility;
+
     /** Initialize active abilities */
     void InitActiveAbility();
     
@@ -50,9 +56,15 @@ private:
     /** Initialize dash ability */
     void InitDashAbility();
 
+    /** Initialize dash ability */
+    void InitCustomAbility();
+
     /** Binding abilities input */
     void BindInput();
 
     /** Use dash on character in game */
     void UseDash();
+
+    /** Use custom ability on character in game */
+    void UseCustomAbility();
 };
