@@ -6,6 +6,7 @@
 #include "Character/BaseCharacter.h"
 #include "Character/Player/BasePlayerController.h"
 #include "Animations/MeleeAtackAnimNotifyState.h"
+#include "Animations/ComboAttackAnimNotifyState.h"
 #include "Character/Player/PlayerCharacter.h"
 #include "Character/Player/Components/PlayerMovementComponent.h"
 
@@ -28,7 +29,10 @@ void UWeaponComponent::BeginPlay()
 
     const auto pPlayerController = Cast<ABasePlayerController>(Character->GetController());
     if (pPlayerController)
+    {
         pPlayerController->OnMeleeAttack.AddUObject(this, &UWeaponComponent::MeleeAttack);
+        Character->GetMesh()->GetAnimInstance()->OnMontageEnded.AddDynamic(this, &UWeaponComponent::OnAttackMontageEnded);
+    }
 }
 
 void UWeaponComponent::SpawnWeapon()
@@ -49,7 +53,7 @@ void UWeaponComponent::InitAnimations()
     if (!m_pWeapon || !m_pWeapon->GetAttackMontage())
         return;
 
-    m_pWeapon->GetAttackMontage()->RateScale = m_pWeapon->GetAttackSpeed();
+    //m_pWeapon->GetAttackMontage()->RateScale = m_pWeapon->GetAttackSpeed();
     const auto NotifyEvents = m_pWeapon->GetAttackMontage()->Notifies;
     for (auto NotifyEvent : NotifyEvents)
     {
@@ -58,7 +62,15 @@ void UWeaponComponent::InitAnimations()
         {
             MeleeNotifyState->FOnMeleeAttackNotify.AddUObject(this, &UWeaponComponent::OnStartAttackState);
             MeleeNotifyState->FOnMeleeAttackDamageNotify.AddUObject(this, &UWeaponComponent::OnEndAttackState);
-            break;
+            //break;
+        }
+
+        auto ComboNotifyState = Cast<UComboAttackAnimNotifyState>(NotifyEvent.NotifyStateClass);
+        if (ComboNotifyState)
+        {
+            ComboNotifyState->FOnComboWindowStartNotify.AddUObject(this, &UWeaponComponent::OnComboWindowOpen);
+            ComboNotifyState->FOnComboWindowEndNotify.AddUObject(this, &UWeaponComponent::OnComboWindowClose);
+            //break;
         }
     }
 }
@@ -68,7 +80,17 @@ void UWeaponComponent::MeleeAttack()
     ABaseCharacter* Character = Cast<ABaseCharacter>(GetOwner());
     if (!Character) return;
 
-    if (Character->GetMesh()->GetAnimInstance()->Montage_IsPlaying(m_pWeapon->GetAttackMontage()))
+    if (m_bIsComboWindowActive)
+        m_nComboIndex++;
+    else
+        m_nComboIndex = 0;
+
+    if (Character->GetMesh()->GetAnimInstance()->Montage_GetCurrentSection(m_pWeapon->GetAttackMontage()) ==
+        m_pWeapon->GetAttackMontage()->GetSectionName(m_nComboIndex))
+        return;
+
+    const auto ComboInfo = m_pWeapon->GetComboInfo();
+    if (!ComboInfo.IsValidIndex(m_nComboIndex))
         return;
 
     const auto pmComponent = GetPlayerMovementComponent();
@@ -77,10 +99,10 @@ void UWeaponComponent::MeleeAttack()
 
     FRotator viewRotation = pmComponent->GetMouseViewDirection().Rotation();
     pmComponent->FixCharacterRotation(viewRotation);
-    pmComponent->SetDeceleration(0.5f);
- 
-    UE_LOG(LogWeaponComponent, Display, TEXT("LightAttack!"));
-    Character->PlayAnimMontage(m_pWeapon->GetAttackMontage());
+    pmComponent->SetDeceleration(ComboInfo[m_nComboIndex].deceleration);
+   
+    Character->GetMesh()->GetAnimInstance()->SetRootMotionMode(ComboInfo[m_nComboIndex].rootMotionMode);
+    Character->PlayAnimMontage(m_pWeapon->GetAttackMontage(), ComboInfo[m_nComboIndex].sectionRateScale, ComboInfo[m_nComboIndex].attackSectionName);
 }
 
 void UWeaponComponent::OnStartAttackState(USkeletalMeshComponent* MeshComp)
@@ -91,11 +113,24 @@ void UWeaponComponent::OnStartAttackState(USkeletalMeshComponent* MeshComp)
 void UWeaponComponent::OnEndAttackState()
 {
     m_pWeapon->OnDamageAllOverlapedActors();
+}
 
+void UWeaponComponent::OnComboWindowOpen()
+{
+    m_bIsComboWindowActive = true;
+}
+
+void UWeaponComponent::OnComboWindowClose()
+{
+    m_bIsComboWindowActive = false;
+}
+
+void UWeaponComponent::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted) 
+{
     const auto pmComponent = GetPlayerMovementComponent();
     if (!pmComponent)
         return;
- 
+
     pmComponent->SetDeceleration(0.0f);
     pmComponent->UnfixCharacterRotation();
 }

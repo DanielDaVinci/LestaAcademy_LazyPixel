@@ -32,6 +32,8 @@ protected:
 private:
     UPROPERTY()
     ABaseWeapon* m_pWeapon;
+    bool  m_bIsComboWindowActive = false;
+    uint8 m_nComboIndex = 0;
 
     void SpawnWeapon();
     void InitAnimations();
@@ -39,6 +41,11 @@ private:
 
     void OnStartAttackState(USkeletalMeshComponent* MeshComp);
     void OnEndAttackState();
+    void OnComboWindowOpen();
+    void OnComboWindowClose();
+
+    UFUNCTION()
+    void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
 
     UPlayerMovementComponent* GetPlayerMovementComponent() const;
 };

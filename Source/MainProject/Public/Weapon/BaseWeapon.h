@@ -14,7 +14,13 @@ struct FComboElement
     GENERATED_BODY()
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Animation")
-    UAnimMontage* attackAnimation;
+    FName attackSectionName;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Animation", meta = (ClampMin = "0.0", ClampMax = "5.0"))
+    float sectionRateScale;
+    
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Animation")
+    TEnumAsByte<ERootMotionMode::Type> rootMotionMode;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Damage")
     float damage = 50.0f;
@@ -45,13 +51,14 @@ public:
     void OnDamageAllOverlapedActors();
 
     UAnimMontage* GetAttackMontage() { return attackAnimation; }
+    TArray<FComboElement> GetComboInfo() { return Combos; }
 
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="WeaponProperties", meta=(ClampMin="0.0"))
     float damage = 100.0f;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "WeaponProperties", meta = (ClampMin = "0.0", ClampMax = "10.0"))
-    float attackSpeed = 3;
+    float attackSpeed = 1;
     
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="WeaponProperties", meta=(ClampMin="0.0"))
     float range;
