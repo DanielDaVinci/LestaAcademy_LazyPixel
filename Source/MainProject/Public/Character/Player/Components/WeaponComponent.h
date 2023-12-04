@@ -32,17 +32,17 @@ protected:
 private:
     UPROPERTY()
     ABaseWeapon* m_pWeapon;
-    bool  m_bIsComboWindowActive = false;
+    bool m_bIsComboChain = false;
     uint8 m_nComboIndex = 0;
 
     void SpawnWeapon();
     void InitAnimations();
     void MeleeAttack();
+    void PlayMeleeAttackAnim();
 
     void OnStartAttackState(USkeletalMeshComponent* MeshComp);
     void OnEndAttackState();
-    void OnComboWindowOpen();
-    void OnComboWindowClose();
+    void OnNextComboSection();
 
     UFUNCTION()
     void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);

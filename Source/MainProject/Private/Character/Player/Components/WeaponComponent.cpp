@@ -6,7 +6,7 @@
 #include "Character/BaseCharacter.h"
 #include "Character/Player/BasePlayerController.h"
 #include "Animations/MeleeAtackAnimNotifyState.h"
-#include "Animations/ComboAttackAnimNotifyState.h"
+#include "Animations/ComboEndAnimNotify.h"
 #include "Character/Player/PlayerCharacter.h"
 #include "Character/Player/Components/PlayerMovementComponent.h"
 
@@ -65,13 +65,9 @@ void UWeaponComponent::InitAnimations()
             //break;
         }
 
-        auto ComboNotifyState = Cast<UComboAttackAnimNotifyState>(NotifyEvent.NotifyStateClass);
-        if (ComboNotifyState)
-        {
-            ComboNotifyState->FOnComboWindowStartNotify.AddUObject(this, &UWeaponComponent::OnComboWindowOpen);
-            ComboNotifyState->FOnComboWindowEndNotify.AddUObject(this, &UWeaponComponent::OnComboWindowClose);
-            //break;
-        }
+        auto ComboNotify = Cast<UComboEndAnimNotify>(NotifyEvent.Notify);
+        if (ComboNotify)
+            ComboNotify->FOnComboEndNotify.AddUObject(this, &UWeaponComponent::OnNextComboSection);
     }
 }
 
@@ -80,14 +76,24 @@ void UWeaponComponent::MeleeAttack()
     ABaseCharacter* Character = Cast<ABaseCharacter>(GetOwner());
     if (!Character) return;
 
-    if (m_bIsComboWindowActive)
-        m_nComboIndex++;
-    else
+    if (m_nComboIndex == m_pWeapon->GetComboInfo().Num() - 1)
         m_nComboIndex = 0;
 
-    if (Character->GetMesh()->GetAnimInstance()->Montage_GetCurrentSection(m_pWeapon->GetAttackMontage()) ==
-        m_pWeapon->GetAttackMontage()->GetSectionName(m_nComboIndex))
+    if (Character->GetMesh()->GetAnimInstance()->IsAnyMontagePlaying())
+    {
+        if (!m_bIsComboChain)
+            m_nComboIndex++; 
+        m_bIsComboChain = true;    
         return;
+    }
+
+    PlayMeleeAttackAnim();
+}
+
+void UWeaponComponent::PlayMeleeAttackAnim() 
+{
+    ABaseCharacter* Character = Cast<ABaseCharacter>(GetOwner());
+    if (!Character) return;
 
     const auto ComboInfo = m_pWeapon->GetComboInfo();
     if (!ComboInfo.IsValidIndex(m_nComboIndex))
@@ -100,7 +106,7 @@ void UWeaponComponent::MeleeAttack()
     FRotator viewRotation = pmComponent->GetMouseViewDirection().Rotation();
     pmComponent->FixCharacterRotation(viewRotation);
     pmComponent->SetDeceleration(ComboInfo[m_nComboIndex].deceleration);
-   
+
     Character->GetMesh()->GetAnimInstance()->SetRootMotionMode(ComboInfo[m_nComboIndex].rootMotionMode);
     Character->PlayAnimMontage(m_pWeapon->GetAttackMontage(), ComboInfo[m_nComboIndex].sectionRateScale, ComboInfo[m_nComboIndex].attackSectionName);
 }
@@ -115,14 +121,14 @@ void UWeaponComponent::OnEndAttackState()
     m_pWeapon->OnDamageAllOverlapedActors();
 }
 
-void UWeaponComponent::OnComboWindowOpen()
+void UWeaponComponent::OnNextComboSection() 
 {
-    m_bIsComboWindowActive = true;
-}
+    if (m_bIsComboChain)
+        PlayMeleeAttackAnim();   
+    else
+        m_nComboIndex = 0;
 
-void UWeaponComponent::OnComboWindowClose()
-{
-    m_bIsComboWindowActive = false;
+    m_bIsComboChain = false;
 }
 
 void UWeaponComponent::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted) 
