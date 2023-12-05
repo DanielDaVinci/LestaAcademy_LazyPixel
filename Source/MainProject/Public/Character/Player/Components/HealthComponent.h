@@ -21,6 +21,7 @@ public:
     FOnDeath OnDeath;
 
     float GetHealth() const { return m_health; }
+    float GetMaxHealth() const { return maxHealth; }
 
     UFUNCTION(BlueprintCallable)
     bool IsDead() const { return m_health <= 0; }
