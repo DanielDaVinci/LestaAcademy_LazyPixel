@@ -44,8 +44,5 @@ private:
     void OnEndAttackState();
     void OnNextComboSection();
 
-    UFUNCTION()
-    void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
-
     UPlayerMovementComponent* GetPlayerMovementComponent() const;
 };

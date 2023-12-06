@@ -29,10 +29,7 @@ void UWeaponComponent::BeginPlay()
 
     const auto pPlayerController = Cast<ABasePlayerController>(Character->GetController());
     if (pPlayerController)
-    {
         pPlayerController->OnMeleeAttack.AddUObject(this, &UWeaponComponent::MeleeAttack);
-        Character->GetMesh()->GetAnimInstance()->OnMontageEnded.AddDynamic(this, &UWeaponComponent::OnAttackMontageEnded);
-    }
 }
 
 void UWeaponComponent::SpawnWeapon()
@@ -77,7 +74,10 @@ void UWeaponComponent::MeleeAttack()
     if (!Character) return;
 
     if (m_nComboIndex == m_pWeapon->GetComboInfo().Num() - 1)
+    {
         m_nComboIndex = 0;
+        return;
+    }
 
     if (Character->GetMesh()->GetAnimInstance()->IsAnyMontagePlaying())
     {
@@ -123,22 +123,21 @@ void UWeaponComponent::OnEndAttackState()
 
 void UWeaponComponent::OnNextComboSection() 
 {
-    if (m_bIsComboChain)
-        PlayMeleeAttackAnim();   
-    else
+    if (!m_bIsComboChain)
+    {
+        const auto pmComponent = GetPlayerMovementComponent();
+        if (!pmComponent)
+            return;
+
+        pmComponent->SetDeceleration(0.0f);
+        pmComponent->UnfixCharacterRotation();
+
         m_nComboIndex = 0;
+    }
+    else
+        PlayMeleeAttackAnim();
 
     m_bIsComboChain = false;
-}
-
-void UWeaponComponent::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted) 
-{
-    const auto pmComponent = GetPlayerMovementComponent();
-    if (!pmComponent)
-        return;
-
-    pmComponent->SetDeceleration(0.0f);
-    pmComponent->UnfixCharacterRotation();
 }
 
 UPlayerMovementComponent* UWeaponComponent::GetPlayerMovementComponent() const

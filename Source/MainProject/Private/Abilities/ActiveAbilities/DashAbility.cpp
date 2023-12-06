@@ -49,5 +49,13 @@ void UDashAbility::OnDashEnd()
     character->StopAnimMontage(dashAnimation);
         
     GetWorld()->GetTimerManager().ClearTimer(m_dashTimerHandle);
+
+    // Temporary solution, delete when handle dash in weaponcomponent
+    const auto pmComponent = GetPlayerMovementComponent();
+    if (!pmComponent)
+        return;
+
+    pmComponent->SetDeceleration(0.0f);
+    pmComponent->UnfixCharacterRotation();
 }
 
