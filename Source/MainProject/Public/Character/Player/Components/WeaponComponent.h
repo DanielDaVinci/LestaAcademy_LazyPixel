@@ -20,6 +20,8 @@ public:
     UFUNCTION()
     void DisableMeleeCollision();
 
+    void OnNextComboSection();
+
 protected:
     UPROPERTY(EditDefaultsOnly, Category = "Weapon")
     TSubclassOf<ABaseWeapon> WeaponClass;
@@ -42,7 +44,6 @@ private:
 
     void OnStartAttackState(USkeletalMeshComponent* MeshComp);
     void OnEndAttackState();
-    void OnNextComboSection();
 
     UPlayerMovementComponent* GetPlayerMovementComponent() const;
 };

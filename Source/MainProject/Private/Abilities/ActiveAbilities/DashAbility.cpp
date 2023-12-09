@@ -6,6 +6,7 @@
 #include "Character/BaseCharacter.h"
 #include "Character/Player/Components/PlayerMovementComponent.h"
 #include "GameFramework/Character.h"
+#include "Character/Player/Components/WeaponComponent.h"
 
 void UDashAbility::Init(ABaseCharacter* Character)
 {
@@ -50,12 +51,7 @@ void UDashAbility::OnDashEnd()
         
     GetWorld()->GetTimerManager().ClearTimer(m_dashTimerHandle);
 
-    // Temporary solution, delete when handle dash in weaponcomponent
-    const auto pmComponent = GetPlayerMovementComponent();
-    if (!pmComponent)
-        return;
-
-    pmComponent->SetDeceleration(0.0f);
-    pmComponent->UnfixCharacterRotation();
+    UWeaponComponent* weapComp = character->GetComponentByClass<UWeaponComponent>();
+    weapComp->OnNextComboSection();
 }
 

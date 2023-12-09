@@ -73,17 +73,12 @@ void UWeaponComponent::MeleeAttack()
     ABaseCharacter* Character = Cast<ABaseCharacter>(GetOwner());
     if (!Character) return;
 
-    if (m_nComboIndex == m_pWeapon->GetComboInfo().Num() - 1)
-    {
-        m_nComboIndex = 0;
-        return;
-    }
+    if (m_bIsComboChain) return;
 
     if (Character->GetMesh()->GetAnimInstance()->IsAnyMontagePlaying())
     {
-        if (!m_bIsComboChain)
-            m_nComboIndex++; 
-        m_bIsComboChain = true;    
+        m_bIsComboChain = true;
+        m_nComboIndex++;  
         return;
     }
 
@@ -123,7 +118,7 @@ void UWeaponComponent::OnEndAttackState()
 
 void UWeaponComponent::OnNextComboSection() 
 {
-    if (!m_bIsComboChain)
+    if (!m_bIsComboChain || m_nComboIndex == m_pWeapon->GetComboInfo().Num())
     {
         const auto pmComponent = GetPlayerMovementComponent();
         if (!pmComponent)
@@ -131,7 +126,7 @@ void UWeaponComponent::OnNextComboSection()
 
         pmComponent->SetDeceleration(0.0f);
         pmComponent->UnfixCharacterRotation();
-
+       
         m_nComboIndex = 0;
     }
     else
