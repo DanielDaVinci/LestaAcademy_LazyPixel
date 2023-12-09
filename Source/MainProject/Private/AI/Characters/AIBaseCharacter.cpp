@@ -2,6 +2,7 @@
 
 
 #include "AI/Characters/AIBaseCharacter.h"
+#include "Environment/Room.h"
 
 AAIBaseCharacter::AAIBaseCharacter(const FObjectInitializer& ObjInit)
     : Super(ObjInit)

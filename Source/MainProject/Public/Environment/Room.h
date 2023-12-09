@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Door.h"
-#include "Character/Player/PlayerCharacter.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/Actor.h"
 #include "Room.generated.h"
@@ -26,6 +25,8 @@ public:
 
     FOnPlayerEnterSignature OnPlayerEnterEvent;
     FOnPlayerLeaveSignature OnPlayerLeaveEvent;
+
+    bool IsEntered;
 
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName="Scene Component")
