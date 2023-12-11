@@ -17,6 +17,8 @@ class MAINPROJECT_API UDashAbility : public UActiveAbility
 public:
     virtual void Init(ABaseCharacter* Character) override;
 
+    UAnimMontage* GetDashMontage() const { return dashAnimation; }
+
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dash")
     float dashImpulse = 2000.0f;

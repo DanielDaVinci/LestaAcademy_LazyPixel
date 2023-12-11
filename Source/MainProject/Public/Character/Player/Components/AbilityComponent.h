@@ -19,6 +19,8 @@ class MAINPROJECT_API UAbilityComponent : public UActorComponent
 public:
     UAbilityComponent();
 
+    UDashAbility* GetDashAbility() const { return m_dashAbility; }
+
 protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Ability")
     TArray<TSubclassOf<UActiveAbility>> activeAbilityClasses;

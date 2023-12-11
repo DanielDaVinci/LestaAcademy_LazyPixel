@@ -7,8 +7,9 @@
 #include "Character/Player/BasePlayerController.h"
 #include "Animations/MeleeAtackAnimNotifyState.h"
 #include "Animations/ComboEndAnimNotify.h"
-#include "Character/Player/PlayerCharacter.h"
 #include "Character/Player/Components/PlayerMovementComponent.h"
+#include "Character/Player/Components/AbilityComponent.h"
+#include "Abilities/ActiveAbilities/DashAbility.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogWeaponComponent, All, All);
 
@@ -29,7 +30,10 @@ void UWeaponComponent::BeginPlay()
 
     const auto pPlayerController = Cast<ABasePlayerController>(Character->GetController());
     if (pPlayerController)
+    {
         pPlayerController->OnMeleeAttack.AddUObject(this, &UWeaponComponent::MeleeAttack);
+        Character->GetMesh()->GetAnimInstance()->OnMontageEnded.AddDynamic(this, &UWeaponComponent::OnAttackMontageEnded);
+    }
 }
 
 void UWeaponComponent::SpawnWeapon()
@@ -73,12 +77,21 @@ void UWeaponComponent::MeleeAttack()
     ABaseCharacter* Character = Cast<ABaseCharacter>(GetOwner());
     if (!Character) return;
 
-    if (m_bIsComboChain) return;
+    UAnimMontage* dashMontage = Character->GetComponentByClass<UAbilityComponent>()->GetDashAbility()->GetDashMontage();
+    if (Character->GetMesh()->GetAnimInstance()->Montage_IsPlaying(dashMontage))
+    {
+        UE_LOG(LogWeaponComponent, Display, TEXT("Attack in Dash!"));
+        PlayMeleeAttackAnim();
+        return;
+    }
+
+    if (m_bIsComboChain)
+        return;
 
     if (Character->GetMesh()->GetAnimInstance()->IsAnyMontagePlaying())
     {
         m_bIsComboChain = true;
-        m_nComboIndex++;  
+        m_nComboIndex++;
         return;
     }
 
@@ -118,8 +131,9 @@ void UWeaponComponent::OnEndAttackState()
 
 void UWeaponComponent::OnNextComboSection() 
 {
-    if (!m_bIsComboChain || m_nComboIndex == m_pWeapon->GetComboInfo().Num())
+    if (!m_bIsComboChain || m_nComboIndex >= m_pWeapon->GetComboInfo().Num())
     {
+        UE_LOG(LogWeaponComponent, Display, TEXT("Notify clear!"));
         const auto pmComponent = GetPlayerMovementComponent();
         if (!pmComponent)
             return;
@@ -130,9 +144,23 @@ void UWeaponComponent::OnNextComboSection()
         m_nComboIndex = 0;
     }
     else
+    {
+        UE_LOG(LogWeaponComponent, Display, TEXT("Notify attack!"));
         PlayMeleeAttackAnim();
+    }
 
     m_bIsComboChain = false;
+}
+
+void UWeaponComponent::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted) 
+{
+    if (m_pWeapon->GetAttackMontage() == Montage && bInterrupted)
+    {
+        UE_LOG(LogWeaponComponent, Display, TEXT("Attack Interrupted!"));
+        if (!m_bIsComboChain)
+            m_nComboIndex++;
+        m_bIsComboChain = false;
+    }
 }
 
 UPlayerMovementComponent* UWeaponComponent::GetPlayerMovementComponent() const

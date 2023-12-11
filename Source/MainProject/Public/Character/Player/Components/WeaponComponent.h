@@ -45,5 +45,8 @@ private:
     void OnStartAttackState(USkeletalMeshComponent* MeshComp);
     void OnEndAttackState();
 
+    UFUNCTION()
+    void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
+
     UPlayerMovementComponent* GetPlayerMovementComponent() const;
 };
