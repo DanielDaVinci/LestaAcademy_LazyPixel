@@ -42,4 +42,6 @@ private:
     EAIStates CalculateState() const;
     float m_currentDistance;
     bool m_isPlayerEnteredRoom;
+
+    void UpdateValues(UBehaviorTreeComponent& OwnerComp);
 };
