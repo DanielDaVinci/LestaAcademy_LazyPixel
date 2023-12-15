@@ -4,17 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTService.h"
-#include "FindPlayerService.generated.h"
+#include "MeleeAIBrain.generated.h"
 
+class ARoom;
 enum EAIStates : uint8;
 
 UCLASS()
-class MAINPROJECT_API UFindPlayerService : public UBTService
+class MAINPROJECT_API UMeleeAIBrain : public UBTService
 {
 	GENERATED_BODY()
 
 public:
-    UFindPlayerService();
+    UMeleeAIBrain();
 
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
@@ -24,17 +25,21 @@ protected:
     FBlackboardKeySelector distanceKey;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
+    FBlackboardKeySelector isPlayerEnteredRoomKey;
+    
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
+    FBlackboardKeySelector aiStateKey;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
     float aggroDistance = 500.0f;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
     float attackDistance = 150.0f;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
-    FBlackboardKeySelector aiStateKey;
 
     virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
 
 private:
     EAIStates CalculateState() const;
     float m_currentDistance;
+    bool m_isPlayerEnteredRoom;
 };

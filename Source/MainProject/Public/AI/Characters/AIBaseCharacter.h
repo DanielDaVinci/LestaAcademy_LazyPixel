@@ -7,6 +7,8 @@
 #include "Character/BaseCharacter.h"
 #include "AIBaseCharacter.generated.h"
 
+class ARoom;
+
 UCLASS()
 class MAINPROJECT_API AAIBaseCharacter : public ABaseCharacter
 {
@@ -17,4 +19,6 @@ public:
     
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "AI")
     UBehaviorTree* BehaviorTreeAsset;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
+    ARoom* enemyRoom;
 };

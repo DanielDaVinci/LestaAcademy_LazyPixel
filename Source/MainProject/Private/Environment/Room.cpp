@@ -60,9 +60,12 @@ void ARoom::OnPlayerLeave()
 void ARoom::NotifyActorBeginOverlap(AActor* OtherActor)
 {
     Super::NotifyActorBeginOverlap(OtherActor);
-    
+
     if (Cast<APlayerCharacter>(OtherActor))
+    {
         OnPlayerEnterEvent.Broadcast();
+        IsEntered = true;
+    }
 }
 
 void ARoom::NotifyActorEndOverlap(AActor* OtherActor)
