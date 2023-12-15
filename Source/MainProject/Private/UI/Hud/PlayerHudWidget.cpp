@@ -14,10 +14,15 @@ void UPlayerHudWidget::NativeConstruct()
 {
     Super::NativeConstruct();
     
-    m_playerHealthComponent->OnHealthChanged.AddUObject(this, &UPlayerHudWidget::UpdateHealthBar);
+    m_playerHealthComponent->OnHealthChanged.AddUObject(this, &UPlayerHudWidget::TakeDamage);
 }
 
-void UPlayerHudWidget::UpdateHealthBar(float health)
+void UPlayerHudWidget::TakeDamage(float damage)
 {
-    pHealthBar->SetPercent(health / m_playerHealthComponent->GetMaxHealth());
+    pHealthBar->SetPercent(damage / m_playerHealthComponent->GetMaxHealth());
+
+    if (!IsAnimationPlaying(pDamageIndicatorAnimation) && damage != m_playerHealthComponent->GetMaxHealth())
+    {
+        PlayAnimation(pDamageIndicatorAnimation);
+    }
 }

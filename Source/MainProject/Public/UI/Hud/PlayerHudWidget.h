@@ -17,12 +17,14 @@ class MAINPROJECT_API UPlayerHudWidget : public UUserWidget
 	GENERATED_BODY()
 
 protected:
-    virtual void NativeConstruct() override;
-    virtual void NativeOnInitialized() override;
-    void UpdateHealthBar(float health);
-    
     UPROPERTY(meta = (BindWidget))
     UProgressBar* pHealthBar;
+    UPROPERTY(meta = (BindWidgetAnim), Transient)
+    UWidgetAnimation* pDamageIndicatorAnimation;
+    
+    virtual void NativeConstruct() override;
+    virtual void NativeOnInitialized() override;
+    void TakeDamage(float damage);
 
 private:
     UHealthComponent* m_playerHealthComponent;
