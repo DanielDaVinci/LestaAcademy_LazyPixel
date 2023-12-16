@@ -73,7 +73,7 @@ protected:
     USceneComponent* pSceneComponent;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components", DisplayName="WeaponMeshComponent")
-    UStaticMeshComponent* pWeaponMeshComponent;
+    USkeletalMeshComponent* pWeaponMeshComponent;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName = "BoxComponent")
     UBoxComponent* pBoxCollision;
