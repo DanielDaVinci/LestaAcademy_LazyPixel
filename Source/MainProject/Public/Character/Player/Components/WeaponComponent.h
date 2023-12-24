@@ -24,16 +24,23 @@ public:
 
 protected:
     UPROPERTY(EditDefaultsOnly, Category = "Weapon")
-    TSubclassOf<ABaseWeapon> WeaponClass;
+    TSubclassOf<ABaseWeapon> WeaponClass; 
 
     UPROPERTY(EditDefaultsOnly, Category = "Weapon")
     FName WeaponAttachPointName = "rhWeaponSocket";
+
+    UPROPERTY(EditDefaultsOnly, Category = "RangeWeapon")
+    TSubclassOf<ABaseWeapon> RangeWeaponClass;
+
+    UPROPERTY(EditDefaultsOnly, Category = "RangeWeapon")
+    FName RangeWeaponAttachPointName = "lhWeaponSocket";
 
 	virtual void BeginPlay() override;
 
 private:
     UPROPERTY()
     ABaseWeapon* m_pWeapon;
+    ABaseWeapon* m_pRangeWeapon;
     bool m_bIsComboChain = false;
     uint8 m_nComboIndex = 0;
 
