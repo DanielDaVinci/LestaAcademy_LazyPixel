@@ -44,9 +44,19 @@ void UWeaponComponent::SpawnWeapon()
     m_pWeapon = GetWorld()->SpawnActor<ABaseWeapon>(WeaponClass);
     if (!m_pWeapon) return;
 
+    m_pRangeWeapon = GetWorld()->SpawnActor<ABaseWeapon>(RangeWeaponClass);
+    if (!m_pRangeWeapon) return;
+
     FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, false);
     m_pWeapon->AttachToComponent(Character->GetMesh(), AttachmentRules, WeaponAttachPointName);
     m_pWeapon->SetOwner(Character);
+
+    const auto pPlayerController = Cast<ABasePlayerController>(Character->GetController());
+    if (pPlayerController)
+    {
+        m_pRangeWeapon->AttachToComponent(Character->GetMesh(), AttachmentRules, RangeWeaponAttachPointName);
+        m_pRangeWeapon->SetOwner(Character);
+    }
 }
 
 void UWeaponComponent::InitAnimations() 
