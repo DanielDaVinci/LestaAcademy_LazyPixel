@@ -41,7 +41,7 @@ void ABasePlayerController::SetupInputComponent()
     InputComponent->BindAction("MeleeAttack", IE_Pressed, this, &ABasePlayerController::HandleMeleeAttack);
     InputComponent->BindAction("RangeAttack", IE_Pressed, this, &ABasePlayerController::HandleRangeAttack);
     InputComponent->BindAction("Dash", IE_Pressed, this, &ABasePlayerController::HandleDash);
-    InputComponent->BindAction("CustomAbility", IE_Pressed, this, &ABasePlayerController::HandleDash);
+    InputComponent->BindAction("CustomAbility", IE_Pressed, this, &ABasePlayerController::HandleCustomAbility);
     InputComponent->BindAction("Interact", IE_Pressed, this, &ABasePlayerController::HandleInteract);
 }
 

@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "BaseCharacter.generated.h"
 
+class UBoxComponent;
 class UTextRenderComponent;
 class UHealthComponent;
 class UBaseWeaponComponent;
@@ -17,12 +18,15 @@ class MAINPROJECT_API ABaseCharacter : public ACharacter
 	GENERATED_BODY()
 
 public:
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Collisions", DisplayName = "BoxCollission")
+    UBoxComponent* pBoxCollision;
+    
 	ABaseCharacter(const FObjectInitializer& ObjInit);
 
     virtual void Tick(float DeltaTime) override;
 
 protected:
-    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName="AbilityComponent")
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName = "AbilityComponent")
     UAbilityComponent* pAbilityComponent;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName = "WeaponComponent")
