@@ -8,7 +8,7 @@
 
 class UTextRenderComponent;
 class UHealthComponent;
-class UWeaponComponent;
+class UBaseWeaponComponent;
 class UAbilityComponent;
 
 UCLASS()
@@ -26,7 +26,7 @@ protected:
     UAbilityComponent* pAbilityComponent;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName = "WeaponComponent")
-    UWeaponComponent* pWeaponComponent; 
+    UBaseWeaponComponent* pWeaponComp; 
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName="HealthComponent")
     UHealthComponent* pHealthComponent;
