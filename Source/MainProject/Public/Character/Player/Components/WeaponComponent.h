@@ -1,36 +1,26 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Lazy Pixel. All Rights Reserved.
 
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/ActorComponent.h"
+#include "Character/Player/Components/BaseWeaponComponent.h"
 #include "WeaponComponent.generated.h"
 
 class UPlayerMovementComponent;
-class ABaseWeapon;
+class AGun;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class MAINPROJECT_API UWeaponComponent : public UActorComponent
+class MAINPROJECT_API UWeaponComponent : public UBaseWeaponComponent
 {
 	GENERATED_BODY()
 
 public:	
-	UWeaponComponent();
-
-    UFUNCTION()
-    void DisableMeleeCollision();
-
+    void MeleeAttack();
     void OnNextComboSection();
 
 protected:
-    UPROPERTY(EditDefaultsOnly, Category = "Weapon")
-    TSubclassOf<ABaseWeapon> WeaponClass; 
-
-    UPROPERTY(EditDefaultsOnly, Category = "Weapon")
-    FName WeaponAttachPointName = "rhWeaponSocket";
-
     UPROPERTY(EditDefaultsOnly, Category = "RangeWeapon")
-    TSubclassOf<ABaseWeapon> RangeWeaponClass;
+    TSubclassOf<AGun> RangeWeaponClass;
 
     UPROPERTY(EditDefaultsOnly, Category = "RangeWeapon")
     FName RangeWeaponAttachPointName = "lhWeaponSocket";
@@ -38,19 +28,13 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
-    UPROPERTY()
-    ABaseWeapon* m_pWeapon;
-    ABaseWeapon* m_pRangeWeapon;
-    bool m_bIsComboChain = false;
+    AGun* m_pRangeWeapon;
+    bool  m_bIsComboChain = false;
     uint8 m_nComboIndex = 0;
 
-    void SpawnWeapon();
-    void InitAnimations();
-    void MeleeAttack();
+    virtual void SpawnWeapons() override;
+    virtual void InitAnimations() override;   
     void PlayMeleeAttackAnim();
-
-    void OnStartAttackState(USkeletalMeshComponent* MeshComp);
-    void OnEndAttackState();
 
     UFUNCTION()
     void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);

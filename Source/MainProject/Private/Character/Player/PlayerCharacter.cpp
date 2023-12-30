@@ -6,11 +6,13 @@
 #include "Camera/CameraComponent.h"
 #include "Character/Player/BasePlayerController.h"
 #include "Character/Player/Components/PlayerMovementComponent.h"
+#include "Character/Player/Components/WeaponComponent.h"
 #include "Curves/CurveVector.h"
 #include "GameFramework/SpringArmComponent.h"
 
 APlayerCharacter::APlayerCharacter(const FObjectInitializer& ObjInit)
-    : Super(ObjInit.SetDefaultSubobjectClass<UPlayerMovementComponent>(ACharacter::CharacterMovementComponentName))
+    : Super(ObjInit.SetDefaultSubobjectClass<UPlayerMovementComponent>(ACharacter::CharacterMovementComponentName).
+        SetDefaultSubobjectClass<UWeaponComponent>("WeaponComponent"))
 {
     PrimaryActorTick.bCanEverTick = true;
 
@@ -30,6 +32,7 @@ void APlayerCharacter::BeginPlay()
     if (const auto playerController = GetPlayerController())
     {
         playerController->OnMouseMove.AddUObject(this, &APlayerCharacter::OnMouseMove);
+        playerController->OnMeleeAttack.AddUObject(Cast<UWeaponComponent>(pWeaponComp), &UWeaponComponent::MeleeAttack);
     }
 
     StartCameraMovement();
