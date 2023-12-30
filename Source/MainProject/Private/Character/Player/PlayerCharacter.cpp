@@ -33,6 +33,7 @@ void APlayerCharacter::BeginPlay()
     {
         playerController->OnMouseMove.AddUObject(this, &APlayerCharacter::OnMouseMove);
         playerController->OnMeleeAttack.AddUObject(Cast<UWeaponComponent>(pWeaponComp), &UWeaponComponent::MeleeAttack);
+        playerController->OnRangeAttack.AddUObject(Cast<UWeaponComponent>(pWeaponComp), &UWeaponComponent::RangeAttack);
     }
 
     StartCameraMovement();

@@ -16,6 +16,7 @@ class MAINPROJECT_API UWeaponComponent : public UBaseWeaponComponent
 
 public:	
     void MeleeAttack();
+    void RangeAttack();
     void OnNextComboSection();
 
 protected:

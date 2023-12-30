@@ -3,18 +3,20 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
 #include "Weapon/BaseWeapon.h"
 #include "Gun.generated.h"
+
+class AProjectile;
 
 UCLASS()
 class MAINPROJECT_API AGun : public ABaseWeapon
 {
-	GENERATED_BODY()
-	
-public:	
-	AGun();
+    GENERATED_BODY()
 
+public:
+    void MakeShot(FVector MouseDirection);
 
-
+protected:
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Projectile")
+    TSubclassOf<AProjectile> ProjectileClass;
 };
