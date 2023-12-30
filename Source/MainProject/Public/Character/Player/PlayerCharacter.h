@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Camera/CameraComponent.h"
 #include "Character/BaseCharacter.h"
+#include "Components/BoxComponent.h"
 #include "PlayerCharacter.generated.h"
 
 class ABasePlayerController;
@@ -43,7 +44,7 @@ protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
     float interpolationFrequency = 0.01f;
-
+    
     void OnMouseMove(FVector2D MouseVector);
     
 private:

@@ -5,6 +5,7 @@
 #include "Character/Player/Components/AbilityComponent.h"
 #include "Character/Player/Components/HealthComponent.h"
 #include "Character/Player/Components/WeaponComponent.h"
+#include "Components/BoxComponent.h"
 #include "Components/TextRenderComponent.h"
 
 
@@ -17,6 +18,9 @@ ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjInit)
     pWeaponComponent = CreateDefaultSubobject<UWeaponComponent>("WeaponComponent");
     pHealthComponent = CreateDefaultSubobject<UHealthComponent>("HealthComponent");
 
+    pBoxCollision = CreateDefaultSubobject<UBoxComponent>("BoxCollision");
+    pBoxCollision->SetupAttachment(GetRootComponent());
+    
     pHealthTextComponent = CreateDefaultSubobject<UTextRenderComponent>("HealthTextComponent");
     pHealthTextComponent->SetupAttachment(GetRootComponent());
 }

@@ -1,6 +1,5 @@
 // Lazy Pixel. All Rights Reserved.
 
-
 #include "Environment/FloorManager.h"
 
 AFloorManager::AFloorManager()
