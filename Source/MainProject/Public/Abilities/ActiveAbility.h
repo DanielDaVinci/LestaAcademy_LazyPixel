@@ -7,14 +7,12 @@
 #include "UObject/Object.h"
 #include "ActiveAbility.generated.h"
 
-UCLASS()
+UCLASS(Blueprintable)
 class MAINPROJECT_API UActiveAbility : public UBaseAbility
 {
     GENERATED_BODY()
 
 public:
-    virtual void Init(ABaseCharacter* Character) override;
-
     /** Activate ability and reload */
     virtual void Activate();
 
@@ -26,6 +24,8 @@ protected:
     int activationAmount = 1;
 
     float m_timerTimeUpdate = 0.01;
+
+    virtual void NativeInitialize() override;
     
     /**
      * Called when activation is possible

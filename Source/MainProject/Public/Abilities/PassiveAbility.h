@@ -7,7 +7,7 @@
 #include "UObject/Object.h"
 #include "PassiveAbility.generated.h"
 
-UCLASS()
+UCLASS(Blueprintable)
 class MAINPROJECT_API UPassiveAbility : public UBaseAbility
 {
     GENERATED_BODY()

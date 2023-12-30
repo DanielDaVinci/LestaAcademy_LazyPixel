@@ -3,9 +3,12 @@
 
 #include "Abilities/BaseAbility.h"
 
-void UBaseAbility::Init(ABaseCharacter* Character)
+void UBaseAbility::Initialize(ABaseCharacter* Character)
 {
     m_character = Character;
+
+    if (m_character)
+        NativeInitialize();
 }
 
 UWorld* UBaseAbility::GetWorld() const

@@ -5,6 +5,7 @@
 #include "Character/Player/Components/AbilityComponent.h"
 #include "Character/Player/Components/HealthComponent.h"
 #include "Character/Player/Components/BaseWeaponComponent.h"
+#include "Components/BoxComponent.h"
 #include "Components/TextRenderComponent.h"
 
 
@@ -14,6 +15,8 @@ ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjInit)
     PrimaryActorTick.bCanEverTick = true;
 
     pAbilityComponent = CreateDefaultSubobject<UAbilityComponent>("AbilityComponent");
+    pAbilityComponent->bWantsInitializeComponent = true;
+    
     pWeaponComp = CreateDefaultSubobject<UBaseWeaponComponent>("WeaponComponent");
     pHealthComponent = CreateDefaultSubobject<UHealthComponent>("HealthComponent");
 

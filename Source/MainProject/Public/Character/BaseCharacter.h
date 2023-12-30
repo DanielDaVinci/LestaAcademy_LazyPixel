@@ -15,37 +15,37 @@ class UAbilityComponent;
 UCLASS()
 class MAINPROJECT_API ABaseCharacter : public ACharacter
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
 
 public:
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Collisions", DisplayName = "BoxCollission")
-    UBoxComponent* pBoxCollision;
-    
-	ABaseCharacter(const FObjectInitializer& ObjInit);
-
-    virtual void Tick(float DeltaTime) override;
+    ABaseCharacter(const FObjectInitializer& ObjInit);
 
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName = "AbilityComponent")
     UAbilityComponent* pAbilityComponent;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName = "WeaponComponent")
-    UBaseWeaponComponent* pWeaponComp; 
+    UBaseWeaponComponent* pWeaponComp;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName="HealthComponent")
     UHealthComponent* pHealthComponent;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName="HealthTextComponent")
     UTextRenderComponent* pHealthTextComponent;
-    
-    virtual void PostInitializeComponents() override;
-    
-	virtual void BeginPlay() override;
 
-    virtual void OnDeath() {}
+    virtual void PostInitializeComponents() override;
+
+    virtual void BeginPlay() override;
+
+    virtual void OnDeath()
+    {
+    }
+
+public:
+    virtual void Tick(float DeltaTime) override;
 
 private:
     UFUNCTION()
     void CheckHealthValue(float Health);
-        
+
 };

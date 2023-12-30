@@ -8,12 +8,6 @@
 #include "GameFramework/Character.h"
 #include "Character/Player/Components/WeaponComponent.h"
 
-void UDashAbility::Init(ABaseCharacter* Character)
-{
-    Super::Init(Character);
-    
-}
-
 bool UDashAbility::NativeActivate()
 {
     const auto character = GetCharacter();

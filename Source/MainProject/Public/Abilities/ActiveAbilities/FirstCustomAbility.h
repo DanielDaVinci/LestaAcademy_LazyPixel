@@ -6,6 +6,7 @@
 #include "CoreMinimal.h"
 #include "FirstCustomAbility.generated.h"
 
+class ACollisionCube;
 class UBoxComponent;
 
 UCLASS()
@@ -14,8 +15,6 @@ class MAINPROJECT_API UStrongAttackAbility : public UActiveAbility
     GENERATED_BODY()
 
 public:
-    virtual void Init(ABaseCharacter* Character) override;
-    
     virtual bool NativeActivate() override;
 
 protected:
@@ -27,19 +26,22 @@ protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Params")
     float abilityDistance = 2000.0f;
+
+    virtual void BeginPlay() override;
     
     UFUNCTION()
     void OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
     int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
-    UFUNCTION()
-    void EnableCollision();
-
-    UFUNCTION()
-    void DisableCollision();
-
     void OnStrongAbilityEnd();
 
 private:
     FTimerHandle m_timerHandle;
+
+protected:
+    void SpawnCubeCollision();
+
+private:
+    UPROPERTY()
+    ACollisionCube* m_pCubeCollision;
 };

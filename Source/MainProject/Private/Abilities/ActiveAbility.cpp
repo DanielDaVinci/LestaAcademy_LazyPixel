@@ -3,10 +3,8 @@
 
 #include "Abilities/ActiveAbility.h"
 
-void UActiveAbility::Init(ABaseCharacter* Character)
+void UActiveAbility::NativeInitialize()
 {
-    Super::Init(Character);
-
     m_currentReloadTime = 0.0f;
     m_currentActivationAmount = activationAmount;
 }

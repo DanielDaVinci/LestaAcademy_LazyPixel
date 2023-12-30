@@ -15,8 +15,6 @@ class MAINPROJECT_API UDashAbility : public UActiveAbility
     GENERATED_BODY()
 
 public:
-    virtual void Init(ABaseCharacter* Character) override;
-
     UAnimMontage* GetDashMontage() const { return dashAnimation; }
 
 protected:

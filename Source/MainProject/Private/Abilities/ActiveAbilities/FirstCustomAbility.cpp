@@ -4,55 +4,58 @@
 #include "Abilities/ActiveAbilities/FirstCustomAbility.h"
 
 #include "Character/BaseCharacter.h"
+#include "Common/Objects/CollisionCube.h"
 #include "Components/BoxComponent.h"
 #include "Engine/DamageEvents.h"
 #include "Kismet/GameplayStatics.h"
 
-void UStrongAttackAbility::Init(ABaseCharacter* Character)
-{
-    Super::Init(Character);
-    
-    Character->pBoxCollision->OnComponentBeginOverlap.AddDynamic(this, &UStrongAttackAbility::OnBeginOverlap);
-
-    Character->pBoxCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-    Character->pBoxCollision->SetCollisionObjectType(ECC_WorldDynamic);
-    Character->pBoxCollision->SetCollisionResponseToAllChannels(ECR_Overlap);
-    Character->pBoxCollision->SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Overlap);
-}
-
 bool UStrongAttackAbility::NativeActivate()
 {
-    const auto character = GetCharacter();
-
+    if (!GetWorld() || !GetCharacter())
+        return false;
+    
+    m_pCubeCollision->Enable();
+    
     GetWorld()->GetTimerManager().SetTimer(m_timerHandle, this, &UStrongAttackAbility::OnStrongAbilityEnd, abilityDuration);
-    EnableCollision();
-    character->LaunchCharacter(character->GetMesh()->GetRightVector().GetSafeNormal() * abilityDistance, true, false);
+    GetCharacter()->LaunchCharacter(GetCharacter()->GetMesh()->GetRightVector().GetSafeNormal() * abilityDistance, true, false);
     
     return Super::NativeActivate();
+}
+
+void UStrongAttackAbility::BeginPlay()
+{
+    Super::BeginPlay();
+
+    SpawnCubeCollision();
 }
 
 void UStrongAttackAbility::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
     int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-    const auto Character = Cast<ACharacter>(GetCharacter());
-    if (OtherActor->GetClass() == Character->GetClass())
+    if (OtherActor == GetCharacter())
         return;
 
     OtherActor->TakeDamage(abilityDamage, FDamageEvent(), UGameplayStatics::GetPlayerController(GetWorld(), 0), GetCharacter());
 }
 
-void UStrongAttackAbility::EnableCollision()
-{
-    GetCharacter()->pBoxCollision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-}
-
-void UStrongAttackAbility::DisableCollision()
-{
-    GetCharacter()->pBoxCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-}
-
 void UStrongAttackAbility::OnStrongAbilityEnd()
 {
-    DisableCollision();
-    GetWorld()->GetTimerManager().ClearTimer(m_timerHandle);
+    m_pCubeCollision->Disable();
+}
+
+void UStrongAttackAbility::SpawnCubeCollision()
+{
+    if (!GetWorld())
+        return;
+    
+    m_pCubeCollision = GetWorld()->SpawnActor<ACollisionCube>(ACollisionCube::StaticClass());
+    if (!m_pCubeCollision)
+        return;
+
+    m_pCubeCollision->SetBoxExtent(FVector(32.0f, 96.0f, 32.0f));
+    
+    m_pCubeCollision->AttachToActor(GetCharacter(), FAttachmentTransformRules::KeepRelativeTransform);
+    m_pCubeCollision->AttachToComponent(GetCharacter()->GetMesh(), FAttachmentTransformRules::KeepWorldTransform);
+    
+    m_pCubeCollision->OnBeginOverlap.AddUObject(this, &UStrongAttackAbility::OnBeginOverlap);
 }

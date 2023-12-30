@@ -15,14 +15,24 @@ UAbilityComponent::UAbilityComponent()
 }
 
 
-void UAbilityComponent::BeginPlay()
+void UAbilityComponent::InitializeComponent()
 {
-    Super::BeginPlay();
+    Super::InitializeComponent();
 
     InitActiveAbility();
     InitPassiveAbility();
     InitDashAbility();
     InitCustomAbility();
+}
+
+void UAbilityComponent::BeginPlay()
+{
+    Super::BeginPlay();
+
+    BeginPlayActiveAbility();
+    BeginPlayPassiveAbility();
+    BeginPlayDashAbility();
+    BeginPlayCustomAbility();
     
     BindInput();
 }
@@ -43,7 +53,7 @@ void UAbilityComponent::InitActiveAbility()
             continue;
 
         m_activeAbilities.Add(activeAbility);
-        activeAbility->Init(character);
+        activeAbility->Initialize(character);
     }
 }
 
@@ -63,7 +73,7 @@ void UAbilityComponent::InitPassiveAbility()
             continue;
 
         m_passiveAbilities.Add(passiveAbility);
-        passiveAbility->Init(character);
+        passiveAbility->Initialize(character);
     }
 }
 
@@ -80,7 +90,7 @@ void UAbilityComponent::InitDashAbility()
     if (!character)
         return;
     
-    m_dashAbility->Init(character);
+    m_dashAbility->Initialize(character);
 }
 
 void UAbilityComponent::InitCustomAbility()
@@ -96,7 +106,45 @@ void UAbilityComponent::InitCustomAbility()
     if (!character)
         return;
     
-    m_customAbility->Init(character);
+    m_customAbility->Initialize(character);
+}
+
+void UAbilityComponent::BeginPlayActiveAbility() const
+{
+    for (const auto& ability: m_activeAbilities)
+    {
+        if (!ability)
+            continue;
+        
+        ability->BeginPlay();
+    }
+}
+
+void UAbilityComponent::BeginPlayPassiveAbility() const
+{
+    for (const auto& ability: m_passiveAbilities)
+    {
+        if (!ability)
+            continue;
+        
+        ability->BeginPlay();
+    }
+}
+
+void UAbilityComponent::BeginPlayDashAbility() const
+{
+    if (!m_dashAbility)
+        return;
+    
+    m_dashAbility->BeginPlay();
+}
+
+void UAbilityComponent::BeginPlayCustomAbility() const
+{
+    if (!m_customAbility)
+        return;
+    
+    m_customAbility->BeginPlay();
 }
 
 void UAbilityComponent::BindInput()

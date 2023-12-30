@@ -3,9 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Abilities/BaseAbility.h"
 #include "Components/ActorComponent.h"
 #include "AbilityComponent.generated.h"
-
 
 class UDashAbility;
 class UPassiveAbility;
@@ -33,6 +33,8 @@ protected:
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Ability")
     TSubclassOf<UActiveAbility> customAbilityClass;
+
+    virtual void InitializeComponent() override;
     
     virtual void BeginPlay() override;
 
@@ -60,6 +62,11 @@ private:
 
     /** Initialize dash ability */
     void InitCustomAbility();
+    
+    void BeginPlayActiveAbility() const;
+    void BeginPlayPassiveAbility() const;
+    void BeginPlayDashAbility() const;
+    void BeginPlayCustomAbility() const;
 
     /** Binding abilities input */
     void BindInput();

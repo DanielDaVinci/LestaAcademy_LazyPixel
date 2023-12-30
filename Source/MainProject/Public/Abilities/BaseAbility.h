@@ -7,22 +7,28 @@
 #include "BaseAbility.generated.h"
 
 class ABaseCharacter;
+class UAbilityComponent;
 
-UCLASS(Blueprintable)
+UCLASS(Abstract, meta=(Blueprintable))
 class MAINPROJECT_API UBaseAbility : public UObject
 {
     GENERATED_BODY()
 
 public:
-    virtual void Init(ABaseCharacter* Character);
+    void Initialize(ABaseCharacter* Character);
 
 protected:
     ABaseCharacter* GetCharacter() const { return m_character; }
+
+    virtual void NativeInitialize() {}
+    virtual void BeginPlay() {}
 
 private:
     UPROPERTY()
     ABaseCharacter* m_character = nullptr;
 
 protected:
+    friend UAbilityComponent;
+    
     virtual UWorld* GetWorld() const override;
 };
