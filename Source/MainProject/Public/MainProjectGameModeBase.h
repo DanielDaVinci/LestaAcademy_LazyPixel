@@ -6,6 +6,8 @@
 #include "GameFramework/GameModeBase.h"
 #include "MainProjectGameModeBase.generated.h"
 
+class AFloorManager;
+
 UCLASS()
 class MAINPROJECT_API AMainProjectGameModeBase : public AGameModeBase
 {
@@ -13,4 +15,16 @@ class MAINPROJECT_API AMainProjectGameModeBase : public AGameModeBase
 
 public:
     AMainProjectGameModeBase();
+
+protected:
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Environment")
+    TSubclassOf<AFloorManager> floorManagerClass;
+
+    virtual void BeginPlay() override;
+    
+private:
+    UPROPERTY()
+    AFloorManager* m_pFloorManager = nullptr;
+    
+    void SpawnFloorManager();
 };

@@ -19,6 +19,7 @@ public:
     
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "AI")
     UBehaviorTree* BehaviorTreeAsset;
+    
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
     ARoom* enemyRoom;
 };

@@ -11,9 +11,10 @@
 class AAIBaseCharacter;
 class AEnemySpawner;
 class ADoor;
+class ARoom;
 
-DECLARE_MULTICAST_DELEGATE(FOnPlayerEnterSignature)
-DECLARE_MULTICAST_DELEGATE(FOnPlayerLeaveSignature)
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnPlayerEnterSignature, ARoom*)
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnPlayerLeaveSignature, ARoom*)
 
 UCLASS()
 class MAINPROJECT_API ARoom : public AActor
@@ -37,9 +38,6 @@ protected:
     
 	virtual void BeginPlay() override;
 
-public:	
-	virtual void Tick(float DeltaTime) override;
-
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room Environment")
     TArray<ADoor*> inputDoors;
@@ -55,9 +53,9 @@ protected:
     
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room Environment")
     TArray<AEnemySpawner*> enemySpawners;
-
-    void OnPlayerEnter();
-    void OnPlayerLeave();
+    
+    void OnPlayerEnter(ARoom* Room);
+    void OnPlayerLeave(ARoom* Room);
     
     void StartSpawn() {};
     void StopSpawn() {};
@@ -74,7 +72,9 @@ protected:
 private:
     int32 currentAliveEnemies;
 
-    void BindEnemyOnDeath();
+    void BindEnemies();
+    void FindEnemies();
+    void BindEnemiesOnDeath();
 
     UFUNCTION()
     void OnEnemyDied();

@@ -29,30 +29,22 @@ ARoom::ARoom()
 void ARoom::BeginPlay()
 {
 	Super::BeginPlay();
-
-    currentAliveEnemies = enemies.Num();
     
     OnPlayerEnterEvent.AddUObject(this, &ARoom::OnPlayerEnter);
     OnPlayerLeaveEvent.AddUObject(this, &ARoom::OnPlayerLeave);
-    
-    BindEnemyOnDeath();
+
+    BindEnemies();
     
     OpenAllDoors();
 }
 
-void ARoom::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-
-void ARoom::OnPlayerEnter()
+void ARoom::OnPlayerEnter(ARoom* Room)
 {
     if (currentAliveEnemies != 0)
         CloseAllDoors();
 }
 
-void ARoom::OnPlayerLeave()
+void ARoom::OnPlayerLeave(ARoom* Room)
 {
     
 }
@@ -63,7 +55,7 @@ void ARoom::NotifyActorBeginOverlap(AActor* OtherActor)
 
     if (Cast<APlayerCharacter>(OtherActor))
     {
-        OnPlayerEnterEvent.Broadcast();
+        OnPlayerEnterEvent.Broadcast(this);
         IsEntered = true;
     }
 }
@@ -73,16 +65,45 @@ void ARoom::NotifyActorEndOverlap(AActor* OtherActor)
     Super::NotifyActorEndOverlap(OtherActor);
     
     if (Cast<APlayerCharacter>(OtherActor))
-        OnPlayerLeaveEvent.Broadcast();
+    {
+        OnPlayerLeaveEvent.Broadcast(this);
+    }
 }
 
 void ARoom::OnEnemyDied()
 {
     if (--currentAliveEnemies == 0)
+    {
         OpenOutputDoors();
+    }
 }
 
-void ARoom::BindEnemyOnDeath()
+void ARoom::BindEnemies()
+{
+    FindEnemies();
+    BindEnemiesOnDeath();
+
+    currentAliveEnemies = enemies.Num();
+}
+
+void ARoom::FindEnemies()
+{
+    TArray<AActor*> overlappingActors;
+    UpdateOverlaps(false);
+    GetOverlappingActors(overlappingActors);
+
+    for (auto actor: overlappingActors)
+    {
+        auto enemy = Cast<AAIBaseCharacter>(actor);
+        if (!enemy)
+            continue;
+
+        enemies.Add(enemy);
+        enemy->enemyRoom = this;
+    }
+}
+
+void ARoom::BindEnemiesOnDeath()
 {
     for (const auto enemy : enemies)
     {

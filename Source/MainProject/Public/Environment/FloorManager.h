@@ -20,5 +20,13 @@ protected:
     TArray<ARoom*> rooms;
     
 	virtual void BeginPlay() override;
+
+private:
+    UPROPERTY()
+    ARoom* m_pCurrentRoom = nullptr;
     
+    void BindRooms();
+    void BindRoomsEntry();
+
+    void OnPlayerEnterRoom(ARoom* Room);
 };
