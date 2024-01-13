@@ -5,6 +5,7 @@
 #include "Weapon/RangeWeapons/Gun.h"
 #include "Character/BaseCharacter.h"
 #include "Animations/ComboEndAnimNotify.h"
+#include "Animations/RangeAttackNotify.h"
 #include "Character/Player/Components/PlayerMovementComponent.h"
 #include "Character/Player/Components/AbilityComponent.h"
 #include "Abilities/ActiveAbilities/DashAbility.h"
@@ -40,16 +41,24 @@ void UWeaponComponent::InitAnimations()
 {
     Super::InitAnimations();
 
-    if (!m_pMeleeWeapon || !m_pMeleeWeapon->GetAttackMontage())
+    if (!m_pBaseWeapon || !m_pBaseWeapon->GetAttackMontage())
         return;
 
-    const auto NotifyEvents = m_pMeleeWeapon->GetAttackMontage()->Notifies;
+    const auto NotifyEvents = m_pBaseWeapon->GetAttackMontage()->Notifies;
     for (auto NotifyEvent : NotifyEvents)
     {
         auto ComboNotify = Cast<UComboEndAnimNotify>(NotifyEvent.Notify);
         if (ComboNotify)
             ComboNotify->FOnComboEndNotify.AddUObject(this, &UWeaponComponent::OnNextComboSection);
     }
+
+    const auto RangeNotifyEvents = m_pRangeWeapon->GetAttackMontage()->Notifies;
+    for (auto NotifyEvent : RangeNotifyEvents)
+    {
+        auto RangeNotify = Cast<URangeAttackNotify>(NotifyEvent.Notify);
+        if (RangeNotify)
+            RangeNotify->FOnRangeAttackNotify.AddUObject(m_pRangeWeapon, &AGun::MakeShot);
+    } 
 }
 
 void UWeaponComponent::MeleeAttack()
@@ -84,7 +93,9 @@ void UWeaponComponent::PlayMeleeAttackAnim()
     ABaseCharacter* Character = Cast<ABaseCharacter>(GetOwner());
     if (!Character) return;
 
-    const auto ComboInfo = m_pMeleeWeapon->GetComboInfo();
+    ASword* pMeleeWeapon = Cast<ASword>(m_pBaseWeapon);
+
+    const auto ComboInfo = pMeleeWeapon->GetComboInfo();
     if (!ComboInfo.IsValidIndex(m_nComboIndex))
         return;
 
@@ -97,12 +108,13 @@ void UWeaponComponent::PlayMeleeAttackAnim()
     pmComponent->SetDeceleration(ComboInfo[m_nComboIndex].deceleration);
 
     Character->GetMesh()->GetAnimInstance()->SetRootMotionMode(ComboInfo[m_nComboIndex].rootMotionMode);
-    Character->PlayAnimMontage(m_pMeleeWeapon->GetAttackMontage(), ComboInfo[m_nComboIndex].sectionRateScale, ComboInfo[m_nComboIndex].attackSectionName);
+    Character->PlayAnimMontage(pMeleeWeapon->GetAttackMontage(), ComboInfo[m_nComboIndex].sectionRateScale, ComboInfo[m_nComboIndex].attackSectionName);
 }
 
 void UWeaponComponent::OnNextComboSection()
 {
-    if (!m_bIsComboChain || m_nComboIndex >= m_pMeleeWeapon->GetComboInfo().Num())
+    ASword* pMeleeWeapon = Cast<ASword>(m_pBaseWeapon);
+    if (!m_bIsComboChain || m_nComboIndex >= pMeleeWeapon->GetComboInfo().Num())
     {
         UE_LOG(LogWeaponComponent, Display, TEXT("Notify clear!"));
         const auto pmComponent = GetPlayerMovementComponent();
@@ -125,7 +137,8 @@ void UWeaponComponent::OnNextComboSection()
 
 void UWeaponComponent::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
 {
-    if (m_pMeleeWeapon->GetAttackMontage() == Montage && bInterrupted)
+    ASword* pMeleeWeapon = Cast<ASword>(m_pBaseWeapon);
+    if (pMeleeWeapon->GetAttackMontage() == Montage && bInterrupted)
     {
         UE_LOG(LogWeaponComponent, Display, TEXT("Attack Interrupted!"));
         if (!m_bIsComboChain)
@@ -152,7 +165,7 @@ void UWeaponComponent::RangeAttack()
     FRotator viewRotation = pmComponent->GetMouseViewDirection().Rotation();
     pmComponent->FixCharacterRotation(viewRotation);
 
-    m_pRangeWeapon->MakeShot(pmComponent->GetMouseViewDirection());
+    //m_pRangeWeapon->MakeShot(pmComponent->GetMouseViewDirection());
 
     OnNextComboSection();
 }

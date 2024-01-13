@@ -14,9 +14,12 @@ class MAINPROJECT_API AGun : public ABaseWeapon
     GENERATED_BODY()
 
 public:
-    void MakeShot(FVector MouseDirection);
+    void MakeShot(USkeletalMeshComponent* MeshComp);
 
 protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Projectile")
     TSubclassOf<AProjectile> ProjectileClass;
+
+private:
+    FVector GetDirection();
 };

@@ -6,7 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "BaseWeaponComponent.generated.h"
 
-class ASword;
+class ABaseWeapon;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class MAINPROJECT_API UBaseWeaponComponent : public UActorComponent
@@ -21,12 +21,12 @@ public:
 
 protected:
     UPROPERTY(EditDefaultsOnly, Category = "Weapon")
-    TSubclassOf<ASword> WeaponClass;
+    TSubclassOf<ABaseWeapon> WeaponClass;
 
     UPROPERTY(EditDefaultsOnly, Category = "Weapon")
     FName WeaponAttachPointName;
 
-    ASword* m_pMeleeWeapon;
+    ABaseWeapon* m_pBaseWeapon;
 
     virtual void SpawnWeapons();
     virtual void InitAnimations();
