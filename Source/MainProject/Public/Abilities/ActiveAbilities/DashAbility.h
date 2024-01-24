@@ -14,9 +14,6 @@ class MAINPROJECT_API UDashAbility : public UActiveAbility
 {
     GENERATED_BODY()
 
-public:
-    UAnimMontage* GetDashMontage() const { return dashAnimation; }
-
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dash")
     float dashImpulse = 2000.0f;

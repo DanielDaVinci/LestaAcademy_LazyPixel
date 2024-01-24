@@ -17,10 +17,11 @@ class MAINPROJECT_API AProjectile : public AActor
 public:
     AProjectile();
 
-    void SetShotDirection(const FVector& Direction) { ShotDirection = Direction; }
+    void SetShotDirection(const FVector& Direction) { m_ShotDirection = Direction; }
+    void SetDamage(const float Damage) { m_Damage = Damage; }
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EndTrace")
-    FVector EndTrace;
+    FVector m_EndTrace;
 
 protected:
     UPROPERTY(VisibleDefaultsOnly, Category = "Weapon")
@@ -36,5 +37,6 @@ private:
     void OnProjectileHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse,
         const FHitResult& Hit);
 
-    FVector ShotDirection;
+    FVector m_ShotDirection;
+    float m_Damage;
 };

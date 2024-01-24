@@ -20,6 +20,7 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Projectile")
     TSubclassOf<AProjectile> ProjectileClass;
 
-private:
-    FVector GetDirection();
+    UPROPERTY(EditDefaultsOnly, Category = "Sockets")
+    FName MuzzleSocketName = "MuzzleSocket";
+
 };

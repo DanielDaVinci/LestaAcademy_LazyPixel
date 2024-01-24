@@ -31,7 +31,7 @@ void AProjectile::BeginPlay()
 
     check(MovementComponent);
     // UE_LOG(LogProjectile, Display, TEXT("ShotDirection: %s"), *ShotDirection.ToString());
-    MovementComponent->Velocity = ShotDirection * MovementComponent->InitialSpeed;
+    MovementComponent->Velocity = m_ShotDirection * MovementComponent->InitialSpeed;
     CollisionComponent->OnComponentHit.AddDynamic(this, &AProjectile::OnProjectileHit);
 
     SetLifeSpan(10.0f);
@@ -40,6 +40,9 @@ void AProjectile::BeginPlay()
 void AProjectile::OnProjectileHit(
     UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-    OtherActor->TakeDamage(100.f, FDamageEvent(), UGameplayStatics::GetPlayerController(GetWorld(), 0), this);
+    //UE_LOG(LogProjectile, Display, TEXT("Proj hit: %s"), *OtherActor->GetName());
+    if (OtherActor->GetClass() != GetOwner()->GetClass())
+        OtherActor->TakeDamage(m_Damage, FDamageEvent(), UGameplayStatics::GetPlayerController(GetWorld(), 0), this);
+
     Destroy();
 }

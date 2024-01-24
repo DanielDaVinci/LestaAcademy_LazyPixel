@@ -28,7 +28,7 @@ protected:
     float attackSpeed = 1;
     
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="WeaponProperties", meta=(ClampMin="0.0"))
-    float range;
+    float range = 2000.f;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Animation")
     UAnimMontage* attackAnimation;

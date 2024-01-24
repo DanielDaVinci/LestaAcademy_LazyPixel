@@ -31,14 +31,12 @@ protected:
 private:
     AGun* m_pRangeWeapon;
     bool  m_bIsComboChain = false;
+    bool  m_bWasFirstAttack = false;
     uint8 m_nComboIndex = 0;
 
     virtual void SpawnWeapons() override;
     virtual void InitAnimations() override;   
     void PlayMeleeAttackAnim();
-
-    UFUNCTION()
-    void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
 
     UPlayerMovementComponent* GetPlayerMovementComponent() const;
 };
