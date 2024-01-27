@@ -2,11 +2,15 @@
 
 
 #include "Character/Player/Components/HealthComponent.h"
+
+#include "Character/Player/BasePlayerController.h"
 #include "GameFramework/Actor.h"
+#include "GameFramework/Character.h"
 
 UHealthComponent::UHealthComponent()
 {
 	PrimaryComponentTick.bCanEverTick = false;
+    
 }
 
 void UHealthComponent::BeginPlay()
@@ -38,5 +42,10 @@ void UHealthComponent::SetHealth(float Health)
     {
         OnDeath.Broadcast();
     }
+}
+
+void UHealthComponent::Heal(float HealthValue)
+{
+    SetHealth(GetHealth() + HealthValue);
 }
 

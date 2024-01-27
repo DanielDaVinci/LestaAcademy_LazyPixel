@@ -26,6 +26,8 @@ public:
     UFUNCTION(BlueprintCallable)
     bool IsDead() const { return m_health <= 0; }
 
+    void Heal(float HealthValue);
+
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ClampMin = "0.0", ClampMax = "1000.0"))
     float maxHealth = 100.0f;
@@ -40,5 +42,4 @@ private:
         AController* InstigateBy, AActor* DamageCauser);
 
     void SetHealth(float Health);
-
 };
