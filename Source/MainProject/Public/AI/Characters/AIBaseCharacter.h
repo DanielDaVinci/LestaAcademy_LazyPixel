@@ -22,4 +22,14 @@ public:
     
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
     ARoom* enemyRoom;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ImpactAnim")
+    UAnimMontage* impactAnimation;
+
+protected:
+    virtual void BeginPlay() override;
+
+private:
+    UFUNCTION()
+    void PlayImpactAnim(float Health);
 };

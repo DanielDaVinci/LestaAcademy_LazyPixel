@@ -7,8 +7,6 @@
 #include "Animations/ComboEndAnimNotify.h"
 #include "Animations/RangeAttackNotify.h"
 #include "Character/Player/Components/PlayerMovementComponent.h"
-#include "Character/Player/Components/AbilityComponent.h"
-#include "Abilities/ActiveAbilities/DashAbility.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogWeaponComponent, All, All);
 
@@ -102,6 +100,7 @@ void UWeaponComponent::PlayMeleeAttackAnim()
     pmComponent->SetDeceleration(ComboInfo[m_nComboIndex].deceleration);
 
     m_bWasFirstAttack = true;
+    pMeleeWeapon->SetDamage(ComboInfo[m_nComboIndex].damage);
     Character->GetMesh()->GetAnimInstance()->SetRootMotionMode(ComboInfo[m_nComboIndex].rootMotionMode);
     Character->PlayAnimMontage(pMeleeWeapon->GetAttackMontage(), ComboInfo[m_nComboIndex].sectionRateScale, ComboInfo[m_nComboIndex].attackSectionName);
 }
@@ -111,7 +110,7 @@ void UWeaponComponent::OnNextComboSection()
     ASword* pMeleeWeapon = Cast<ASword>(m_pBaseWeapon);
     if (!m_bIsComboChain || m_nComboIndex >= pMeleeWeapon->GetComboInfo().Num())
     {
-        UE_LOG(LogWeaponComponent, Display, TEXT("Notify clear!"));
+        //UE_LOG(LogWeaponComponent, Display, TEXT("Notify clear!"));
         const auto pmComponent = GetPlayerMovementComponent();
         if (!pmComponent)
             return;
@@ -124,7 +123,7 @@ void UWeaponComponent::OnNextComboSection()
     }
     else
     {
-        UE_LOG(LogWeaponComponent, Display, TEXT("Notify attack!"));
+        //UE_LOG(LogWeaponComponent, Display, TEXT("Notify attack!"));
         PlayMeleeAttackAnim();
     }
 
@@ -147,7 +146,7 @@ void UWeaponComponent::RangeAttack()
 
     FRotator viewRotation = pmComponent->GetMouseViewDirection().Rotation();
     pmComponent->FixCharacterRotation(viewRotation);
-    pmComponent->SetDeceleration(0.5);
+    pmComponent->SetDeceleration(1.f);
 
     Character->PlayAnimMontage(m_pRangeWeapon->GetAttackMontage());
 }

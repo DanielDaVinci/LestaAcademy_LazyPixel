@@ -14,6 +14,7 @@ class MAINPROJECT_API ABaseWeapon : public AActor
 public:
     ABaseWeapon();
 
+    void SetDamage(const float fDamage) { damage = fDamage; }
     float GetDamage() const { return damage; }
     float GetAttackSpeed() const { return attackSpeed; }
     float GetRange() const { return range; }
