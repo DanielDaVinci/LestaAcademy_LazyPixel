@@ -10,8 +10,6 @@
 #include "Environment/Room.h"
 #include "Kismet/GameplayStatics.h"
 
-enum EAIStates : uint8;
-
 UMeleeAIBrain::UMeleeAIBrain()
 {
     NodeName = "AI Brain";
@@ -30,7 +28,7 @@ EAIStates UMeleeAIBrain::CalculateState() const
         return Attack;
 
     if (m_currentDistance >= attackDistance && m_isPlayerEnteredRoom)
-        return Chase;
+        return Moving;
 
     return Idle;
 }

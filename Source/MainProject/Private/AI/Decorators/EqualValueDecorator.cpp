@@ -3,6 +3,7 @@
 
 #include "AI/Decorators/EqualValueDecorator.h"
 
+#include "..\..\..\Public\AI\States\AIStates.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/Decorators/BTDecorator_BlackboardBase.h"
 
@@ -19,5 +20,5 @@ bool UEqualValueDecorator::CalculateRawConditionValue(UBehaviorTreeComponent& Ow
 
     const auto value = blackboard->GetValueAsEnum(targetKey.SelectedKeyName);
 
-    return value == targetValue;
+    return value == targetValue.GetIntValue();
 }

@@ -15,6 +15,5 @@ public:
     void AttackPlayer();
 
 protected:
-
     virtual void OnPossess(APawn* InPawn) override;
 };

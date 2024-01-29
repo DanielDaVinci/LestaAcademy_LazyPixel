@@ -19,7 +19,6 @@ AMeleeAICharacter::AMeleeAICharacter(const FObjectInitializer& ObjInit)
     {
         GetCharacterMovement()->bUseControllerDesiredRotation = true;
     }
-
 }
 
 void AMeleeAICharacter::OnDeath()

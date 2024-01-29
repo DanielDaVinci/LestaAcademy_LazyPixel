@@ -3,11 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "..\States\AIStates.h"
 #include "BehaviorTree/BTService.h"
 #include "MeleeAIBrain.generated.h"
 
 class ARoom;
-enum EAIStates : uint8;
 
 UCLASS()
 class MAINPROJECT_API UMeleeAIBrain : public UBTService

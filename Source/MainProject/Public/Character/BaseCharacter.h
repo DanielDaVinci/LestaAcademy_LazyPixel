@@ -12,6 +12,7 @@ class UHealthComponent;
 class UBaseWeaponComponent;
 class UAbilityComponent;
 
+DEFINE_LOG_CATEGORY_STATIC(LogFistWeapon, All, All);
 UCLASS()
 class MAINPROJECT_API ABaseCharacter : public ACharacter
 {
