@@ -1,18 +1,16 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+// Lazy Pixel. All Rights Reserved.
 
 
-#include "AI/Characters/MeleeAICharacter.h"
+#include "AI/Characters/RangeAICharacter.h"
 
-#include "AIController.h"
-#include "AI/Characters/MeleeAIController.h"
+#include "AI/Characters/RangeAIController.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
-
-AMeleeAICharacter::AMeleeAICharacter(const FObjectInitializer& ObjInit)
+ARangeAICharacter::ARangeAICharacter(const FObjectInitializer& ObjInit)
     : Super(ObjInit)
 {
-    AIControllerClass = AMeleeAIController::StaticClass();
+    AIControllerClass = ARangeAIController::StaticClass();
     bUseControllerRotationYaw = false;
 
     if (GetCharacterMovement())
@@ -21,7 +19,7 @@ AMeleeAICharacter::AMeleeAICharacter(const FObjectInitializer& ObjInit)
     }
 }
 
-void AMeleeAICharacter::OnDeath()
+void ARangeAICharacter::OnDeath()
 {
     Super::OnDeath();
 

@@ -3,6 +3,7 @@
 #include "Weapon/RangeWeapons/Gun.h"
 #include "Weapon/RangeWeapons/Projectile.h"
 #include "GameFramework/Character.h"
+#include "Character/Player/Components/PlayerMovementComponent.h"
 
 void AGun::MakeShot(USkeletalMeshComponent* MeshComp)
 {
@@ -13,8 +14,7 @@ void AGun::MakeShot(USkeletalMeshComponent* MeshComp)
     const FTransform SpawnTranform(FRotator::ZeroRotator, SocketTransform.GetLocation());
 
     const FVector TraceStart = SocketTransform.GetLocation();
-    FVector TraceEnd = TraceStart + SocketTransform.GetRotation().GetForwardVector() * range;
-    TraceEnd.Z = TraceStart.Z;      // During shoot socket pointing down, so we need to equalize the height
+    const FVector TraceEnd = TraceStart + GetDirection();//    MouseDirection;
 
     FCollisionQueryParams CollisionParams;
     CollisionParams.AddIgnoredActor(GetOwner());
@@ -35,4 +35,19 @@ void AGun::MakeShot(USkeletalMeshComponent* MeshComp)
 
         Projectile->FinishSpawning(SpawnTranform);
     }
+}
+
+FVector AGun::GetDirection()
+{
+    const auto character = Cast<ACharacter>(GetOwner());
+    if (!character)
+        return FVector();
+
+    if (character->IsPlayerControlled())
+    {
+        const auto MovComp = Cast<UPlayerMovementComponent>(character->GetMovementComponent());
+        return MovComp->GetMouseViewDirection();
+    }
+    else
+        return pWeaponMeshComponent->GetSocketRotation(FName("MuzzleSocket")).Vector();
 }

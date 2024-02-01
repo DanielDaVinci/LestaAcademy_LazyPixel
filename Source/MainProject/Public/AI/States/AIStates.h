@@ -9,6 +9,6 @@ UENUM()
 enum EAIStates : uint8
 {
     Idle = 0,
-    Chase = 1,
+    Moving = 1,
     Attack = 2,
 };

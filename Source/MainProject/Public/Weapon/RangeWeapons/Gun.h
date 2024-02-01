@@ -22,5 +22,8 @@ protected:
 
     UPROPERTY(EditDefaultsOnly, Category = "Sockets")
     FName MuzzleSocketName = "MuzzleSocket";
+    
+private:
+    FVector GetDirection();
 
 };

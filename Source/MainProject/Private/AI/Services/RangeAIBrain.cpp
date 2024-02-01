@@ -1,39 +1,40 @@
 // Lazy Pixel. All Rights Reserved.
 
 
-#include "AI/Services/MeleeAIBrain.h"
+#include "AI/Services/RangeAIBrain.h"
 
 #include "AIController.h"
-#include "..\..\..\Public\AI\States\AIStates.h"
+#include "AIHelpers.h"
 #include "AI/Characters/AIBaseCharacter.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Character/Player/PlayerCharacter.h"
 #include "Environment/Room.h"
 #include "Kismet/GameplayStatics.h"
 
-UMeleeAIBrain::UMeleeAIBrain()
+URangeAIBrain::URangeAIBrain()
 {
-    NodeName = "AI Brain";
+    NodeName = "Range AI Brain";
 }
 
-void UMeleeAIBrain::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
+void URangeAIBrain::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
 {
     UpdateValues(OwnerComp);
     
     Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
 }
 
-EAIStates UMeleeAIBrain::CalculateState() const
+EAIStates URangeAIBrain::CalculateState() const
 {
+    if (m_currentDistance > attackDistance && m_isPlayerEnteredRoom)
+        return Moving;
+        
     if (m_currentDistance <= attackDistance)
         return Attack;
-
-    if (m_currentDistance >= attackDistance && m_isPlayerEnteredRoom)
-        return Moving;
 
     return Idle;
 }
 
-void UMeleeAIBrain::UpdateValues(UBehaviorTreeComponent& OwnerComp)
+void URangeAIBrain::UpdateValues(UBehaviorTreeComponent& OwnerComp)
 {
     const auto blackboard = OwnerComp.GetBlackboardComponent();
     if (!blackboard)
@@ -61,3 +62,4 @@ void UMeleeAIBrain::UpdateValues(UBehaviorTreeComponent& OwnerComp)
 
     blackboard->SetValueAsEnum(aiStateKey.SelectedKeyName, CalculateState());
 }
+
