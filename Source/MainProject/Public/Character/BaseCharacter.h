@@ -36,10 +36,8 @@ protected:
     virtual void PostInitializeComponents() override;
 
     virtual void BeginPlay() override;
-
-    virtual void OnDeath()
-    {
-    }
+    
+    virtual void OnDeath() {}
 
 public:
     virtual void Tick(float DeltaTime) override;
