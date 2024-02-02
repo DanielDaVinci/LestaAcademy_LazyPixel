@@ -51,7 +51,7 @@ void UMeleeAIBrain::UpdateValues(UBehaviorTreeComponent& OwnerComp)
     if (!room)
         return;
 
-    m_isPlayerEnteredRoom = room->IsEntered;
+    m_isPlayerEnteredRoom = room->IsEntered();
     blackboard->SetValueAsBool(isPlayerEnteredRoomKey.SelectedKeyName, m_isPlayerEnteredRoom);
         
     blackboard->SetValueAsObject(playerActorKey.SelectedKeyName, player);

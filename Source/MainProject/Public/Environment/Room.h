@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Door.h"
 #include "Components/BoxComponent.h"
+#include "Engine/Light.h"
 #include "GameFramework/Actor.h"
 #include "Room.generated.h"
 
@@ -14,7 +15,6 @@ class ADoor;
 class ARoom;
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnPlayerEnterSignature, ARoom*)
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnPlayerLeaveSignature, ARoom*)
 
 UCLASS()
 class MAINPROJECT_API ARoom : public AActor
@@ -25,9 +25,11 @@ public:
 	ARoom();
 
     FOnPlayerEnterSignature OnPlayerEnterEvent;
-    FOnPlayerLeaveSignature OnPlayerLeaveEvent;
 
-    bool IsEntered;
+    void TurnOffLight();
+    void TurnOnLight();
+
+    bool IsEntered() const { return m_isEntered; }
 
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName="Scene Component")
@@ -36,9 +38,6 @@ protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName="Room Collision Component")
     UBoxComponent* pRoomCollisionComponent;
     
-	virtual void BeginPlay() override;
-
-protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room Environment")
     TArray<ADoor*> inputDoors;
 
@@ -50,32 +49,35 @@ protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room Environment")
     TArray<AAIBaseCharacter*> enemies;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room Environment")
+    TArray<ALight*> lightSources;
     
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room Environment")
     TArray<AEnemySpawner*> enemySpawners;
-    
-    void OnPlayerEnter(ARoom* Room);
-    void OnPlayerLeave(ARoom* Room);
-    
-    void StartSpawn() {};
-    void StopSpawn() {};
-    
-private:
-    virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
-    virtual void NotifyActorEndOverlap(AActor* OtherActor) override;
 
-protected:
+    virtual void BeginPlay() override;
+    
+    void OnPlayerEnter();
+
+    UFUNCTION()
+    void OnEnemyDied();
+
+private:
+    int32 m_currentAliveEnemies;
+    bool m_isEntered;
+
+    void BindEnemies();
+    void BindInputDoorsForEnter();
+    void BindLightSources();
+    
+    void FindEnemies();
+    void BindEnemiesOnDeath();
+    
     void CloseAllDoors();
     void OpenAllDoors();
     void OpenOutputDoors();
 
-private:
-    int32 currentAliveEnemies;
-
-    void BindEnemies();
-    void FindEnemies();
-    void BindEnemiesOnDeath();
-
-    UFUNCTION()
-    void OnEnemyDied();
+    void StartSpawn() {}
+    void StopSpawn() {}
 };
