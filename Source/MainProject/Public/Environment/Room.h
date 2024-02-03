@@ -15,6 +15,7 @@ class ADoor;
 class ARoom;
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnPlayerEnterSignature, ARoom*)
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnAllEnemiesDiedSignature, ARoom*)
 
 UCLASS()
 class MAINPROJECT_API ARoom : public AActor
@@ -25,11 +26,21 @@ public:
 	ARoom();
 
     FOnPlayerEnterSignature OnPlayerEnterEvent;
+    FOnAllEnemiesDiedSignature OnAllEnemiesDied;
+    
+    bool IsEntered() const { return m_isEntered; }
 
     void TurnOffLight();
     void TurnOnLight();
 
-    bool IsEntered() const { return m_isEntered; }
+    void SetCeilingVisibility(bool Visible);
+
+    void CloseAllDoors();
+    void OpenAllDoors();
+    void OpenOutputDoors();
+    void OpenInputDoors();
+
+    void DestroyActorsInRoom();
 
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName="Scene Component")
@@ -37,24 +48,24 @@ protected:
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName="Room Collision Component")
     UBoxComponent* pRoomCollisionComponent;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room Environment|Manual")
+    AActor* roomCeiling;
     
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room Environment")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room Environment|Manual")
     TArray<ADoor*> inputDoors;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room Environment")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room Environment|Manual")
     TArray<ADoor*> outputDoors;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room Environment")
-    TArray<AActor*> lowerWalls;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room Environment|Manual")
+    TArray<AEnemySpawner*> enemySpawners;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room Environment")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room Environment|Dynamic")
     TArray<AAIBaseCharacter*> enemies;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room Environment")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room Environment|Dynamic")
     TArray<ALight*> lightSources;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room Environment")
-    TArray<AEnemySpawner*> enemySpawners;
 
     virtual void BeginPlay() override;
     
@@ -73,11 +84,4 @@ private:
     
     void FindEnemies();
     void BindEnemiesOnDeath();
-    
-    void CloseAllDoors();
-    void OpenAllDoors();
-    void OpenOutputDoors();
-
-    void StartSpawn() {}
-    void StopSpawn() {}
 };

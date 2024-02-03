@@ -17,16 +17,17 @@ public:
 
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Environment")
-    TArray<ARoom*> rooms;
+    TArray<ARoom*> priorityQueueRooms;
     
 	virtual void BeginPlay() override;
 
 private:
-    UPROPERTY()
-    ARoom* m_pCurrentRoom = nullptr;
+    int32 m_currentRoomIndex = 0;
     
-    void BindRooms();
-    void BindRoomsEntry();
-
+    void BindEvents();
+    
     void OnPlayerEnterRoom(ARoom* Room);
+    void OnClearRoom(ARoom* Room);
+
+    void Preparation();
 };

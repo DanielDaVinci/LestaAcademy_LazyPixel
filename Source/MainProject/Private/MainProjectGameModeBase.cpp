@@ -16,11 +16,4 @@ AMainProjectGameModeBase::AMainProjectGameModeBase()
 void AMainProjectGameModeBase::BeginPlay()
 {
     Super::BeginPlay();
-
-    SpawnFloorManager();
-}
-
-void AMainProjectGameModeBase::SpawnFloorManager()
-{
-    m_pFloorManager = GetWorld()->SpawnActor<AFloorManager>(floorManagerClass);
 }

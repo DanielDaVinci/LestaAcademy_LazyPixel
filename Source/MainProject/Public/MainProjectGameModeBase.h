@@ -6,6 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "MainProjectGameModeBase.generated.h"
 
+class UFloorManagerComponent;
 class AFloorManager;
 
 UCLASS()
@@ -18,13 +19,7 @@ public:
 
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Environment")
-    TSubclassOf<AFloorManager> floorManagerClass;
-
+    AFloorManager* floorManager;
+    
     virtual void BeginPlay() override;
-    
-private:
-    UPROPERTY()
-    AFloorManager* m_pFloorManager = nullptr;
-    
-    void SpawnFloorManager();
 };

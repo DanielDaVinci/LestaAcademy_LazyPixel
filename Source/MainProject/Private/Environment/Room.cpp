@@ -7,25 +7,26 @@
 #include "Character/Player/PlayerCharacter.h"
 #include "Character/Player/Components/HealthComponent.h"
 #include "Components/LightComponent.h"
+#include "Engine/StaticMeshActor.h"
 #include "Kismet/GameplayStatics.h"
+#include "NavMesh/NavMeshBoundsVolume.h"
 
 ARoom::ARoom()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
     pSceneComponent = CreateDefaultSubobject<USceneComponent>("SceneComponent");
-    pSceneComponent->SetMobility(EComponentMobility::Static);
+    pSceneComponent->SetMobility(EComponentMobility::Stationary);
     SetRootComponent(pSceneComponent);
 
     pRoomCollisionComponent = CreateDefaultSubobject<UBoxComponent>("RoomCollisionComponent");
     pRoomCollisionComponent->SetupAttachment(GetRootComponent());
-    pRoomCollisionComponent->SetMobility(EComponentMobility::Static);
+    pRoomCollisionComponent->SetMobility(EComponentMobility::Stationary);
     pRoomCollisionComponent->InitBoxExtent(FVector(300.0f, 300.0f, 50.0f));
     pRoomCollisionComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
     pRoomCollisionComponent->SetCollisionObjectType(ECC_WorldStatic);
     pRoomCollisionComponent->SetCollisionResponseToAllChannels(ECR_Ignore);
     pRoomCollisionComponent->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
-    
 }
 
 void ARoom::TurnOffLight()
@@ -44,6 +45,14 @@ void ARoom::TurnOnLight()
     }
 }
 
+void ARoom::SetCeilingVisibility(bool Visible)
+{
+    if (!roomCeiling)
+        return;
+
+    roomCeiling->SetActorHiddenInGame(!Visible);
+}
+
 void ARoom::BeginPlay()
 {
 	Super::BeginPlay();
@@ -51,15 +60,12 @@ void ARoom::BeginPlay()
     BindInputDoorsForEnter();
     BindEnemies();
     BindLightSources();
-
-    TurnOffLight();
-    OpenAllDoors();
 }
 
 void ARoom::OnPlayerEnter()
 {
     m_isEntered = true;
-    TurnOnLight();
+    OnPlayerEnterEvent.Broadcast(this);
     
     if (m_currentAliveEnemies != 0)
         CloseAllDoors();
@@ -67,7 +73,7 @@ void ARoom::OnPlayerEnter()
 
 void ARoom::BindInputDoorsForEnter()
 {
-    for (auto& door: inputDoors)
+    for (const auto& door: inputDoors)
     {
         door->OnEnterDoor.AddUObject(this, &ARoom::OnPlayerEnter);
     }
@@ -115,7 +121,7 @@ void ARoom::OnEnemyDied()
 {
     if (--m_currentAliveEnemies == 0)
     {
-        OpenOutputDoors();
+        OnAllEnemiesDied.Broadcast(this);
     }
 }
 
@@ -133,7 +139,7 @@ void ARoom::FindEnemies()
     UpdateOverlaps(false);
     GetOverlappingActors(overlappingActors);
 
-    for (auto actor: overlappingActors)
+    for (const auto& actor: overlappingActors)
     {
         auto enemy = Cast<AAIBaseCharacter>(actor);
         if (!enemy)
@@ -146,7 +152,7 @@ void ARoom::FindEnemies()
 
 void ARoom::BindEnemiesOnDeath()
 {
-    for (const auto enemy : enemies)
+    for (const auto& enemy : enemies)
     {
         const auto healthComponent = enemy->GetComponentByClass<UHealthComponent>();
         if (!healthComponent)
@@ -158,12 +164,12 @@ void ARoom::BindEnemiesOnDeath()
 
 void ARoom::CloseAllDoors()
 {
-    for (const auto door : inputDoors)
+    for (const auto& door : inputDoors)
     {
         door->Close();
     }
 
-    for (const auto door : outputDoors)
+    for (const auto& door : outputDoors)
     {
         door->Close();
     }
@@ -171,22 +177,61 @@ void ARoom::CloseAllDoors()
 
 void ARoom::OpenAllDoors()
 {
-    for (const auto door : inputDoors)
-    {
-        door->Open();
-    }
+    OpenInputDoors();
+    OpenOutputDoors();
+}
 
-    for (const auto door : outputDoors)
+void ARoom::OpenOutputDoors()
+{
+    for (const auto& door : outputDoors)
     {
         door->Open();
     }
 }
 
-void ARoom::OpenOutputDoors()
+void ARoom::OpenInputDoors()
 {
-    for (const auto door : outputDoors)
+    for (const auto& door : inputDoors)
     {
         door->Open();
+    }
+}
+
+void ARoom::DestroyActorsInRoom()
+{
+    if (!GetWorld())
+        return;
+   
+    TArray<UBoxComponent*> boxComponents;
+    GetComponents(UBoxComponent::StaticClass(), boxComponents);
+    
+    TArray<FBox> volumes;
+    for (const auto& component: boxComponents)
+    {
+        volumes.Push(component->Bounds.GetBox());
+    }
+    
+    TArray<AActor*> findedActors;
+    UGameplayStatics::GetAllActorsOfClass(GetWorld(), AStaticMeshActor::StaticClass(), findedActors);
+    
+    for (const auto& actor : findedActors)
+    {
+        if (!Cast<AStaticMeshActor>(actor))
+            return;
+        
+        bool isInside = false;
+        for (auto box: volumes)
+        {
+            isInside = box.IsInside(actor->GetActorLocation());
+            if (isInside)
+                break;
+        }
+
+        if (isInside)
+        {
+            UE_LOG(LogTemp, Warning, TEXT("%s"), *actor->GetName());
+            actor->Destroy();
+        }   
     }
 }
 
