@@ -31,7 +31,7 @@ void AGun::MakeShot(USkeletalMeshComponent* MeshComp)
     {
         Projectile->SetShotDirection(Direction);
         Projectile->SetDamage(damage);
-        Projectile->m_EndTrace = EndPoint;
+        Projectile->SetTrailColor(m_nProjTrailCol);
 
         Projectile->FinishSpawning(SpawnTranform);
     }
@@ -46,8 +46,12 @@ FVector AGun::GetDirection()
     if (character->IsPlayerControlled())
     {
         const auto MovComp = Cast<UPlayerMovementComponent>(character->GetMovementComponent());
+        m_nProjTrailCol = 0;
         return MovComp->GetMouseViewDirection();
     }
     else
+    {
+        m_nProjTrailCol = 1;
         return pWeaponMeshComponent->GetSocketRotation(FName("MuzzleSocket")).Vector();
+    }
 }

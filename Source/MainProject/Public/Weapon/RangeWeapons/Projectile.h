@@ -19,9 +19,7 @@ public:
 
     void SetShotDirection(const FVector& Direction) { m_ShotDirection = Direction; }
     void SetDamage(const float Damage) { m_Damage = Damage; }
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EndTrace")
-    FVector m_EndTrace;
+    void SetTrailColor(const uint8 nColorIndex) { if (TrailColors.IsValidIndex(nColorIndex)) CurTrailColor = TrailColors[nColorIndex]; }
 
 protected:
     UPROPERTY(VisibleDefaultsOnly, Category = "Weapon")
@@ -29,6 +27,12 @@ protected:
 
     UPROPERTY(VisibleDefaultsOnly, Category = "Weapon")
     UProjectileMovementComponent* MovementComponent;
+
+    UPROPERTY(EditDefaultsOnly, Category = "VFX")
+    TArray<FLinearColor> TrailColors;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "VFX")
+    FLinearColor CurTrailColor;
 
     virtual void BeginPlay() override;
 

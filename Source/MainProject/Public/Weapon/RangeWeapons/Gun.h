@@ -25,5 +25,5 @@ protected:
     
 private:
     FVector GetDirection();
-
+    uint8 m_nProjTrailCol = 0;
 };
