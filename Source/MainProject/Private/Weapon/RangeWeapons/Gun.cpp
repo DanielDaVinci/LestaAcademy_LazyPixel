@@ -1,53 +1,45 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Weapon/RangeWeapons/Gun.h"
+
+#include "Character/Player/BasePlayerController.h"
 #include "Weapon/RangeWeapons/Projectile.h"
 #include "GameFramework/Character.h"
-#include "Character/Player/Components/PlayerMovementComponent.h"
 
-void AGun::MakeShot(USkeletalMeshComponent* MeshComp)
+void AGun::MakeShoot(const FVector& Point) const
 {
-    if (GetOwner() != MeshComp->GetOwner())
+    FVector shootDirection = Point - GetActorLocation();
+    shootDirection.Z = 0.0f;
+    shootDirection.Normalize();
+    
+    const FTransform socketTransform = pWeaponMeshComponent->GetSocketTransform(MuzzleSocketName);
+    const FTransform spawnTransform(FRotator::ZeroRotator, socketTransform.GetLocation());
+
+    AProjectile* projectile = GetWorld()->SpawnActorDeferred<AProjectile>(ProjectileClass, spawnTransform);
+    if (!projectile)
         return;
+    
+    projectile->SetOwner(GetOwner());
+    projectile->SetShootDirection(shootDirection);
+    projectile->SetDamage(damage);
 
-    const FTransform SocketTransform = pWeaponMeshComponent->GetSocketTransform(MuzzleSocketName);
-    const FTransform SpawnTranform(FRotator::ZeroRotator, SocketTransform.GetLocation());
-
-    const FVector TraceStart = SocketTransform.GetLocation();
-    const FVector TraceEnd = TraceStart + GetDirection();//    MouseDirection;
-
-    FCollisionQueryParams CollisionParams;
-    CollisionParams.AddIgnoredActor(GetOwner());
-
-    FHitResult HitResult;
-    GetWorld()->LineTraceSingleByChannel(HitResult, TraceStart, TraceEnd, ECollisionChannel::ECC_Visibility, CollisionParams);
-
-    FVector EndPoint = HitResult.bBlockingHit ? HitResult.ImpactPoint : TraceEnd;
-    const FVector Direction = (EndPoint - SocketTransform.GetLocation()).GetSafeNormal();
-
-    AProjectile* Projectile = GetWorld()->SpawnActorDeferred<AProjectile>(ProjectileClass, SpawnTranform);
-    Projectile->SetOwner(GetOwner());
-    if (Projectile)
-    {
-        Projectile->SetShotDirection(Direction);
-        Projectile->SetDamage(damage);
-        Projectile->m_EndTrace = EndPoint;
-
-        Projectile->FinishSpawning(SpawnTranform);
-    }
+    projectile->FinishSpawning(spawnTransform);
 }
 
-FVector AGun::GetDirection()
+FVector AGun::GetDirection() const
 {
+    const auto defaultValue = pWeaponMeshComponent->GetSocketRotation(MuzzleSocketName).Vector();
+    
     const auto character = Cast<ACharacter>(GetOwner());
-    if (!character)
-        return FVector();
+    if (!character || !character->IsPlayerControlled())
+        return defaultValue;
 
-    if (character->IsPlayerControlled())
-    {
-        const auto MovComp = Cast<UPlayerMovementComponent>(character->GetMovementComponent());
-        return MovComp->GetMouseViewDirection();
-    }
-    else
-        return pWeaponMeshComponent->GetSocketRotation(FName("MuzzleSocket")).Vector();
+    const auto playerController = Cast<ABasePlayerController>(character->GetController());
+    if (!playerController)
+        return defaultValue;
+    
+    FVector direction = playerController->GetDirectionToMouseHit(GetActorLocation());
+    direction.Z = 0.0f;
+    
+    return direction.GetSafeNormal();
 }

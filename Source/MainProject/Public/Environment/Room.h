@@ -84,4 +84,6 @@ private:
     
     void FindEnemies();
     void BindEnemiesOnDeath();
+
+    void SetupCeiling() const;
 };

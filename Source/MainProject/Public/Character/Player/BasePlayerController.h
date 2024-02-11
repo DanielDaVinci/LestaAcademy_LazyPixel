@@ -37,9 +37,12 @@ public:
     FOnCustomAbilitySignature OnCustomAbility;
     FOnInteractSignature OnInteract;
 #pragma endregion delegates
-
+    
     FVector2D GetMouseVector() const;
     FVector2D GetMaxMouseVector() const;
+    
+    FVector GetWorldPointUnderMouse() const;
+    FVector GetDirectionToMouseHit(const FVector& StartPoint) const;
 
 public:
     virtual void SetupInputComponent() override;

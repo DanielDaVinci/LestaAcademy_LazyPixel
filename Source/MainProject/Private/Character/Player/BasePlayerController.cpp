@@ -30,6 +30,19 @@ FVector2D ABasePlayerController::GetMaxMouseVector() const
     return FVector2D(viewportSize.X / 2, viewportSize.Y / 2);
 }
 
+FVector ABasePlayerController::GetWorldPointUnderMouse() const
+{
+    FHitResult hitResult;
+    GetHitResultUnderCursor(ECC_MAX, false, hitResult);
+    
+    return hitResult.ImpactPoint;
+}
+
+FVector ABasePlayerController::GetDirectionToMouseHit(const FVector& StartPoint) const
+{
+    return GetWorldPointUnderMouse() - StartPoint;
+}
+
 void ABasePlayerController::SetupInputComponent()
 {
     Super::SetupInputComponent();
@@ -62,6 +75,7 @@ void ABasePlayerController::HandleMeleeAttack()
 
 void ABasePlayerController::HandleRangeAttack()
 {
+    GetWorldPointUnderMouse();
     OnRangeAttack.Broadcast();
 }
 

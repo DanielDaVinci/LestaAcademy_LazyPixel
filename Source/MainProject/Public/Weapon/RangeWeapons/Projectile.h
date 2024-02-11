@@ -17,11 +17,8 @@ class MAINPROJECT_API AProjectile : public AActor
 public:
     AProjectile();
 
-    void SetShotDirection(const FVector& Direction) { m_ShotDirection = Direction; }
+    void SetShootDirection(const FVector& Direction) { m_ShotDirection = Direction; }
     void SetDamage(const float Damage) { m_Damage = Damage; }
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EndTrace")
-    FVector m_EndTrace;
 
 protected:
     UPROPERTY(VisibleDefaultsOnly, Category = "Weapon")

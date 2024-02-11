@@ -69,10 +69,10 @@ private:
 
 public:
     /**
-     * @return Direction character view regarding mouse position on screen ceneter
+     * @return Direction character view regarding mouse position on screen center
      */
     FVector GetMouseViewDirection() const;
-
+    
     /**
      * Fix character rotation
      * @param FixRotation Characters's fix rotation in end

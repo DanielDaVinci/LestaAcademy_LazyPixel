@@ -86,9 +86,7 @@ void APlayerCharacter::OnMouseMove(FVector2D MouseVector)
         pSpringArmComponent->GetRelativeRotation().Yaw,
         FVector(0.0f, 0.0f, 1.0f));
 
-    if (FMath::IsNearlyEqual(m_targetCameraOffset.X, newCameraOffset.X) &&
-        FMath::IsNearlyEqual(m_targetCameraOffset.Y, newCameraOffset.Y) &&
-        FMath::IsNearlyEqual(m_targetCameraOffset.Z, newCameraOffset.Z))
+    if ((m_targetCameraOffset - newCameraOffset).IsNearlyZero())
             return;
 
     m_currentCameraOffset = pSpringArmComponent->TargetOffset;

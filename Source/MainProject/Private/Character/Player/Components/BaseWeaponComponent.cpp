@@ -53,10 +53,10 @@ void UBaseWeaponComponent::InitAnimations()
             //break;
         }
 
-        auto RangeNotify = Cast<URangeAttackNotify>(NotifyEvent.Notify);
-        if (RangeNotify)
-            if (AGun* pRangeWeapon = Cast<AGun>(m_pBaseWeapon))
-                RangeNotify->FOnRangeAttackNotify.AddUObject(pRangeWeapon, &AGun::MakeShot);
+        // auto RangeNotify = Cast<URangeAttackNotify>(NotifyEvent.Notify);
+        // if (RangeNotify)
+        //     if (AGun* pRangeWeapon = Cast<AGun>(m_pBaseWeapon))
+        //         RangeNotify->FOnRangeAttackNotify.AddUObject(pRangeWeapon, &AGun::MakeShot);
     }
 }
 

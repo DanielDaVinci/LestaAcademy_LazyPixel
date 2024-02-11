@@ -14,7 +14,7 @@ class MAINPROJECT_API AGun : public ABaseWeapon
     GENERATED_BODY()
 
 public:
-    void MakeShot(USkeletalMeshComponent* MeshComp);
+    void MakeShoot(const FVector& Point) const;
 
 protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Projectile")
@@ -24,6 +24,6 @@ protected:
     FName MuzzleSocketName = "MuzzleSocket";
     
 private:
-    FVector GetDirection();
+    FVector GetDirection() const;
 
 };

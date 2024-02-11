@@ -60,6 +60,8 @@ void ARoom::BeginPlay()
     BindInputDoorsForEnter();
     BindEnemies();
     BindLightSources();
+
+    SetupCeiling();
 }
 
 void ARoom::OnPlayerEnter()
@@ -160,6 +162,14 @@ void ARoom::BindEnemiesOnDeath()
 
         healthComponent->OnDeath.AddUObject(this, &ARoom::OnEnemyDied);
     }
+}
+
+void ARoom::SetupCeiling() const
+{
+    if (!roomCeiling)
+        return;
+
+    roomCeiling->SetActorEnableCollision(false);
 }
 
 void ARoom::CloseAllDoors()

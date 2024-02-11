@@ -30,6 +30,7 @@ protected:
 
 private:
     AGun* m_pRangeWeapon;
+    FVector m_rangeAttackPoint;
     bool  m_bIsComboChain = false;
     bool  m_bWasFirstAttack = false;
     uint8 m_nComboIndex = 0;
@@ -37,6 +38,8 @@ private:
     virtual void SpawnWeapons() override;
     virtual void InitAnimations() override;   
     void PlayMeleeAttackAnim();
+
+    void OnRangeNotifyHandle(USkeletalMeshComponent* MeshComp);
 
     UPlayerMovementComponent* GetPlayerMovementComponent() const;
 };

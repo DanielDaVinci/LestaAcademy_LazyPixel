@@ -16,8 +16,7 @@ AProjectile::AProjectile()
     CollisionComponent = CreateDefaultSubobject<USphereComponent>("SphereComponent");
     CollisionComponent->InitSphereRadius(3.0f);
     CollisionComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-    CollisionComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
-
+    CollisionComponent->SetCollisionResponseToAllChannels(ECR_Block);
     SetRootComponent(CollisionComponent);
 
     MovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>("ProjectileMovementComponent");
@@ -30,15 +29,13 @@ void AProjectile::BeginPlay()
     Super::BeginPlay();
 
     check(MovementComponent);
-    // UE_LOG(LogProjectile, Display, TEXT("ShotDirection: %s"), *ShotDirection.ToString());
     MovementComponent->Velocity = m_ShotDirection * MovementComponent->InitialSpeed;
     CollisionComponent->OnComponentHit.AddDynamic(this, &AProjectile::OnProjectileHit);
 
     SetLifeSpan(10.0f);
 }
 
-void AProjectile::OnProjectileHit(
-    UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+void AProjectile::OnProjectileHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
     //UE_LOG(LogProjectile, Display, TEXT("Proj hit: %s"), *OtherActor->GetName());
     if (OtherActor->GetClass() != GetOwner()->GetClass())

@@ -36,13 +36,13 @@ public:
     virtual void Tick(float DeltaTime) override;
 
 protected:
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera|Movement Interpolation")
     FVector2D maxCameraShiftOnMouseMove = { 500.0f, 300.0f };
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera|Movement Interpolation")
     UCurveVector* cameraMovementInterpolation;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera|Movement Interpolation")
     float interpolationFrequency = 0.01f;
     
     void OnMouseMove(FVector2D MouseVector);

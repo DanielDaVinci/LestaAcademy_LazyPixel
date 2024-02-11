@@ -6,6 +6,7 @@
 #include "Character/BaseCharacter.h"
 #include "Animations/ComboEndAnimNotify.h"
 #include "Animations/RangeAttackNotify.h"
+#include "Character/Player/BasePlayerController.h"
 #include "Character/Player/Components/PlayerMovementComponent.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogWeaponComponent, All, All);
@@ -53,7 +54,7 @@ void UWeaponComponent::InitAnimations()
     {
         auto RangeNotify = Cast<URangeAttackNotify>(NotifyEvent.Notify);
         if (RangeNotify)
-            RangeNotify->FOnRangeAttackNotify.AddUObject(m_pRangeWeapon, &AGun::MakeShot);
+            RangeNotify->FOnRangeAttackNotify.AddUObject(this, &UWeaponComponent::OnRangeNotifyHandle);
 
         auto ComboNotify = Cast<UComboEndAnimNotify>(NotifyEvent.Notify);
         if (ComboNotify)
@@ -105,6 +106,14 @@ void UWeaponComponent::PlayMeleeAttackAnim()
     Character->PlayAnimMontage(pMeleeWeapon->GetAttackMontage(), ComboInfo[m_nComboIndex].sectionRateScale, ComboInfo[m_nComboIndex].attackSectionName);
 }
 
+void UWeaponComponent::OnRangeNotifyHandle(USkeletalMeshComponent* MeshComp)
+{
+    if (GetOwner() != MeshComp->GetOwner() || !m_pRangeWeapon)
+        return;
+    
+    m_pRangeWeapon->MakeShoot(m_rangeAttackPoint);
+}
+
 void UWeaponComponent::OnNextComboSection()
 {
     ASword* pMeleeWeapon = Cast<ASword>(m_pBaseWeapon);
@@ -140,12 +149,17 @@ void UWeaponComponent::RangeAttack()
 
     m_bIsComboChain = false; 
 
+    const auto playerController = Cast<ABasePlayerController>(Character->GetController());
     const auto pmComponent = GetPlayerMovementComponent();
-    if (!pmComponent)
+    if (!playerController || !pmComponent)
         return;
 
-    FRotator viewRotation = pmComponent->GetMouseViewDirection().Rotation();
-    pmComponent->FixCharacterRotation(viewRotation);
+    m_rangeAttackPoint = playerController->GetWorldPointUnderMouse();
+    if (m_rangeAttackPoint == FVector())
+        return;
+
+    const FRotator viewRotation = (m_rangeAttackPoint - Character->GetActorLocation()).Rotation();
+    pmComponent->FixCharacterRotation(FRotator(0.0f, viewRotation.Yaw, 0.0f));
     pmComponent->SetDeceleration(1.f);
 
     Character->PlayAnimMontage(m_pRangeWeapon->GetAttackMontage());
