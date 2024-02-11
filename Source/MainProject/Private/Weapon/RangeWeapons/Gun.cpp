@@ -6,7 +6,7 @@
 #include "Weapon/RangeWeapons/Projectile.h"
 #include "GameFramework/Character.h"
 
-void AGun::MakeShoot(const FVector& Point) const
+void AGun::MakeShoot(const FVector& Point)
 {
     FVector shootDirection = Point - GetActorLocation();
     shootDirection.Z = 0.0f;
@@ -22,9 +22,9 @@ void AGun::MakeShoot(const FVector& Point) const
     projectile->SetOwner(GetOwner());
     projectile->SetShootDirection(shootDirection);
     projectile->SetDamage(damage);
-    m_nProjTrailCol = 0;
-    projectile->SetTrailColor(m_nProjTrailCol);
-
+    if (const auto character = Cast<ACharacter>(GetOwner()))
+        projectile->SetTrailColor(character->IsPlayerControlled() ? 0 : 1);
+    
     projectile->FinishSpawning(spawnTransform);
 }
 

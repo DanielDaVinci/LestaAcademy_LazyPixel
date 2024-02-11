@@ -14,7 +14,7 @@ class MAINPROJECT_API AGun : public ABaseWeapon
     GENERATED_BODY()
 
 public:
-    void MakeShoot(const FVector& Point) const;
+    void MakeShoot(const FVector& Point);
 
 protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Projectile")
