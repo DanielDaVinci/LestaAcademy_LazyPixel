@@ -22,6 +22,8 @@ void AGun::MakeShoot(const FVector& Point) const
     projectile->SetOwner(GetOwner());
     projectile->SetShootDirection(shootDirection);
     projectile->SetDamage(damage);
+    m_nProjTrailCol = 0;
+    projectile->SetTrailColor(m_nProjTrailCol);
 
     projectile->FinishSpawning(spawnTransform);
 }
