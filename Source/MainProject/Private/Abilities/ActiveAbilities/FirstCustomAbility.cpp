@@ -5,7 +5,6 @@
 
 #include "Character/BaseCharacter.h"
 #include "Common/Objects/CollisionCube.h"
-#include "Components/BoxComponent.h"
 #include "Engine/DamageEvents.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -15,10 +14,9 @@ bool UStrongAttackAbility::NativeActivate()
         return false;
     
     m_pCubeCollision->Enable();
-    
+
+    GetCharacter()->PlayAnimMontage(pAbilityAnimation);
     GetWorld()->GetTimerManager().SetTimer(m_timerHandle, this, &UStrongAttackAbility::OnStrongAbilityEnd, abilityDuration);
-    GetCharacter()->LaunchCharacter(GetCharacter()->GetMesh()->GetRightVector().GetSafeNormal() * abilityDistance, true, false);
-    
     return Super::NativeActivate();
 }
 

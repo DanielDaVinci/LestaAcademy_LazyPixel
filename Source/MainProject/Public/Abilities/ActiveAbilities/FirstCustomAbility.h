@@ -27,6 +27,9 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Params")
     float abilityDistance = 2000.0f;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Params")
+    UAnimMontage* pAbilityAnimation;
+
     virtual void BeginPlay() override;
     
     UFUNCTION()
