@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="RIDER_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$USER_HOME$/.nuget/packages/microsoft.net.test.sdk/17.3.0/build/netcoreapp2.1" />
+    <content url="file://$USER_HOME$/.nuget/packages/microsoft.testplatform.testhost/17.3.0/build/netcoreapp2.1/x64/testhost.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/microsoft.testplatform.testhost/17.3.0/build/netcoreapp2.1/x64/testhost.exe" />
+    <content url="file://$USER_HOME$/.nuget/packages/mstest.testadapter/2.2.10/build/_common/Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/mstest.testadapter/2.2.10/build/_common/Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/mstest.testadapter/2.2.10/build/_common/ru" />
+    <content url="file://$USER_HOME$/.nuget/packages/mstest.testadapter/2.2.10/build/net5.0/Microsoft.TestPlatform.AdapterUtilities.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/mstest.testadapter/2.2.10/build/net5.0/Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll" />
+    <content url="file://$USER_HOME$/AppData/Roaming/Unreal Engine/UnrealBuildTool/BuildConfiguration.xml" />
+    <content url="file://$MODULE_DIR$/../.." />
+    <content url="file://$MODULE_DIR$/../../../UE_5.3/Engine/Binaries/DotNET/EpicGames.Perforce.Native/linux-x64/Release/EpicGames.Perforce.Native.so" />
+    <content url="file://$MODULE_DIR$/../../../UE_5.3/Engine/Binaries/DotNET/EpicGames.Perforce.Native/mac-x64/Release/EpicGames.Perforce.Native.dylib" />
+    <content url="file://$MODULE_DIR$/../../../UE_5.3/Engine/Binaries/DotNET/EpicGames.Perforce.Native/win-x64/Release/EpicGames.Perforce.Native.dll" />
+    <content url="file://$MODULE_DIR$/../../../UE_5.3/Engine/Binaries/DotNET/EpicGames.Perforce.Native/win-x64/Release/EpicGames.Perforce.Native.pdb" />
+    <content url="file://$MODULE_DIR$/../../../UE_5.3/Engine/Build/BatchFiles" />
+    <content url="file://$MODULE_DIR$/../../../UE_5.3/Engine/Config" />
+    <content url="file://$MODULE_DIR$/../../../UE_5.3/Engine/Extras/VisualStudioDebugging/Unreal.natstepfilter" />
+    <content url="file://$MODULE_DIR$/../../../UE_5.3/Engine/Extras/VisualStudioDebugging/Unreal.natvis" />
+    <content url="file://$MODULE_DIR$/../../../UE_5.3/Engine/Intermediate/Build/BuildRulesProjects/UE5ProgramRules" />
+    <content url="file://$MODULE_DIR$/../../../UE_5.3/Engine/Intermediate/Build/BuildRulesProjects/UE5Rules" />
+    <content url="file://$MODULE_DIR$/../../../UE_5.3/Engine/Intermediate/ProjectFiles/AutomationTool.csproj.References" />
+    <content url="file://$MODULE_DIR$/../../../UE_5.3/Engine/Plugins" />
+    <content url="file://$MODULE_DIR$/../../../UE_5.3/Engine/Shaders/Private" />
+    <content url="file://$MODULE_DIR$/../../../UE_5.3/Engine/Shaders/Public" />
+    <content url="file://$MODULE_DIR$/../../../UE_5.3/Engine/Shaders/Shared" />
+    <content url="file://$MODULE_DIR$/../../../UE_5.3/Engine/Shaders/StandaloneRenderer/D3D" />
+    <content url="file://$MODULE_DIR$/../../../UE_5.3/Engine/Shaders/StandaloneRenderer/OpenGL" />
+    <content url="file://$MODULE_DIR$/../../../UE_5.3/Engine/Source" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>
