@@ -9,6 +9,7 @@
 #include "GameFramework/Actor.h"
 #include "Room.generated.h"
 
+class UWavesSystemComponent;
 class AAIBaseCharacter;
 class AEnemySpawner;
 class ADoor;
@@ -49,22 +50,22 @@ protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName="Room Collision Component")
     UBoxComponent* pRoomCollisionComponent;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room Environment|Manual")
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName="Waves System Component")
+    UWavesSystemComponent* pWavesSystemComponent;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room|Environment|Manual")
     AActor* roomCeiling;
     
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room Environment|Manual")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room|Environment|Manual")
     TArray<ADoor*> inputDoors;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room Environment|Manual")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room|Environment|Manual")
     TArray<ADoor*> outputDoors;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room Environment|Manual")
-    TArray<AEnemySpawner*> enemySpawners;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room Environment|Dynamic")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room|Enemies|Dynamic")
     TArray<AAIBaseCharacter*> enemies;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room Environment|Dynamic")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room|Environment|Dynamic")
     TArray<ALight*> lightSources;
 
     virtual void BeginPlay() override;

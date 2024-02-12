@@ -8,6 +8,7 @@
 #include "Character/Player/Components/HealthComponent.h"
 #include "Components/LightComponent.h"
 #include "Engine/StaticMeshActor.h"
+#include "Environment/Components/WavesSystemComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "NavMesh/NavMeshBoundsVolume.h"
 
@@ -27,6 +28,8 @@ ARoom::ARoom()
     pRoomCollisionComponent->SetCollisionObjectType(ECC_WorldStatic);
     pRoomCollisionComponent->SetCollisionResponseToAllChannels(ECR_Ignore);
     pRoomCollisionComponent->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
+
+    pWavesSystemComponent = CreateDefaultSubobject<UWavesSystemComponent>("WavesSystemComponent");
 }
 
 void ARoom::TurnOffLight()
