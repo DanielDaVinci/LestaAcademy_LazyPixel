@@ -36,6 +36,9 @@ protected:
     void OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
     int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
+    UFUNCTION()
+    void OnMontageEndedHandle(UAnimMontage* Montage, bool bInterrupted);
+
     void OnStrongAbilityEnd();
 
 private:
