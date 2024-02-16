@@ -16,6 +16,7 @@ ADoor::ADoor()
     pCollisionComponent = CreateDefaultSubobject<UBoxComponent>("CollisionComponent");
     pCollisionComponent->SetupAttachment(GetRootComponent());
     pCollisionComponent->SetCollisionObjectType(ECC_WorldStatic);
+    pCollisionComponent->SetCanEverAffectNavigation(false);
 
     pArrowComponent = CreateDefaultSubobject<UArrowComponent>("ArrowComponent");
     pArrowComponent->SetupAttachment(GetRootComponent());
@@ -25,16 +26,19 @@ ADoor::ADoor()
 
     pWallDoorMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("WallDoorMeshComponent");
     pWallDoorMeshComponent->SetupAttachment(GetRootComponent());
+    pWallDoorMeshComponent->SetCanEverAffectNavigation(false);
 
     pLeftDoorSceneComponent = CreateDefaultSubobject<USceneComponent>("LeftDoorSceneComponent");
     pLeftDoorSceneComponent->SetupAttachment(pWallDoorMeshComponent);
     pLeftDoorMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("LeftDoorMeshComponent");
     pLeftDoorMeshComponent->SetupAttachment(pLeftDoorSceneComponent);
+    pLeftDoorMeshComponent->SetCanEverAffectNavigation(false);
 
     pRightDoorSceneComponent = CreateDefaultSubobject<USceneComponent>("RightDoorSceneComponent");
     pRightDoorSceneComponent->SetupAttachment(pWallDoorMeshComponent);
     pRightDoorMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("RightDoorMeshComponent");
     pRightDoorMeshComponent->SetupAttachment(pRightDoorSceneComponent);
+    pRightDoorMeshComponent->SetCanEverAffectNavigation(false);
 }
 
 void ADoor::NotifyActorEndOverlap(AActor* OtherActor)

@@ -61,10 +61,15 @@ void ARoom::BeginPlay()
 	Super::BeginPlay();
     
     BindInputDoorsForEnter();
-    BindEnemies();
     BindLightSources();
 
     SetupCeiling();
+    BindEvents();
+}
+
+void ARoom::BindEvents()
+{
+    pWavesSystemComponent->OnAllWavesEndEvent.AddUObject(this, &ARoom::OnAllWavesEnd);
 }
 
 void ARoom::OnPlayerEnter()
@@ -72,8 +77,12 @@ void ARoom::OnPlayerEnter()
     m_isEntered = true;
     OnPlayerEnterEvent.Broadcast(this);
     
-    if (m_currentAliveEnemies != 0)
-        CloseAllDoors();
+    pWavesSystemComponent->StartWaves();
+}
+
+void ARoom::OnAllWavesEnd()
+{
+    OnAllEnemiesDied.Broadcast(this);
 }
 
 void ARoom::BindInputDoorsForEnter()
@@ -122,51 +131,6 @@ void ARoom::BindLightSources()
     }
 }
 
-void ARoom::OnEnemyDied()
-{
-    if (--m_currentAliveEnemies == 0)
-    {
-        OnAllEnemiesDied.Broadcast(this);
-    }
-}
-
-void ARoom::BindEnemies()
-{
-    FindEnemies();
-    BindEnemiesOnDeath();
-
-    m_currentAliveEnemies = enemies.Num();
-}
-
-void ARoom::FindEnemies()
-{
-    TArray<AActor*> overlappingActors;
-    UpdateOverlaps(false);
-    GetOverlappingActors(overlappingActors);
-
-    for (const auto& actor: overlappingActors)
-    {
-        auto enemy = Cast<AAIBaseCharacter>(actor);
-        if (!enemy)
-            continue;
-
-        enemies.Add(enemy);
-        enemy->enemyRoom = this;
-    }
-}
-
-void ARoom::BindEnemiesOnDeath()
-{
-    for (const auto& enemy : enemies)
-    {
-        const auto healthComponent = enemy->GetComponentByClass<UHealthComponent>();
-        if (!healthComponent)
-            continue;
-
-        healthComponent->OnDeath.AddUObject(this, &ARoom::OnEnemyDied);
-    }
-}
-
 void ARoom::SetupCeiling() const
 {
     if (!roomCeiling)
@@ -210,7 +174,7 @@ void ARoom::OpenInputDoors()
     }
 }
 
-void ARoom::DestroyActorsInRoom()
+void ARoom::DestroyActorsInRoom() const
 {
     if (!GetWorld())
         return;

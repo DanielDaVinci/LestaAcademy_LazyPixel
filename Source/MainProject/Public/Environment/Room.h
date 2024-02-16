@@ -41,7 +41,7 @@ public:
     void OpenOutputDoors();
     void OpenInputDoors();
 
-    void DestroyActorsInRoom();
+    void DestroyActorsInRoom() const;
 
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName="Scene Component")
@@ -53,38 +53,43 @@ protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName="Waves System Component")
     UWavesSystemComponent* pWavesSystemComponent;
 
+    virtual void BeginPlay() override;
+
+    void BindEvents();
+    
+    void OnPlayerEnter();
+    void OnAllWavesEnd();
+
+private:
+    bool m_isEntered;
+
+
+    // Ceilings
+protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room|Environment|Manual")
     AActor* roomCeiling;
     
+private:
+    void SetupCeiling() const;
+
+    
+    // Doors
+protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room|Environment|Manual")
     TArray<ADoor*> inputDoors;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room|Environment|Manual")
     TArray<ADoor*> outputDoors;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room|Enemies|Dynamic")
-    TArray<AAIBaseCharacter*> enemies;
+private:
+    void BindInputDoorsForEnter();
 
+    
+    // Lights
+protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room|Environment|Dynamic")
     TArray<ALight*> lightSources;
-
-    virtual void BeginPlay() override;
     
-    void OnPlayerEnter();
-
-    UFUNCTION()
-    void OnEnemyDied();
-
 private:
-    int32 m_currentAliveEnemies;
-    bool m_isEntered;
-
-    void BindEnemies();
-    void BindInputDoorsForEnter();
     void BindLightSources();
-    
-    void FindEnemies();
-    void BindEnemiesOnDeath();
-
-    void SetupCeiling() const;
 };

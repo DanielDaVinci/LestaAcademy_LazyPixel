@@ -3,12 +3,16 @@
 
 #include "Environment/EnemySpawner.h"
 
+#include "AI/Characters/AIBaseCharacter.h"
+#include "Environment/Door.h"
+
 AEnemySpawner::AEnemySpawner()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
     pStartCapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>("CapsuleComponent");
     SetRootComponent(pStartCapsuleComponent);
+    pStartCapsuleComponent->SetCapsuleSize(34.0f, 88.0f);
 
     pArrowComponent = CreateDefaultSubobject<UArrowComponent>("ArrowComponent");
     pArrowComponent->SetupAttachment(GetRootComponent());
@@ -17,15 +21,30 @@ AEnemySpawner::AEnemySpawner()
     pArrowComponent->ArrowColor = FColor::Blue;
 }
 
-void AEnemySpawner::BeginPlay()
+AAIBaseCharacter* AEnemySpawner::Spawn(const TSubclassOf<AAIBaseCharacter>& AICharacterClass) const
 {
-	Super::BeginPlay();
-	
+    if (!GetWorld() || !AICharacterClass)
+        return nullptr;
+
+    return GetWorld()->SpawnActor<AAIBaseCharacter>(
+        AICharacterClass,
+        pStartCapsuleComponent->GetComponentLocation(),
+        pStartCapsuleComponent->GetComponentRotation());
 }
 
-void AEnemySpawner::Tick(float DeltaTime)
+void AEnemySpawner::OpenDoor() const
 {
-	Super::Tick(DeltaTime);
+    if (!pEnemyOutputDoor)
+        return;
 
+    pEnemyOutputDoor->Open();
+}
+
+void AEnemySpawner::CloseDoor() const
+{
+    if (!pEnemyOutputDoor)
+        return;
+
+    pEnemyOutputDoor->Close();
 }
 

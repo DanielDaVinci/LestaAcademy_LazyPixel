@@ -4,41 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Environment/EnemySpawner.h"
+#include "Environment/EnvironmentCoreTypes.h"
 #include "WavesSystemComponent.generated.h"
 
-class AAIBaseCharacter;
-class AEnemySpawner;
+DECLARE_MULTICAST_DELEGATE(FOnWaveEndSignature)
+DECLARE_MULTICAST_DELEGATE(FOnAllWavesEndSignature)
 
-USTRUCT(BlueprintType, Blueprintable)
-struct FSpawner
-{
-    GENERATED_BODY()
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, DisplayName="Enemy Spawner")
-    AEnemySpawner* pEnemySpawner;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, DisplayName="AI Base Character Class")
-    TSubclassOf<AAIBaseCharacter> AIBaseCharacterClass;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(ClampMin="0"))
-    int32 EnemiesCount;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(ClampMin="0.0"))
-    float StartDelay;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(ClampMin="0.0"))
-    float SpawnDelay;
-};
-
-USTRUCT(BlueprintType)
-struct FWave
-{
-    GENERATED_BODY()
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    TArray<FSpawner> Spawners;
-};
-
+class ARoom;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class MAINPROJECT_API UWavesSystemComponent : public UActorComponent
@@ -48,14 +21,53 @@ class MAINPROJECT_API UWavesSystemComponent : public UActorComponent
 public:
 	UWavesSystemComponent();
 
+    FOnWaveEndSignature OnWaveEndEvent;
+    FOnAllWavesEndSignature OnAllWavesEndEvent;
+
+    void StartWaves();
+
 protected:
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Room|Enemies")
-    TArray<FWave> waves;
+    virtual void BeginPlay() override;
+
+    void BindEvents();
+
+    // Dynamic Enemies 
+protected:
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room|Enemies|Dynamic")
+    TArray<AAIBaseCharacter*> sceneEnemies;
     
-	virtual void BeginPlay() override;
+    void BindSceneEnemies();
+    
+private:
+    void FindEnemiesInRoom();
 
-public:	
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+    
+    // Manual Enemies
+protected:
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Room|Enemies|Manual")
+    TArray<FWave> waves;
 
-		
+    void StartWave(int32 WaveIndex);
+
+private:
+    TArray<FTimerHandle> m_timers;
+    TArray<int32> m_spawnCounts;
+
+    UFUNCTION()
+    void OnSpawnTick(int32 SpawnerIndex);
+
+    
+    // Common
+protected:
+    void OnEnemyDied();
+    void OnWaveEnd();
+    
+    ARoom* GetOwningRoom() const;
+    
+private:
+    int32 m_currentAliveEnemies;
+    int32 m_currentWaveIndex;
+
+    void BindEnemiesOnDeath(const TArray<AAIBaseCharacter*>& Enemies);
+    void BindOneEnemyOnDeath(const AAIBaseCharacter* Enemy);
 };
