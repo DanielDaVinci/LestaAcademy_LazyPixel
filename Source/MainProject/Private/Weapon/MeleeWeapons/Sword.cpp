@@ -2,6 +2,7 @@
 
 
 #include "Weapon/MeleeWeapons/Sword.h"
+
 #include "Components/BoxComponent.h"
 #include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
@@ -23,7 +24,7 @@ void ASword::InitBoxCollision()
     pBoxCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     pBoxCollision->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
     pBoxCollision->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
-    pBoxCollision->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
+    pBoxCollision->SetCollisionResponseToChannel(ECC_Enemy, ECollisionResponse::ECR_Overlap);
 }
 
 void ASword::OnMeleeWeaponOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,

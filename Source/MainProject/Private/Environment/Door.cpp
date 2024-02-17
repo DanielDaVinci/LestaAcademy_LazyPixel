@@ -16,6 +16,7 @@ ADoor::ADoor()
     pCollisionComponent = CreateDefaultSubobject<UBoxComponent>("CollisionComponent");
     pCollisionComponent->SetupAttachment(GetRootComponent());
     pCollisionComponent->SetCollisionObjectType(ECC_WorldStatic);
+    pCollisionComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
     pCollisionComponent->SetCanEverAffectNavigation(false);
 
     pArrowComponent = CreateDefaultSubobject<UArrowComponent>("ArrowComponent");
@@ -49,21 +50,17 @@ void ADoor::NotifyActorEndOverlap(AActor* OtherActor)
         OnEnterDoor.Broadcast();
 }
 
-void ADoor::BlockDoor() const
+void ADoor::BlockDoor(ECollisionChannel Channel) const
 {
-    pCollisionComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-    pCollisionComponent->SetCollisionResponseToAllChannels(ECR_Ignore);
-    pCollisionComponent->SetCollisionResponseToChannel(ECC_Pawn, ECR_Block);
+    pCollisionComponent->SetCollisionResponseToChannel(Channel, ECR_Block);
 }
 
-void ADoor::UnblockDoor() const
+void ADoor::UnblockDoor(ECollisionChannel Channel) const
 {
-    pCollisionComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-    pCollisionComponent->SetCollisionResponseToAllChannels(ECR_Ignore);
-    pCollisionComponent->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
+    pCollisionComponent->SetCollisionResponseToChannel(Channel, ECR_Overlap);
 }
 
-bool ADoor::IsPlayerEntry(const AActor* OtherActor)
+bool ADoor::IsPlayerEntry(const AActor* OtherActor) const
 {
     if (!OtherActor->IsA<APlayerCharacter>())
         return false;

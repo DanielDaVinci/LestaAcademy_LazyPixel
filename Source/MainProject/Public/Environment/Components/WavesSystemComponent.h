@@ -70,4 +70,6 @@ private:
 
     void BindEnemiesOnDeath(const TArray<AAIBaseCharacter*>& Enemies);
     void BindOneEnemyOnDeath(const AAIBaseCharacter* Enemy);
+
+    void CloseDoorAllSpawners(int32 WaveIndex);
 };

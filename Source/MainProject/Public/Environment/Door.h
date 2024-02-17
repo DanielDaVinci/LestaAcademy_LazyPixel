@@ -26,6 +26,12 @@ public:
     UFUNCTION(BlueprintImplementableEvent)
     void Close();
 
+    UFUNCTION(BlueprintCallable)
+    void BlockDoor(ECollisionChannel Channel) const;
+
+    UFUNCTION(BlueprintCallable)
+    void UnblockDoor(ECollisionChannel Channel) const;
+
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName="Root Scene Component")
     USceneComponent* pRootSceneComponent;
@@ -53,13 +59,6 @@ protected:
     
     virtual void NotifyActorEndOverlap(AActor* OtherActor) override;
 
-private:
-    UFUNCTION(BlueprintCallable)
-    void BlockDoor() const;
-
-    UFUNCTION(BlueprintCallable)
-    void UnblockDoor() const;
-
-    bool IsPlayerEntry(const AActor* OtherActor);
+    bool IsPlayerEntry(const AActor* OtherActor) const;
     
 };

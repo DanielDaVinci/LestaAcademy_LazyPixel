@@ -92,14 +92,17 @@ void UWavesSystemComponent::StartWave(int32 WaveIndex)
 
         if (!spawnerProperties.AICharacterClass || !spawner)
             continue;
-
-        spawner->OpenDoor();
         
         m_spawnCounts.Add(spawnerProperties.EnemiesCount);
         m_currentAliveEnemies += spawnerProperties.EnemiesCount;
         
+        FTimerHandle openDoorTimer;
+        GetWorld()->GetTimerManager().SetTimer(openDoorTimer, [&spawner]()
+        {
+            spawner->OpenDoor();
+        }, wave.StartWaveDelay, false);
+
         m_timers.Add(FTimerHandle());
-        
         const FTimerDelegate& timerDelegate = FTimerDelegate::CreateUObject(this, &UWavesSystemComponent::OnSpawnTick, i);
         GetWorld()->GetTimerManager().SetTimer(m_timers[i], timerDelegate, spawnerProperties.SpawnDelay, true, spawnerProperties.StartDelay + wave.StartWaveDelay);
     }
@@ -125,6 +128,20 @@ void UWavesSystemComponent::BindOneEnemyOnDeath(const AAIBaseCharacter* Enemy)
     healthComponent->OnDeath.AddUObject(this, &UWavesSystemComponent::OnEnemyDied);
 }
 
+void UWavesSystemComponent::CloseDoorAllSpawners(int32 WaveIndex)
+{
+    if (!FMath::IsWithinInclusive(WaveIndex, 0, waves.Num()))
+        return;
+    
+    for (const auto& spawnProperties: waves[WaveIndex].Spawners)
+    {
+        if (!spawnProperties.pEnemySpawner)
+            continue;
+
+        spawnProperties.pEnemySpawner->CloseDoor();
+    }
+}
+
 void UWavesSystemComponent::OnSpawnTick(int32 SpawnerIndex)
 {
     if (!GetWorld())
@@ -137,7 +154,6 @@ void UWavesSystemComponent::OnSpawnTick(int32 SpawnerIndex)
     
     if (m_spawnCounts[SpawnerIndex] == 0)
     {
-        // spawner->CloseDoor();
         GetWorld()->GetTimerManager().ClearTimer(m_timers[SpawnerIndex]);
         return;
     }
@@ -161,6 +177,8 @@ void UWavesSystemComponent::OnEnemyDied()
 
 void UWavesSystemComponent::OnWaveEnd()
 {
+    CloseDoorAllSpawners(m_currentWaveIndex);
+    
     if (++m_currentWaveIndex >= waves.Num())
     {
         OnAllWavesEndEvent.Broadcast();

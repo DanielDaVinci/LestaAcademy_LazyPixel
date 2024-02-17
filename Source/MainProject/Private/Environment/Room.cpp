@@ -3,6 +3,7 @@
 
 #include "Environment/Room.h"
 
+#include "MainProjectCoreTypes.h"
 #include "AI/Characters/AIBaseCharacter.h"
 #include "Character/Player/PlayerCharacter.h"
 #include "Character/Player/Components/HealthComponent.h"
@@ -27,7 +28,7 @@ ARoom::ARoom()
     pRoomCollisionComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
     pRoomCollisionComponent->SetCollisionObjectType(ECC_WorldStatic);
     pRoomCollisionComponent->SetCollisionResponseToAllChannels(ECR_Ignore);
-    pRoomCollisionComponent->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
+    pRoomCollisionComponent->SetCollisionResponseToChannel(ECC_Enemy, ECR_Overlap);
 
     pWavesSystemComponent = CreateDefaultSubobject<UWavesSystemComponent>("WavesSystemComponent");
 }
@@ -143,11 +144,13 @@ void ARoom::CloseAllDoors()
 {
     for (const auto& door : inputDoors)
     {
+        door->BlockDoor(ECC_Pawn);
         door->Close();
     }
 
     for (const auto& door : outputDoors)
     {
+        door->BlockDoor(ECC_Pawn);
         door->Close();
     }
 }
@@ -162,6 +165,7 @@ void ARoom::OpenOutputDoors()
 {
     for (const auto& door : outputDoors)
     {
+        door->UnblockDoor(ECC_Pawn);
         door->Open();
     }
 }
@@ -170,6 +174,7 @@ void ARoom::OpenInputDoors()
 {
     for (const auto& door : inputDoors)
     {
+        door->UnblockDoor(ECC_Pawn);
         door->Open();
     }
 }

@@ -34,4 +34,5 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Environment", DisplayName="Enemy Door")
     ADoor* pEnemyOutputDoor;
 
+    virtual void BeginPlay() override;
 };
