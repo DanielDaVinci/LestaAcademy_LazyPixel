@@ -18,8 +18,8 @@ AEnemySpawner::AEnemySpawner()
     pArrowComponent = CreateDefaultSubobject<UArrowComponent>("ArrowComponent");
     pArrowComponent->SetupAttachment(GetRootComponent());
     pArrowComponent->SetRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));
-    pArrowComponent->ArrowSize = 2.0f;
-    pArrowComponent->ArrowColor = FColor::Blue;
+    pArrowComponent->ArrowSize = 1.0f;
+    pArrowComponent->ArrowColor = FColor::Red;
 }
 
 AAIBaseCharacter* AEnemySpawner::Spawn(const TSubclassOf<AAIBaseCharacter>& AICharacterClass) const
