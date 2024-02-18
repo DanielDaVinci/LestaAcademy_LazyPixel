@@ -25,5 +25,6 @@ void AAIBaseCharacter::BeginPlay()
 
 void AAIBaseCharacter::PlayImpactAnim(float Health) 
 {
-    PlayAnimMontage(impactAnimation);
+    if (impactAnimations.Num())
+        PlayAnimMontage(impactAnimations[FMath::RandRange(0, impactAnimations.Num() - 1)]);
 }
