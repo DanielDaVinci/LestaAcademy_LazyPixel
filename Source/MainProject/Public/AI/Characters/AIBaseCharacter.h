@@ -24,7 +24,7 @@ public:
     ARoom* enemyRoom;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ImpactAnim")
-    UAnimMontage* impactAnimation;
+    TArray<UAnimMontage*> impactAnimations;
 
 protected:
     virtual void BeginPlay() override;

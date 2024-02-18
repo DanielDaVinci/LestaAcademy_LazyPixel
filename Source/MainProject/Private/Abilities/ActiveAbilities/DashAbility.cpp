@@ -14,7 +14,7 @@ bool UDashAbility::NativeActivate()
     if (!character)
         return false;
 
-    if (GetWorld()->GetTimerManager().IsTimerActive(m_dashTimerHandle))
+    if (GetWorld()->GetTimerManager().IsTimerActive(m_dashTimerHandle) || character->IsUltimateActive())
         return false;
 
     character->PlayAnimMontage(dashAnimation);

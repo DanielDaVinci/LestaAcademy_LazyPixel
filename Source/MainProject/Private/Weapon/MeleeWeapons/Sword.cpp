@@ -34,7 +34,10 @@ void ASword::OnMeleeWeaponOverlap(UPrimitiveComponent* OverlappedComponent, AAct
     if (OtherActor->GetClass() == Character->GetClass())
         return;
 
-    EnemyActors.AddUnique(OtherActor);
+    OtherActor->TakeDamage(damage, FDamageEvent(), UGameplayStatics::GetPlayerController(GetWorld(), 0), this);
+    UE_LOG(LogSwordWeapon, Display, TEXT("Damage %.f to actor %s"), damage, *(OtherActor->GetName()));
+
+    //EnemyActors.AddUnique(OtherActor);
 }
 
 void ASword::OnOffCollision(USkeletalMeshComponent* MeshComp) 
@@ -61,14 +64,4 @@ void ASword::DisableCollision(USkeletalMeshComponent* MeshComp)
     }
 
     pBoxCollision->SetGenerateOverlapEvents(0);
-}
-
-void ASword::OnDamageAllOverlapedActors() 
-{
-    for (auto Actor : EnemyActors)
-    {
-        Actor->TakeDamage(damage, FDamageEvent(), UGameplayStatics::GetPlayerController(GetWorld(), 0), this);
-        UE_LOG(LogSwordWeapon, Display, TEXT("Damage %.f to actor %s"), damage, *(Actor->GetName()));
-    }
-    EnemyActors.Empty();
 }

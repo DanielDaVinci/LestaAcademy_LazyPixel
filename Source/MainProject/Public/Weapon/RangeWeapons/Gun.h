@@ -15,6 +15,7 @@ class MAINPROJECT_API AGun : public ABaseWeapon
 
 public:
     void MakeShoot(const FVector& Point);
+    const FName GetMuzzleSocketName() { return MuzzleSocketName; }
 
 protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Projectile")

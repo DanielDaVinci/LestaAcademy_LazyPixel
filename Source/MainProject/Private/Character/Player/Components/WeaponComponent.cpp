@@ -67,7 +67,7 @@ void UWeaponComponent::MeleeAttack()
     ABaseCharacter* Character = Cast<ABaseCharacter>(GetOwner());
     if (!Character) return;
 
-    if (m_bIsComboChain || Character->GetMesh()->GetAnimInstance()->Montage_IsPlaying(m_pRangeWeapon->GetAttackMontage()))
+    if (m_bIsComboChain || Character->IsUltimateActive() || Character->GetMesh()->GetAnimInstance()->Montage_IsPlaying(m_pRangeWeapon->GetAttackMontage()))
         return;
 
     if (Character->GetMesh()->GetAnimInstance()->IsAnyMontagePlaying())
@@ -144,7 +144,7 @@ void UWeaponComponent::RangeAttack()
     ABaseCharacter* Character = Cast<ABaseCharacter>(GetOwner());
     if (!Character) return;
 
-    if (Character->GetMesh()->GetAnimInstance()->Montage_IsPlaying(m_pRangeWeapon->GetAttackMontage()))
+    if (Character->IsUltimateActive() || Character->GetMesh()->GetAnimInstance()->Montage_IsPlaying(m_pRangeWeapon->GetAttackMontage()))
         return;
 
     m_bIsComboChain = false; 

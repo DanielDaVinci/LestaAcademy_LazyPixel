@@ -47,16 +47,11 @@ void UBaseWeaponComponent::InitAnimations()
     {
         auto MeleeNotifyState = Cast<UMeleeAttackAnimNotifyState>(NotifyEvent.NotifyStateClass);
         if (MeleeNotifyState)
-        {
             MeleeNotifyState->FOnMeleeAttackNotify.AddUObject(this, &UBaseWeaponComponent::OnStartAttackState);
-            MeleeNotifyState->FOnMeleeAttackDamageNotify.AddUObject(this, &UBaseWeaponComponent::OnEndAttackState);
-            //break;
-        }
 
-        // auto RangeNotify = Cast<URangeAttackNotify>(NotifyEvent.Notify);
-        // if (RangeNotify)
-        //     if (AGun* pRangeWeapon = Cast<AGun>(m_pBaseWeapon))
-        //         RangeNotify->FOnRangeAttackNotify.AddUObject(pRangeWeapon, &AGun::MakeShot);
+        auto RangeNotify = Cast<URangeAttackNotify>(NotifyEvent.Notify);
+        if (RangeNotify && m_pBaseWeapon->IsA(AGun::StaticClass()))
+            RangeNotify->FOnRangeAttackNotify.AddUObject(this, &UBaseWeaponComponent::OnRangeNotifyHandle);
     }
 }
 
@@ -66,10 +61,17 @@ void UBaseWeaponComponent::OnStartAttackState(USkeletalMeshComponent* MeshComp)
         pMeleeWeapon->OnOffCollision(MeshComp);
 }
 
-void UBaseWeaponComponent::OnEndAttackState() 
+void UBaseWeaponComponent::OnRangeNotifyHandle(USkeletalMeshComponent* MeshComp) 
 {
-    if (ASword* pMeleeWeapon = Cast<ASword>(m_pBaseWeapon))
-        pMeleeWeapon->OnDamageAllOverlapedActors();
+    AGun* pRangeWeapon = Cast<AGun>(m_pBaseWeapon);
+
+    if (GetOwner() != MeshComp->GetOwner() || !pRangeWeapon)
+        return;
+
+    USkeletalMeshComponent* weapSkel = pRangeWeapon->FindComponentByClass<USkeletalMeshComponent>();   
+    const auto rangeAttackPoint = weapSkel->GetSocketTransform(pRangeWeapon->GetMuzzleSocketName()).GetLocation() + 
+                                  weapSkel->GetSocketRotation(pRangeWeapon->GetMuzzleSocketName()).Vector();
+    pRangeWeapon->MakeShoot(rangeAttackPoint);
 }
 
 void UBaseWeaponComponent::DisableMeleeCollision() 

@@ -32,7 +32,9 @@ protected:
     virtual void InitAnimations();
 
     void OnStartAttackState(USkeletalMeshComponent* MeshComp);
-    void OnEndAttackState();
 
 	virtual void BeginPlay() override;	
+
+private:
+    void OnRangeNotifyHandle(USkeletalMeshComponent* MeshComp);
 };

@@ -21,6 +21,9 @@ class MAINPROJECT_API ABaseCharacter : public ACharacter
 public:
     ABaseCharacter(const FObjectInitializer& ObjInit);
 
+    void SetUltimateActive(bool bActive) { m_bUltActive = bActive; }
+    bool IsUltimateActive() const { return m_bUltActive; }
+
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName = "AbilityComponent")
     UAbilityComponent* pAbilityComponent;
@@ -39,6 +42,8 @@ protected:
     virtual void BeginPlay() override;
     
     virtual void OnDeath() {}
+
+    bool m_bUltActive;
 
 public:
     virtual void Tick(float DeltaTime) override;
