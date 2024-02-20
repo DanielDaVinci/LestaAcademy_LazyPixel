@@ -19,132 +19,26 @@ void UAbilityComponent::InitializeComponent()
 {
     Super::InitializeComponent();
 
-    InitActiveAbility();
-    InitPassiveAbility();
-    InitDashAbility();
-    InitCustomAbility();
+    m_activeAbilities = InitArrayAbilities(activeAbilityClasses);
+    m_passiveAbilities = InitArrayAbilities(passiveAbilityClasses);
+    m_dashAbility = InitAbility(dashAbilityClass);
+    m_customAbility = InitAbility(customAbilityClass);
 }
 
 void UAbilityComponent::BeginPlay()
 {
     Super::BeginPlay();
 
-    BeginPlayActiveAbility();
-    BeginPlayPassiveAbility();
-    BeginPlayDashAbility();
-    BeginPlayCustomAbility();
+    BeginPlayArrayAbilities(m_activeAbilities);
+    BeginPlayArrayAbilities(m_passiveAbilities);
+    
+    if (m_dashAbility)
+        m_dashAbility->BeginPlay();
+    
+    if (m_customAbility)
+        m_customAbility->BeginPlay();
     
     BindInput();
-}
-
-void UAbilityComponent::InitActiveAbility()
-{
-    const auto character = Cast<ABaseCharacter>(GetOwner());
-    if (!character)
-        return;
-    
-    for (auto activeAbilityClass: activeAbilityClasses)
-    {
-        if (!activeAbilityClass)
-            continue;
-        
-        const auto activeAbility = NewObject<UActiveAbility>(this, activeAbilityClass);
-        if (!activeAbility)
-            continue;
-
-        m_activeAbilities.Add(activeAbility);
-        activeAbility->Initialize(character);
-    }
-}
-
-void UAbilityComponent::InitPassiveAbility()
-{
-    const auto character = Cast<ABaseCharacter>(GetOwner());
-    if (!character)
-        return;
-    
-    for (auto passiveAbilityClass: passiveAbilityClasses)
-    {
-        if (!passiveAbilityClass)
-            continue;
-        
-        const auto passiveAbility = NewObject<UPassiveAbility>(this, passiveAbilityClass);
-        if (!passiveAbility)
-            continue;
-
-        m_passiveAbilities.Add(passiveAbility);
-        passiveAbility->Initialize(character);
-    }
-}
-
-void UAbilityComponent::InitDashAbility()
-{
-    if (!dashAbilityClass)
-        return;
-    
-    m_dashAbility = NewObject<UDashAbility>(this, dashAbilityClass);
-    if (!m_dashAbility)
-        return;
-
-    ABaseCharacter* character = Cast<ABaseCharacter>(GetOwner());
-    if (!character)
-        return;
-    
-    m_dashAbility->Initialize(character);
-}
-
-void UAbilityComponent::InitCustomAbility()
-{
-    if (!customAbilityClass)
-        return;
-    
-    m_customAbility = NewObject<UActiveAbility>(this, customAbilityClass);
-    if (!m_customAbility)
-        return;
-
-    ABaseCharacter* character = Cast<ABaseCharacter>(GetOwner());
-    if (!character)
-        return;
-    
-    m_customAbility->Initialize(character);
-}
-
-void UAbilityComponent::BeginPlayActiveAbility() const
-{
-    for (const auto& ability: m_activeAbilities)
-    {
-        if (!ability)
-            continue;
-        
-        ability->BeginPlay();
-    }
-}
-
-void UAbilityComponent::BeginPlayPassiveAbility() const
-{
-    for (const auto& ability: m_passiveAbilities)
-    {
-        if (!ability)
-            continue;
-        
-        ability->BeginPlay();
-    }
-}
-
-void UAbilityComponent::BeginPlayDashAbility() const
-{
-    if (!m_dashAbility)
-        return;
-    
-    m_dashAbility->BeginPlay();
-}
-
-void UAbilityComponent::BeginPlayCustomAbility() const
-{
-    if (!m_customAbility)
-        return;
-    
-    m_customAbility->BeginPlay();
 }
 
 void UAbilityComponent::BindInput()

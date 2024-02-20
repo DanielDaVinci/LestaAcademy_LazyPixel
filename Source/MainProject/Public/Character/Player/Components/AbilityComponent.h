@@ -8,6 +8,7 @@
 #include "AbilityComponent.generated.h"
 
 class UDashAbility;
+class ABaseCharacter;
 class UPassiveAbility;
 class UActiveAbility;
 
@@ -49,22 +50,14 @@ private:
     UPROPERTY()
     UActiveAbility* m_customAbility;
 
-    /** Initialize active abilities */
-    void InitActiveAbility();
-    
-    /** Initialize passive abilities */
-    void InitPassiveAbility();
+    template<typename T>
+    TArray<T*> InitArrayAbilities(const TArray<TSubclassOf<T>>& Classes);
 
-    /** Initialize dash ability */
-    void InitDashAbility();
+    template<typename T>
+    T* InitAbility(const TSubclassOf<T>& Class);
 
-    /** Initialize dash ability */
-    void InitCustomAbility();
-    
-    void BeginPlayActiveAbility() const;
-    void BeginPlayPassiveAbility() const;
-    void BeginPlayDashAbility() const;
-    void BeginPlayCustomAbility() const;
+    template<typename T>
+    void BeginPlayArrayAbilities(const TArray<T*>& Abilities);
 
     /** Binding abilities input */
     void BindInput();
@@ -75,3 +68,49 @@ private:
     /** Use custom ability on character in game */
     void UseCustomAbility();
 };
+
+template <typename T>
+TArray<T*> UAbilityComponent::InitArrayAbilities(const TArray<TSubclassOf<T>>& Classes)
+{
+    TArray<T*> abilities;
+    
+    for (auto abilityClass: Classes)
+    {
+        T* ability = InitAbility(abilityClass);
+        if (!ability)
+            continue;
+
+        abilities.Add(ability);
+    }
+
+    return abilities;
+}
+
+template <typename T>
+T* UAbilityComponent::InitAbility(const TSubclassOf<T>& Class)
+{
+    static_assert(std::is_base_of_v<UBaseAbility, T>, "Type parameter of this class must derive from UBaseAbility");
+    
+    const auto character = Cast<ABaseCharacter>(GetOwner());
+    if (!character || !Class)
+        return nullptr;
+        
+    T* ability = NewObject<T>(this, Class);
+    if (!ability)
+        return nullptr;
+    
+    ability->Initialize(character);
+    return ability;
+}
+
+template <typename T>
+void UAbilityComponent::BeginPlayArrayAbilities(const TArray<T*>& Abilities)
+{
+    for (const auto& ability: Abilities)
+    {
+        if (!ability)
+            continue;
+        
+        ability->BeginPlay();
+    }
+}
