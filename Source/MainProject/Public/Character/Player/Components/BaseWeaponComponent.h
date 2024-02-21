@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Character/Player/PlayerCoreTypes.h"
 #include "Components/ActorComponent.h"
 #include "BaseWeaponComponent.generated.h"
 
@@ -16,25 +17,41 @@ class MAINPROJECT_API UBaseWeaponComponent : public UActorComponent
 public:	
 	UBaseWeaponComponent();
 
-    UFUNCTION()
-    void DisableMeleeCollision();
+    // UFUNCTION()
+    // void DisableMeleeCollision();
 
 protected:
     UPROPERTY(EditDefaultsOnly, Category = "Weapon")
-    TSubclassOf<ABaseWeapon> WeaponClass;
+    TArray<FWeaponData> weaponData;
 
-    UPROPERTY(EditDefaultsOnly, Category = "Weapon")
-    FName WeaponAttachPointName;
-
-    ABaseWeapon* m_pBaseWeapon;
-
-    virtual void SpawnWeapons();
-    virtual void InitAnimations();
-
-    void OnStartAttackState(USkeletalMeshComponent* MeshComp);
-
-	virtual void BeginPlay() override;	
+    virtual void BeginPlay() override;
 
 private:
+    virtual void SpawnAllWeapons();
+    
+    ABaseWeapon* SpawnWeapon(const TSubclassOf<ABaseWeapon>& WeaponClass) const;
+    void AttachWeapon(ABaseWeapon* Weapon, const FName& SocketName) const;
+    
+protected:
+    UPROPERTY()
+    TArray<ABaseWeapon*> weapons;
+
+private:
+    virtual void InitAnimations();
+    void SubscribeAnimationNotifies(ABaseWeapon* Weapon);
+
+protected:
+    virtual void OnSubscribeToNotifies(const FAnimNotifyEvent& NotifyEvent);
+    
+private:
+    void SubscribeOnMeleeNotify(const FAnimNotifyEvent& NotifyEvent);
+    void SubscribeOnRangeNotify(const FAnimNotifyEvent& NotifyEvent);
+    
+    void OnMeleeNotifyStateHandle(USkeletalMeshComponent* MeshComp);
+    // void OnStartAttackState(USkeletalMeshComponent* MeshComp);
     void OnRangeNotifyHandle(USkeletalMeshComponent* MeshComp);
+
+protected:
+    virtual void OnMeleeStartAttackAnim() {}
+    virtual void OnRangeAttackAnim() {}
 };

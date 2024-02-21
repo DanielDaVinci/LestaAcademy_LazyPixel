@@ -19,66 +19,126 @@ void UBaseWeaponComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-    SpawnWeapons();
+    SpawnAllWeapons();
     InitAnimations();
 }
 
-void UBaseWeaponComponent::SpawnWeapons() 
+void UBaseWeaponComponent::SpawnAllWeapons() 
 {
-    ABaseCharacter* Character = Cast<ABaseCharacter>(GetOwner());
-    if (!Character || !GetWorld()) return;
+    for (const auto& data: weaponData)
+    {
+        const auto weapon = SpawnWeapon(data.WeaponClass);
+        if (weapon)
+            continue;
 
-    m_pBaseWeapon = GetWorld()->SpawnActor<ABaseWeapon>(WeaponClass);
-    if (!m_pBaseWeapon) return;
+        AttachWeapon(weapon, data.WeaponAttachPointName);
+        weapons.Add(weapon);
+    }
+}
 
-    FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, false);
-    m_pBaseWeapon->AttachToComponent(Character->GetMesh(), AttachmentRules, WeaponAttachPointName);
-    m_pBaseWeapon->SetOwner(Character);
+ABaseWeapon* UBaseWeaponComponent::SpawnWeapon(const TSubclassOf<ABaseWeapon>& WeaponClass) const
+{
+    if (!GetWorld() || !WeaponClass)
+        return nullptr;
+    
+    return GetWorld()->SpawnActor<ABaseWeapon>(WeaponClass);
+}
+
+void UBaseWeaponComponent::AttachWeapon(ABaseWeapon* Weapon, const FName& SocketName) const
+{
+    ABaseCharacter* character = Cast<ABaseCharacter>(GetOwner());
+    if (!character)
+        return;
+
+    const FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, false);
+    Weapon->AttachToComponent(character->GetMesh(), AttachmentRules, SocketName);
+    Weapon->SetOwner(character);
 }
 
 void UBaseWeaponComponent::InitAnimations() 
 {
-    if (!m_pBaseWeapon || !m_pBaseWeapon->GetAttackMontage())
-        return;
-
-    // m_pWeapon->GetAttackMontage()->RateScale = m_pWeapon->GetAttackSpeed();
-    const auto NotifyEvents = m_pBaseWeapon->GetAttackMontage()->Notifies;
-    for (auto NotifyEvent : NotifyEvents)
+    for (const auto& weapon: weapons)
     {
-        auto MeleeNotifyState = Cast<UMeleeAttackAnimNotifyState>(NotifyEvent.NotifyStateClass);
-        if (MeleeNotifyState)
-            MeleeNotifyState->FOnMeleeAttackNotify.AddUObject(this, &UBaseWeaponComponent::OnStartAttackState);
-
-        auto RangeNotify = Cast<URangeAttackNotify>(NotifyEvent.Notify);
-        if (RangeNotify && m_pBaseWeapon->IsA(AGun::StaticClass()))
-            RangeNotify->FOnRangeAttackNotify.AddUObject(this, &UBaseWeaponComponent::OnRangeNotifyHandle);
+        SubscribeAnimationNotifies(weapon);
     }
 }
 
-void UBaseWeaponComponent::OnStartAttackState(USkeletalMeshComponent* MeshComp) 
+void UBaseWeaponComponent::SubscribeAnimationNotifies(ABaseWeapon* Weapon)
 {
-    if (ASword* pMeleeWeapon = Cast<ASword>(m_pBaseWeapon))
-        pMeleeWeapon->OnOffCollision(MeshComp);
+    if (!Weapon || !Weapon->GetAttackMontage())
+        return;
+
+    const auto notifyEvents = Weapon->GetAttackMontage()->Notifies;
+    for (const auto& notifyEvent: notifyEvents)
+    {
+        OnSubscribeToNotifies(notifyEvent);
+    }
 }
+
+void UBaseWeaponComponent::OnSubscribeToNotifies(const FAnimNotifyEvent& NotifyEvent)
+{
+    SubscribeOnMeleeNotify(NotifyEvent);
+    SubscribeOnRangeNotify(NotifyEvent);
+}
+
+void UBaseWeaponComponent::SubscribeOnMeleeNotify(const FAnimNotifyEvent& NotifyEvent)
+{
+    auto meleeNotifyState = Cast<UMeleeAttackAnimNotifyState>(NotifyEvent.NotifyStateClass);
+    if (!meleeNotifyState)
+        return;
+
+    meleeNotifyState->FOnMeleeAttackNotify.AddUObject(this, &UBaseWeaponComponent::OnMeleeNotifyStateHandle);
+}
+
+void UBaseWeaponComponent::SubscribeOnRangeNotify(const FAnimNotifyEvent& NotifyEvent)
+{
+    auto rangeNotify = Cast<URangeAttackNotify>(NotifyEvent.Notify);
+    if (!rangeNotify)
+        return;
+
+    rangeNotify->FOnRangeAttackNotify.AddUObject(this, &UBaseWeaponComponent::OnRangeNotifyHandle);
+}
+
+void UBaseWeaponComponent::OnMeleeNotifyStateHandle(USkeletalMeshComponent* MeshComp)
+{
+    if (MeshComp->GetOwner() != GetOwner())
+        return;
+
+    OnMeleeStartAttackAnim();
+}
+
+// void UBaseWeaponComponent::OnStartAttackState(USkeletalMeshComponent* MeshComp) 
+// {
+//     if (ASword* pMeleeWeapon = Cast<ASword>(m_pBaseWeapon))
+//         pMeleeWeapon->OnOffCollision(MeshComp);
+// }
 
 void UBaseWeaponComponent::OnRangeNotifyHandle(USkeletalMeshComponent* MeshComp) 
 {
-    AGun* pRangeWeapon = Cast<AGun>(m_pBaseWeapon);
-
-    if (GetOwner() != MeshComp->GetOwner() || !pRangeWeapon)
+    if (MeshComp->GetOwner() != GetOwner())
         return;
 
-    USkeletalMeshComponent* weapSkel = pRangeWeapon->FindComponentByClass<USkeletalMeshComponent>();   
-    const auto rangeAttackPoint = weapSkel->GetSocketTransform(pRangeWeapon->GetMuzzleSocketName()).GetLocation() + 
-                                  weapSkel->GetSocketRotation(pRangeWeapon->GetMuzzleSocketName()).Vector();
-    pRangeWeapon->MakeShoot(rangeAttackPoint);
+    OnRangeAttackAnim();
 }
 
-void UBaseWeaponComponent::DisableMeleeCollision() 
-{
-    const auto Character = Cast<ACharacter>(GetOwner());
-    if (!Character) return;
+// void UBaseWeaponComponent::OnRangeAttack()
+// {
+//     AGun* pRangeWeapon = Cast<AGun>(m_pBaseWeapon);
+//
+//     if (GetOwner() != MeshComp->GetOwner() || !pRangeWeapon)
+//         return;
+//
+//     USkeletalMeshComponent* weapSkel = pRangeWeapon->FindComponentByClass<USkeletalMeshComponent>();   
+//     const auto rangeAttackPoint = weapSkel->GetSocketTransform(pRangeWeapon->GetMuzzleSocketName()).GetLocation() + 
+//                                   weapSkel->GetSocketRotation(pRangeWeapon->GetMuzzleSocketName()).Vector();
+//     pRangeWeapon->MakeShoot(rangeAttackPoint);
+// }
 
-    if (ASword* pMeleeWeapon = Cast<ASword>(m_pBaseWeapon))
-        pMeleeWeapon->DisableCollision(Character->GetMesh());
-}
+// void UBaseWeaponComponent::DisableMeleeCollision() 
+// {
+//     const auto Character = Cast<ACharacter>(GetOwner());
+//     if (!Character) return;
+//
+//     if (ASword* pMeleeWeapon = Cast<ASword>(m_pBaseWeapon))
+//         pMeleeWeapon->DisableCollision(Character->GetMesh());
+// }

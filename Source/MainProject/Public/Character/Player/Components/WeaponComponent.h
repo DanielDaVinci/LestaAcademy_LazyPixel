@@ -6,6 +6,8 @@
 #include "Character/Player/Components/BaseWeaponComponent.h"
 #include "WeaponComponent.generated.h"
 
+class APlayerCharacter;
+class ABasePlayerController;
 class UPlayerMovementComponent;
 class AGun;
 
@@ -14,20 +16,21 @@ class MAINPROJECT_API UWeaponComponent : public UBaseWeaponComponent
 {
 	GENERATED_BODY()
 
-public:	
+protected:
+	virtual void BeginPlay() override;
+
+private:
+    void BindInput();
+
+    virtual void OnSubscribeToNotifies(const FAnimNotifyEvent& NotifyEvent) override;
+
     void MeleeAttack();
     void RangeAttack();
     void OnNextComboSection();
 
-protected:
-    UPROPERTY(EditDefaultsOnly, Category = "RangeWeapon")
-    TSubclassOf<AGun> RangeWeaponClass;
-
-    UPROPERTY(EditDefaultsOnly, Category = "RangeWeapon")
-    FName RangeWeaponAttachPointName = "lhWeaponSocket";
-
-	virtual void BeginPlay() override;
-
+    virtual void OnMeleeStartAttackAnim() override;
+    virtual void OnRangeAttackAnim() override;
+    
 private:
     AGun* m_pRangeWeapon;
     FVector m_rangeAttackPoint;
@@ -35,11 +38,16 @@ private:
     bool  m_bWasFirstAttack = false;
     uint8 m_nComboIndex = 0;
 
-    virtual void SpawnWeapons() override;
-    virtual void InitAnimations() override;   
+    void SubscribeOnComboNotify(const FAnimNotifyEvent& NotifyEvent);
+    void OnComboNotifyHandle(USkeletalMeshComponent* MeshComp);
+    
+    void InitAnimations();   
     void PlayMeleeAttackAnim();
 
     void OnRangeNotifyHandle(USkeletalMeshComponent* MeshComp);
 
+public:
+    APlayerCharacter* GetPlayerCharacter() const;
+    ABasePlayerController* GetPlayerController() const;
     UPlayerMovementComponent* GetPlayerMovementComponent() const;
 };

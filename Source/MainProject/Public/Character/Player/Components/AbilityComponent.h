@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Abilities/BaseAbility.h"
+#include "Character/BaseCharacter.h"
 #include "Components/ActorComponent.h"
 #include "AbilityComponent.generated.h"
 
@@ -67,6 +68,8 @@ private:
 
     /** Use custom ability on character in game */
     void UseCustomAbility();
+
+    ABaseCharacter* GetCharacter() const { return Cast<ABaseCharacter>(GetOwner()); }
 };
 
 template <typename T>
@@ -91,7 +94,7 @@ T* UAbilityComponent::InitAbility(const TSubclassOf<T>& Class)
 {
     static_assert(std::is_base_of_v<UBaseAbility, T>, "Type parameter of this class must derive from UBaseAbility");
     
-    const auto character = Cast<ABaseCharacter>(GetOwner());
+    const auto character = GetCharacter();
     if (!character || !Class)
         return nullptr;
         

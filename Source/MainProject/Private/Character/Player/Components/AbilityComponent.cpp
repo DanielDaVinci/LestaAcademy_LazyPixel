@@ -23,6 +23,8 @@ void UAbilityComponent::InitializeComponent()
     m_passiveAbilities = InitArrayAbilities(passiveAbilityClasses);
     m_dashAbility = InitAbility(dashAbilityClass);
     m_customAbility = InitAbility(customAbilityClass);
+
+    auto param = InitAbility<UObject>(dashAbilityClass);
 }
 
 void UAbilityComponent::BeginPlay()

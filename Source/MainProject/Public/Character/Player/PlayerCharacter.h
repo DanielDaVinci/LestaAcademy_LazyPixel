@@ -59,7 +59,7 @@ private:
     void StartCameraMovement();
     void CameraMovementTimerUpdate();
 
-protected:
+public:
 
     ABasePlayerController* GetPlayerController() const;
 };

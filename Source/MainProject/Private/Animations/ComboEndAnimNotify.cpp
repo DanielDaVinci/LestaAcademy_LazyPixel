@@ -6,6 +6,6 @@
 void UComboEndAnimNotify::Notify(
     USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference)
 {
-    FOnComboEndNotify.Broadcast();
+    FOnComboEndNotify.Broadcast(MeshComp);
     Super::Notify(MeshComp, Animation, EventReference);
 }

@@ -6,7 +6,7 @@
 #include "Animation/AnimNotifies/AnimNotify.h"
 #include "ComboEndAnimNotify.generated.h"
 
-DECLARE_MULTICAST_DELEGATE(FOnComboEndSignature);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnComboEndSignature, USkeletalMeshComponent*);
 
 UCLASS()
 class MAINPROJECT_API UComboEndAnimNotify : public UAnimNotify
