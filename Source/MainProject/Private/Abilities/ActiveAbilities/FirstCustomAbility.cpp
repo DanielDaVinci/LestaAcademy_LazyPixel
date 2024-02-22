@@ -67,7 +67,7 @@ void UStrongAttackAbility::OnMontageEndedHandle(UAnimMontage* Montage, bool bInt
     if (pAbilityAnimation == Montage)
     {
         GetCharacter()->SetUltimateActive(0);
-        UWeaponComponent* weapComp = GetCharacter()->GetComponentByClass<UWeaponComponent>();
-        weapComp->OnNextComboSection();
+        // UWeaponComponent* weapComp = GetCharacter()->GetComponentByClass<UWeaponComponent>();
+        // weapComp->OnNextComboSection();
     }
 }

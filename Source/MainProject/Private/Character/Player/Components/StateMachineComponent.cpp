@@ -12,7 +12,7 @@ void UStateMachineComponent::AddState(const FState& State)
 {
     if (State.Priority == EStatePriority::Force)
     {
-        StopCurrentState();
+        StopCurrentState(EStateResult::Aborted);
         ClearQueue();
     }
 
@@ -25,6 +25,21 @@ void UStateMachineComponent::AddState(const FState& State)
     }
 }
 
+void UStateMachineComponent::SkipCurrentState()
+{
+    NextState();
+}
+
+FState UStateMachineComponent::GetCurrentState() const
+{
+    return m_pCurrentState? *m_pCurrentState : FState();
+}
+
+FState UStateMachineComponent::GetNextState() const
+{
+    return !m_queueStates.empty() ? *m_queueStates.top() : FState();
+}
+
 void UStateMachineComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
     Super::EndPlay(EndPlayReason);
@@ -32,13 +47,13 @@ void UStateMachineComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
     ClearQueue();
 }
 
-void UStateMachineComponent::StopCurrentState()
+void UStateMachineComponent::StopCurrentState(EStateResult StateResult)
 {
     if (!m_pCurrentState)
         return;
 
     ClearStateTimer();
-    m_pCurrentState->OnEndState.Broadcast();
+    m_pCurrentState->OnEndState.Broadcast(StateResult);
     delete m_pCurrentState;
     m_pCurrentState = nullptr;
 }
@@ -59,7 +74,7 @@ void UStateMachineComponent::NextState()
 {
     if (m_pCurrentState)
     {
-        StopCurrentState();
+        StopCurrentState(EStateResult::Successed);
     }
     
     if (m_queueStates.empty())

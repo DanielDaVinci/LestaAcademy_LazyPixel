@@ -51,17 +51,12 @@ void ASword::OnOffCollision()
         pBoxCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
-// void ASword::DisableCollision() 
-// {
-//     if (!pBoxCollision)
-//         return;
-//
-//     // Temporary dummy for testing, protect player character from disabling overlap events
-//     if (UGameplayStatics::GetPlayerCharacter(GetWorld(), 0) == Cast<ACharacter>(GetOwner()))
-//     {
-//         UE_LOG(LogSwordWeapon, Display, TEXT("Player is dead!"));
-//         return;
-//     }
-//
-//     pBoxCollision->SetGenerateOverlapEvents(0);
-// }
+void ASword::EnableAttackCollision() const
+{
+    pBoxCollision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+}
+
+void ASword::DisableAttackCollision() const
+{
+    pBoxCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+}

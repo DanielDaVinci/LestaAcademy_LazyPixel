@@ -17,6 +17,10 @@ public:
 	UStateMachineComponent();
 
     void AddState(const FState& State);
+    void SkipCurrentState();
+    
+    FState GetCurrentState() const;
+    FState GetNextState() const;
 
 protected:
     virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
@@ -28,7 +32,7 @@ private:
     FTimerHandle m_currentStateTimer;
     void OnEndStateTimer();
 
-    void StopCurrentState();
+    void StopCurrentState(EStateResult StateResult);
     void StartState(FState* State);
     void NextState();
 

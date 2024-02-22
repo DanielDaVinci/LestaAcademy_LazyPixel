@@ -45,7 +45,7 @@ void UDashAbility::OnDashEnd()
         
     GetWorld()->GetTimerManager().ClearTimer(m_dashTimerHandle);
 
-    UWeaponComponent* weapComp = character->GetComponentByClass<UWeaponComponent>();
-    weapComp->OnNextComboSection();
+    // UWeaponComponent* weapComp = character->GetComponentByClass<UWeaponComponent>();
+    // weapComp->OnNextComboSection();
 }
 

@@ -6,6 +6,8 @@
 #include "Character/Player/Components/BaseWeaponComponent.h"
 #include "WeaponComponent.generated.h"
 
+class UStateMachineComponent;
+class ASword;
 class APlayerCharacter;
 class ABasePlayerController;
 class UPlayerMovementComponent;
@@ -33,24 +35,34 @@ private:
     // Game logic / Attack
 public:
     void MeleeAttack();
-    void RangeAttack();
-    void OnNextComboSection();
-
-protected:
-
-    virtual void OnMeleeStartAttackAnim() override;
-    virtual void OnRangeAttackAnim() override;
     
+protected:
+    void OnStartComboState(int32 ComboIndex);
+    void OnEndComboState(EStateResult StateResult, int32 ComboIndex);
+
+private:
+    int32 m_nextComboIndex = 0;
+    
+    void PlayMeleeWeaponComboAnim(ASword* Weapon, int32 ComboIndex) const;
+    
+public:
+    void RangeAttack();
+    
+protected:
+    void OnStartRangeState(FVector WorldPointToRotate);
+    void OnEndRangeState(EStateResult StateResult);
+
 private:
     FVector m_rangeAttackPoint;
-    bool  m_bIsComboChain = false;
-    bool  m_bWasFirstAttack = false;
-    uint8 m_nComboIndex = 0;
-    
-    void PlayMeleeAttackAnim();
+
+protected:
+    virtual void OnMeleeStartAttackAnim() override;
+    virtual void OnRangeAttackAnim() override;
 
 public:
     APlayerCharacter* GetPlayerCharacter() const;
     ABasePlayerController* GetPlayerController() const;
     UPlayerMovementComponent* GetPlayerMovementComponent() const;
+    UStateMachineComponent* GetStateMachineComponent() const;
+    
 };
