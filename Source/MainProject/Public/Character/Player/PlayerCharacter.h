@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "Camera/CameraComponent.h"
 #include "Character/BaseCharacter.h"
-#include "Components/BoxComponent.h"
 #include "PlayerCharacter.generated.h"
 
 class ABasePlayerController;
@@ -60,6 +59,5 @@ private:
     void CameraMovementTimerUpdate();
 
 public:
-
     ABasePlayerController* GetPlayerController() const;
 };

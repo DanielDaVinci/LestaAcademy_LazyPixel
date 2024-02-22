@@ -5,6 +5,7 @@
 #include "Character/Player/Components/AbilityComponent.h"
 #include "Character/Player/Components/HealthComponent.h"
 #include "Character/Player/Components/BaseWeaponComponent.h"
+#include "Character/Player/Components/StateMachineComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/TextRenderComponent.h"
 
@@ -22,6 +23,8 @@ ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjInit)
 
     pHealthTextComponent = CreateDefaultSubobject<UTextRenderComponent>("HealthTextComponent");
     pHealthTextComponent->SetupAttachment(GetRootComponent());
+
+    pStateMachineComponent = CreateDefaultSubobject<UStateMachineComponent>("StateMachineComponent");
 }
 
 void ABaseCharacter::PostInitializeComponents()
@@ -30,7 +33,6 @@ void ABaseCharacter::PostInitializeComponents()
 
     pHealthComponent->OnHealthChanged.AddUObject(this, &ABaseCharacter::CheckHealthValue);
     pHealthComponent->OnDeath.AddUObject(this, &ABaseCharacter::OnDeath);
-    pHealthComponent->OnDeath.AddUObject(pWeaponComp, &UBaseWeaponComponent::DisableMeleeCollision);
 }
 
 void ABaseCharacter::BeginPlay()
@@ -41,8 +43,13 @@ void ABaseCharacter::BeginPlay()
      check(pHealthTextComponent);
  
  }
- 
- void ABaseCharacter::Tick(float DeltaTime)
+
+void ABaseCharacter::OnDeath()
+{
+    pWeaponComp->DisableAllWeaponsCollision();
+}
+
+void ABaseCharacter::Tick(float DeltaTime)
  {
     Super::Tick(DeltaTime);
     
@@ -51,4 +58,9 @@ void ABaseCharacter::BeginPlay()
 void ABaseCharacter::CheckHealthValue(float Health)
 {
     pHealthTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
+}
+
+UStateMachineComponent* ABaseCharacter::GetStateMachineComponent() const
+{
+    return pStateMachineComponent;
 }

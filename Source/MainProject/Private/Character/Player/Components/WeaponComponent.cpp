@@ -5,10 +5,10 @@
 #include "Weapon/RangeWeapons/Gun.h"
 #include "Character/BaseCharacter.h"
 #include "Animations/ComboEndAnimNotify.h"
-#include "Animations/RangeAttackNotify.h"
 #include "Character/Player/BasePlayerController.h"
 #include "Character/Player/PlayerCharacter.h"
 #include "Character/Player/Components/PlayerMovementComponent.h"
+#include "Character/Player/Components/StateMachineComponent.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogWeaponComponent, All, All);
 
@@ -41,7 +41,7 @@ void UWeaponComponent::SubscribeOnComboNotify(const FAnimNotifyEvent& NotifyEven
     auto comboNotify = Cast<UComboEndAnimNotify>(NotifyEvent.Notify);
     if (!comboNotify)
         return;
-
+    
     comboNotify->FOnComboEndNotify.AddUObject(this, &UWeaponComponent::OnComboNotifyHandle);
 }
 
@@ -55,10 +55,14 @@ void UWeaponComponent::OnComboNotifyHandle(USkeletalMeshComponent* MeshComp)
 
 void UWeaponComponent::MeleeAttack()
 {
-    ABaseCharacter* сharacter = Cast<ABaseCharacter>(GetOwner());
+    const auto сharacter = GetPlayerCharacter();
     if (!сharacter) return;
 
-    if (m_bIsComboChain || сharacter->IsUltimateActive() || сharacter->GetMesh()->GetAnimInstance()->Montage_IsPlaying(m_pRangeWeapon->GetAttackMontage()))
+    const auto pRangeWeapon = FindWeapon<AGun>();
+    if (!pRangeWeapon)
+        return;
+    
+    if (m_bIsComboChain || сharacter->IsUltimateActive() || сharacter->GetMesh()->GetAnimInstance()->Montage_IsPlaying(pRangeWeapon->GetAttackMontage()))
         return;
 
     if (сharacter->GetMesh()->GetAnimInstance()->IsAnyMontagePlaying())
@@ -69,15 +73,29 @@ void UWeaponComponent::MeleeAttack()
         return;
     }
 
+    FState state(5.0f, EStatePriority::Hard);
+    state.OnStartState.AddLambda([]()
+    {
+       UE_LOG(LogTemp, Warning, TEXT("Start")); 
+    });
+    state.OnEndState.AddLambda([]()
+    {
+        UE_LOG(LogTemp, Warning, TEXT("End"));
+    });
+
+    GetPlayerCharacter()->GetStateMachineComponent()->AddState(state);
+
     PlayMeleeAttackAnim();
 }
 
 void UWeaponComponent::PlayMeleeAttackAnim()
 {
-    ABaseCharacter* Character = Cast<ABaseCharacter>(GetOwner());
-    if (!Character) return;
+    const auto character = GetPlayerCharacter();
+    if (!character) return;
 
-    ASword* pMeleeWeapon = Cast<ASword>(m_pBaseWeapon);
+    const auto pMeleeWeapon = FindWeapon<ASword>();
+    if (!pMeleeWeapon)
+        return;
 
     const auto ComboInfo = pMeleeWeapon->GetComboInfo();
     if (!ComboInfo.IsValidIndex(m_nComboIndex))
@@ -93,24 +111,18 @@ void UWeaponComponent::PlayMeleeAttackAnim()
 
     m_bWasFirstAttack = true;
     pMeleeWeapon->SetDamage(ComboInfo[m_nComboIndex].damage);
-    Character->GetMesh()->GetAnimInstance()->SetRootMotionMode(ComboInfo[m_nComboIndex].rootMotionMode);
-    Character->PlayAnimMontage(pMeleeWeapon->GetAttackMontage(), ComboInfo[m_nComboIndex].sectionRateScale, ComboInfo[m_nComboIndex].attackSectionName);
-}
-
-void UWeaponComponent::OnRangeNotifyHandle(USkeletalMeshComponent* MeshComp)
-{
-    if (GetOwner() != MeshComp->GetOwner() || !m_pRangeWeapon)
-        return;
-    
-    m_pRangeWeapon->MakeShoot(m_rangeAttackPoint);
+    character->GetMesh()->GetAnimInstance()->SetRootMotionMode(ComboInfo[m_nComboIndex].rootMotionMode);
+    character->PlayAnimMontage(pMeleeWeapon->GetAttackMontage(), ComboInfo[m_nComboIndex].sectionRateScale, ComboInfo[m_nComboIndex].attackSectionName);
 }
 
 void UWeaponComponent::OnNextComboSection()
 {
-    ASword* pMeleeWeapon = Cast<ASword>(m_pBaseWeapon);
+    const auto pMeleeWeapon = FindWeapon<ASword>();
+    if (!pMeleeWeapon)
+        return;
+    
     if (!m_bIsComboChain || m_nComboIndex >= pMeleeWeapon->GetComboInfo().Num())
     {
-        //UE_LOG(LogWeaponComponent, Display, TEXT("Notify clear!"));
         const auto pmComponent = GetPlayerMovementComponent();
         if (!pmComponent)
             return;
@@ -123,7 +135,6 @@ void UWeaponComponent::OnNextComboSection()
     }
     else
     {
-        //UE_LOG(LogWeaponComponent, Display, TEXT("Notify attack!"));
         PlayMeleeAttackAnim();
     }
 
@@ -133,41 +144,47 @@ void UWeaponComponent::OnNextComboSection()
 void UWeaponComponent::OnMeleeStartAttackAnim()
 {
     Super::OnMeleeStartAttackAnim();
-
     
+    if (const auto pSword = FindWeapon<ASword>())
+        pSword->OnOffCollision();
 }
 
 void UWeaponComponent::OnRangeAttackAnim()
 {
     Super::OnRangeAttackAnim();
-
-    m_pRangeWeapon->MakeShoot(m_rangeAttackPoint);
+    
+    if (const auto pRangeWeapon = FindWeapon<AGun>())
+        pRangeWeapon->MakeShoot(m_rangeAttackPoint);
 }
 
 void UWeaponComponent::RangeAttack()
 {
-    ABaseCharacter* Character = Cast<ABaseCharacter>(GetOwner());
-    if (!Character) return;
+    ABaseCharacter* character = Cast<ABaseCharacter>(GetOwner());
+    if (!character) return;
 
-    if (Character->IsUltimateActive() || Character->GetMesh()->GetAnimInstance()->Montage_IsPlaying(m_pRangeWeapon->GetAttackMontage()))
+    const auto pRangeWeapon = FindWeapon<AGun>();
+    if (!pRangeWeapon)
+        return;
+
+    if (character->IsUltimateActive() || character->GetMesh()->GetAnimInstance()->Montage_IsPlaying(pRangeWeapon->GetAttackMontage()))
         return;
 
     m_bIsComboChain = false; 
 
-    const auto playerController = Cast<ABasePlayerController>(Character->GetController());
+    const auto playerController = Cast<ABasePlayerController>(character->GetController());
     const auto pmComponent = GetPlayerMovementComponent();
     if (!playerController || !pmComponent)
         return;
 
     m_rangeAttackPoint = playerController->GetWorldPointUnderMouse();
-    if (m_rangeAttackPoint == FVector())
+    if (m_rangeAttackPoint == FVector::ZeroVector)
         return;
 
-    const FRotator viewRotation = (m_rangeAttackPoint - Character->GetActorLocation()).Rotation();
+    const FRotator viewRotation = (m_rangeAttackPoint - character->GetActorLocation()).Rotation();
     pmComponent->FixCharacterRotation(FRotator(0.0f, viewRotation.Yaw, 0.0f));
     pmComponent->SetDeceleration(1.f);
 
-    Character->PlayAnimMontage(m_pRangeWeapon->GetAttackMontage());
+    character->PlayAnimMontage(pRangeWeapon->GetAttackMontage());
 }
 
 APlayerCharacter* UWeaponComponent::GetPlayerCharacter() const
@@ -182,6 +199,5 @@ ABasePlayerController* UWeaponComponent::GetPlayerController() const
 
 UPlayerMovementComponent* UWeaponComponent::GetPlayerMovementComponent() const
 {
-    const auto character = Cast<ACharacter>(GetOwner());
-    return character ? Cast<UPlayerMovementComponent>(character->GetMovementComponent()) : nullptr;
+    return GetPlayerCharacter() ? Cast<UPlayerMovementComponent>(GetPlayerCharacter()->GetMovementComponent()) : nullptr;
 }

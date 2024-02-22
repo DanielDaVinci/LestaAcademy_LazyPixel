@@ -18,7 +18,7 @@ APlayerCharacter::APlayerCharacter(const FObjectInitializer& ObjInit)
 
     pSpringArmComponent = CreateDefaultSubobject<USpringArmComponent>("SpringArmComponent");
     pSpringArmComponent->SetupAttachment(GetRootComponent());
-    pSpringArmComponent->SetRelativeRotation(FRotator(-45.0f, 0.0f, 0.0f));\
+    pSpringArmComponent->SetRelativeRotation(FRotator(-45.0f, 0.0f, 0.0f));
     pSpringArmComponent->bDoCollisionTest = false;
 
     pCameraComponent = CreateDefaultSubobject<UCameraComponent>("CameraComponent");

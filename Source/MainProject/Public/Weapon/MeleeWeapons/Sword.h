@@ -18,10 +18,10 @@ public:
     ASword();
     
     UFUNCTION()
-    void OnOffCollision(USkeletalMeshComponent* MeshComp);
+    void OnOffCollision();
 
-    UFUNCTION()
-    void DisableCollision(USkeletalMeshComponent* MeshComp);
+    // UFUNCTION()
+    // void DisableCollision();
 
     TArray<FComboElement> GetComboInfo() { return Combos; }
 

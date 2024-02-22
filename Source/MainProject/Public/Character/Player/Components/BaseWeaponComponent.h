@@ -17,8 +17,7 @@ class MAINPROJECT_API UBaseWeaponComponent : public UActorComponent
 public:	
 	UBaseWeaponComponent();
 
-    // UFUNCTION()
-    // void DisableMeleeCollision();
+    void DisableAllWeaponsCollision();
 
 protected:
     UPROPERTY(EditDefaultsOnly, Category = "Weapon")
@@ -26,6 +25,8 @@ protected:
 
     virtual void BeginPlay() override;
 
+    
+    // Weapons
 private:
     virtual void SpawnAllWeapons();
     
@@ -35,14 +36,19 @@ private:
 protected:
     UPROPERTY()
     TArray<ABaseWeapon*> weapons;
+    
+    template<typename T>
+    T* FindWeapon() const;
 
+    
+    // Animations and notifies
 private:
     virtual void InitAnimations();
     void SubscribeAnimationNotifies(ABaseWeapon* Weapon);
 
 protected:
     virtual void OnSubscribeToNotifies(const FAnimNotifyEvent& NotifyEvent);
-    
+
 private:
     void SubscribeOnMeleeNotify(const FAnimNotifyEvent& NotifyEvent);
     void SubscribeOnRangeNotify(const FAnimNotifyEvent& NotifyEvent);
@@ -55,3 +61,15 @@ protected:
     virtual void OnMeleeStartAttackAnim() {}
     virtual void OnRangeAttackAnim() {}
 };
+
+template <typename T>
+T* UBaseWeaponComponent::FindWeapon() const
+{
+    for (const auto& weapon: weapons)
+    {
+        if (const auto& castWeapon = Cast<T>(weapon))
+            return castWeapon;
+    }
+
+    return nullptr;
+}

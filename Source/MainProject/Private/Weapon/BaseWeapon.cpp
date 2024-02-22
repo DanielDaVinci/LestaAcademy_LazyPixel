@@ -13,3 +13,8 @@ ABaseWeapon::ABaseWeapon()
     pWeaponMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>("WeaponMeshComponent");
     pWeaponMeshComponent->SetupAttachment(GetRootComponent());
 }
+
+void ABaseWeapon::DisableCollision() const
+{
+    pWeaponMeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+}

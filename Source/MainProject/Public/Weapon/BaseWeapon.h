@@ -21,6 +21,8 @@ public:
 
     UAnimMontage* GetAttackMontage() { return attackAnimation; }
 
+    void DisableCollision() const;
+
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="WeaponProperties", meta=(ClampMin="0.0"))
     float damage = 100.0f;

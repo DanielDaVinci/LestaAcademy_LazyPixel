@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "BaseCharacter.generated.h"
 
+class UStateMachineComponent;
 class UBoxComponent;
 class UTextRenderComponent;
 class UHealthComponent;
@@ -37,11 +38,13 @@ protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName="HealthTextComponent")
     UTextRenderComponent* pHealthTextComponent;
 
-    virtual void PostInitializeComponents() override;
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName="StateMachineComponent")
+    UStateMachineComponent* pStateMachineComponent;
 
+    virtual void PostInitializeComponents() override;
     virtual void BeginPlay() override;
     
-    virtual void OnDeath() {}
+    virtual void OnDeath();
 
     bool m_bUltActive;
 
@@ -51,5 +54,8 @@ public:
 private:
     UFUNCTION()
     void CheckHealthValue(float Health);
+
+public:
+    UStateMachineComponent* GetStateMachineComponent() const;
 
 };

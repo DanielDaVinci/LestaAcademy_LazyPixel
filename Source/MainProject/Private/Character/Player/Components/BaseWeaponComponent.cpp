@@ -15,6 +15,14 @@ UBaseWeaponComponent::UBaseWeaponComponent()
 	PrimaryComponentTick.bCanEverTick = false;
 }
 
+void UBaseWeaponComponent::DisableAllWeaponsCollision()
+{
+    for (const auto& weapon: weapons)
+    {
+        weapon->DisableCollision();
+    }
+}
+
 void UBaseWeaponComponent::BeginPlay()
 {
 	Super::BeginPlay();
@@ -28,7 +36,7 @@ void UBaseWeaponComponent::SpawnAllWeapons()
     for (const auto& data: weaponData)
     {
         const auto weapon = SpawnWeapon(data.WeaponClass);
-        if (weapon)
+        if (!weapon)
             continue;
 
         AttachWeapon(weapon, data.WeaponAttachPointName);
@@ -132,13 +140,4 @@ void UBaseWeaponComponent::OnRangeNotifyHandle(USkeletalMeshComponent* MeshComp)
 //     const auto rangeAttackPoint = weapSkel->GetSocketTransform(pRangeWeapon->GetMuzzleSocketName()).GetLocation() + 
 //                                   weapSkel->GetSocketRotation(pRangeWeapon->GetMuzzleSocketName()).Vector();
 //     pRangeWeapon->MakeShoot(rangeAttackPoint);
-// }
-
-// void UBaseWeaponComponent::DisableMeleeCollision() 
-// {
-//     const auto Character = Cast<ACharacter>(GetOwner());
-//     if (!Character) return;
-//
-//     if (ASword* pMeleeWeapon = Cast<ASword>(m_pBaseWeapon))
-//         pMeleeWeapon->DisableCollision(Character->GetMesh());
 // }

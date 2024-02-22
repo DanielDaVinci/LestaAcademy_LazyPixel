@@ -40,9 +40,9 @@ void ASword::OnMeleeWeaponOverlap(UPrimitiveComponent* OverlappedComponent, AAct
     //EnemyActors.AddUnique(OtherActor);
 }
 
-void ASword::OnOffCollision(USkeletalMeshComponent* MeshComp) 
+void ASword::OnOffCollision() 
 {
-    if (!pBoxCollision || (GetOwner() != MeshComp->GetOwner()))
+    if (!pBoxCollision)
         return;
 
     if (pBoxCollision->GetCollisionEnabled() == ECollisionEnabled::NoCollision)
@@ -51,17 +51,17 @@ void ASword::OnOffCollision(USkeletalMeshComponent* MeshComp)
         pBoxCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
-void ASword::DisableCollision(USkeletalMeshComponent* MeshComp) 
-{
-    if (!pBoxCollision || (GetOwner() != MeshComp->GetOwner()))
-        return;
-
-    // Temporary dummy for testing, protect player character from disabling overlap events
-    if (UGameplayStatics::GetPlayerCharacter(GetWorld(), 0) == Cast<ACharacter>(GetOwner()))
-    {
-        UE_LOG(LogSwordWeapon, Display, TEXT("Player is dead!"));
-        return;
-    }
-
-    pBoxCollision->SetGenerateOverlapEvents(0);
-}
+// void ASword::DisableCollision() 
+// {
+//     if (!pBoxCollision)
+//         return;
+//
+//     // Temporary dummy for testing, protect player character from disabling overlap events
+//     if (UGameplayStatics::GetPlayerCharacter(GetWorld(), 0) == Cast<ACharacter>(GetOwner()))
+//     {
+//         UE_LOG(LogSwordWeapon, Display, TEXT("Player is dead!"));
+//         return;
+//     }
+//
+//     pBoxCollision->SetGenerateOverlapEvents(0);
+// }
