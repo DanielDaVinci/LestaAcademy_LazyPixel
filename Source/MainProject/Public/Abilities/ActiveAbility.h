@@ -32,11 +32,11 @@ protected:
      * @return Is activation successful
      */
     virtual bool NativeActivate() { return true; }
+    float currentReloadTime;
 
 private:
     FTimerHandle m_reloadTimerHandle;
-    
-    float m_currentReloadTime;
+
     float m_currentActivationAmount;
 
     /** Called every timer update */

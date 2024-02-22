@@ -5,15 +5,17 @@
 
 #include "Abilities/PassiveAbility.h"
 #include "Abilities/ActiveAbilities/DashAbility.h"
+#include "Abilities/ActiveAbilities/FirstCustomAbility.h"
 #include "Character/Player/BasePlayerController.h"
 #include "Character/Player/PlayerCharacter.h"
+#include "Character/Player/Components/BaseWeaponComponent.h"
 #include "GameFramework/Character.h"
+#include "GameFramework/GameSession.h"
 
 UAbilityComponent::UAbilityComponent()
 {
     PrimaryComponentTick.bCanEverTick = false;
 }
-
 
 void UAbilityComponent::InitializeComponent()
 {
@@ -28,7 +30,7 @@ void UAbilityComponent::InitializeComponent()
 void UAbilityComponent::BeginPlay()
 {
     Super::BeginPlay();
-
+    
     BeginPlayActiveAbility();
     BeginPlayPassiveAbility();
     BeginPlayDashAbility();
@@ -159,6 +161,7 @@ void UAbilityComponent::BindInput()
 
     playerController->OnDash.AddUObject(this, &UAbilityComponent::UseDash);
     playerController->OnCustomAbility.AddUObject(this, &UAbilityComponent::UseCustomAbility);
+    playerController->OnCustomAbilityPressed.AddUObject(this, &UAbilityComponent::CustomAbilityPressed);
 }
 
 void UAbilityComponent::UseDash()
@@ -175,4 +178,10 @@ void UAbilityComponent::UseCustomAbility()
         return;
 
     m_customAbility->Activate();
+}
+
+void UAbilityComponent::CustomAbilityPressed()
+{
+    if (m_customAbility)
+        Cast<UStrongAttackAbility>(m_customAbility)->Press();   
 }

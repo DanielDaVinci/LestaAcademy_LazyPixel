@@ -35,6 +35,7 @@ public:
     FOnRangeAttackSignature OnRangeAttack;
     FOnDashSignature OnDash;
     FOnCustomAbilitySignature OnCustomAbility;
+    FOnCustomAbilitySignature OnCustomAbilityPressed;
     FOnInteractSignature OnInteract;
 #pragma endregion delegates
     
@@ -56,6 +57,7 @@ private:
     void HandleRangeAttack();
     void HandleDash();
     void HandleCustomAbility();
+    void HandleCustomAbilityPressed();
 
     void HandleInteract();
 };

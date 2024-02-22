@@ -33,9 +33,8 @@ protected:
     TSubclassOf<UActiveAbility> customAbilityClass;
 
     virtual void InitializeComponent() override;
-    
-    virtual void BeginPlay() override;
 
+    virtual void BeginPlay() override;
 private:
     UPROPERTY()
     TArray<UActiveAbility*> m_activeAbilities;
@@ -74,4 +73,5 @@ private:
 
     /** Use custom ability on character in game */
     void UseCustomAbility();
+    void CustomAbilityPressed();
 };
