@@ -23,9 +23,13 @@ AAIBaseCharacter::AAIBaseCharacter(const FObjectInitializer& ObjInit)
 void AAIBaseCharacter::BeginPlay() 
 {
     Super::BeginPlay();
+}
+
+void AAIBaseCharacter::PostInitializeComponents()
+{
+    Super::PostInitializeComponents();
 
     pHealthComponent->OnHealthChanged.AddUObject(this, &AAIBaseCharacter::PlayImpactAnim);
-
 }
 
 void AAIBaseCharacter::PlayImpactAnim(float Health) 

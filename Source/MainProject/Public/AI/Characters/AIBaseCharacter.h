@@ -29,6 +29,8 @@ public:
 protected:
     virtual void BeginPlay() override;
 
+    virtual void PostInitializeComponents() override;
+
 private:
     UFUNCTION()
     void PlayImpactAnim(float Health);

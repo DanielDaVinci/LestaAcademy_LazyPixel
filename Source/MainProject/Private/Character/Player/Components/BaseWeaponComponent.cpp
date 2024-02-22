@@ -115,12 +115,6 @@ void UBaseWeaponComponent::OnMeleeNotifyStateHandle(USkeletalMeshComponent* Mesh
     OnMeleeStartAttackAnim();
 }
 
-// void UBaseWeaponComponent::OnStartAttackState(USkeletalMeshComponent* MeshComp) 
-// {
-//     if (ASword* pMeleeWeapon = Cast<ASword>(m_pBaseWeapon))
-//         pMeleeWeapon->OnOffCollision(MeshComp);
-// }
-
 void UBaseWeaponComponent::OnRangeNotifyHandle(USkeletalMeshComponent* MeshComp) 
 {
     if (MeshComp->GetOwner() != GetOwner())
@@ -128,16 +122,3 @@ void UBaseWeaponComponent::OnRangeNotifyHandle(USkeletalMeshComponent* MeshComp)
 
     OnRangeAttackAnim();
 }
-
-// void UBaseWeaponComponent::OnRangeAttack()
-// {
-//     AGun* pRangeWeapon = Cast<AGun>(m_pBaseWeapon);
-//
-//     if (GetOwner() != MeshComp->GetOwner() || !pRangeWeapon)
-//         return;
-//
-//     USkeletalMeshComponent* weapSkel = pRangeWeapon->FindComponentByClass<USkeletalMeshComponent>();   
-//     const auto rangeAttackPoint = weapSkel->GetSocketTransform(pRangeWeapon->GetMuzzleSocketName()).GetLocation() + 
-//                                   weapSkel->GetSocketRotation(pRangeWeapon->GetMuzzleSocketName()).Vector();
-//     pRangeWeapon->MakeShoot(rangeAttackPoint);
-// }

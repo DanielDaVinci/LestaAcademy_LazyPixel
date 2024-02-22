@@ -14,4 +14,7 @@ class MAINPROJECT_API UAIWeaponComponent : public UBaseWeaponComponent
 
 protected:
 	virtual void BeginPlay() override;
+
+    virtual void OnMeleeStartAttackAnim() override;
+    virtual void OnRangeAttackAnim() override;
 };
