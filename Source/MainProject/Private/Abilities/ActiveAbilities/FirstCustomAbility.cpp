@@ -47,7 +47,7 @@ void UStrongAttackAbility::OnStrongAbilityEnd()
 
 void UStrongAttackAbility::SpawnCubeCollision()
 {
-    if (!GetWorld())
+    if (!GetWorld() || !GetCharacter())
         return;
     
     m_pCubeCollision = GetWorld()->SpawnActor<ACollisionCube>(ACollisionCube::StaticClass());

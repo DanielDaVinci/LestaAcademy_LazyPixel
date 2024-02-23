@@ -3,6 +3,7 @@
 
 #include "Common/Objects/CollisionObject.h"
 
+#include "MainProjectCoreTypes.h"
 #include "Components/ShapeComponent.h"
 
 ACollisionObject::ACollisionObject()
@@ -15,12 +16,15 @@ ACollisionObject::ACollisionObject()
     pCollisionComponent = nullptr;
 }
 
-void ACollisionObject::Enable() const
+void ACollisionObject::Enable(bool bWithUpdateOverlaps) const
 {
     if (!pCollisionComponent)
         return;
 
     pCollisionComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+
+    if (bWithUpdateOverlaps)
+        UpdateOverlaps();
 }
 
 void ACollisionObject::Disable() const
@@ -31,7 +35,27 @@ void ACollisionObject::Disable() const
     pCollisionComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
-void ACollisionObject::SetObjectType(ECollisionChannel CollisionChannel) const
+void ACollisionObject::UpdateOverlaps() const
+{
+    pCollisionComponent->UpdateOverlaps();
+}
+
+bool ACollisionObject::HasOverlappingActors(const TSubclassOf<AActor>& FindClass) const
+{
+    TArray<AActor*> overlappingActors;
+    GetOverlappingActors(overlappingActors, FindClass);
+
+    UE_LOG(LogTemp, Error, TEXT("%d"), overlappingActors.Num());
+
+    return !overlappingActors.IsEmpty();
+}
+
+void ACollisionObject::GetOverlappingActors(TArray<AActor*>& OverlappingActors, const TSubclassOf<AActor>& ClassFilter) const
+{
+    pCollisionComponent->GetOverlappingActors(OverlappingActors, ClassFilter);
+}
+
+void ACollisionObject::SetObjectType(const ECollisionChannel CollisionChannel) const
 {
     if (!pCollisionComponent)
         return;
@@ -46,6 +70,31 @@ void ACollisionObject::SetResponseOnlyPawn() const
 
     pCollisionComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
     pCollisionComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
+}
+
+void ACollisionObject::SetResponseOnlyEnemy() const
+{
+    if (!pCollisionComponent)
+        return;
+
+    pCollisionComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+    pCollisionComponent->SetCollisionResponseToChannel(ECC_Enemy, ECollisionResponse::ECR_Overlap);
+}
+
+void ACollisionObject::SetResponseToChannel(const ECollisionChannel CollisionChannel, const ECollisionResponse CollisionResponse) const
+{
+    if (!pCollisionComponent)
+        return;
+
+    pCollisionComponent->SetCollisionResponseToChannel(CollisionChannel, CollisionResponse);
+}
+
+void ACollisionObject::SetResponseToAllChannels(ECollisionResponse CollisionResponse) const
+{
+    if (!pCollisionComponent)
+        return;
+
+    pCollisionComponent->SetCollisionResponseToAllChannels(CollisionResponse);
 }
 
 void ACollisionObject::BeginPlay()
