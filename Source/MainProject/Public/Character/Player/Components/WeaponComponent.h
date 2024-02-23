@@ -11,7 +11,8 @@ class ASword;
 class APlayerCharacter;
 class ABasePlayerController;
 class UPlayerMovementComponent;
-class AGun;
+//class AGun;
+class ABaseWeapon;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class MAINPROJECT_API UWeaponComponent : public UBaseWeaponComponent
@@ -33,10 +34,8 @@ private:
     void OnComboNotifyHandle(USkeletalMeshComponent* MeshComp);
 
     // Game logic / Attack
-public:
-    void MeleeAttack();
-    
 protected:
+    void MeleeAttack();
     void OnStartComboState(int32 ComboIndex);
     void OnEndComboState(EStateResult StateResult, int32 ComboIndex);
 
@@ -45,21 +44,23 @@ private:
     
     void PlayMeleeWeaponComboAnim(ASword* Weapon, int32 ComboIndex) const;
     
-public:
-    void RangeAttack();
-    
 protected:
+    void RangeAttack();
     void OnStartRangeState(FVector WorldPointToRotate);
     void OnEndRangeState(EStateResult StateResult);
 
 private:
     FVector m_rangeAttackPoint;
 
+    void DropWeapon(const TSubclassOf<ABaseWeapon>& WeaponClass);
+    void SubscribeOnDropRangeWeapon();
+
 protected:
     virtual void OnMeleeStartAttackAnim() override;
     virtual void OnRangeAttackAnim() override;
 
 public:
+    void PickUpWeapon(const TSubclassOf<ABaseWeapon>& WeaponClass);
     APlayerCharacter* GetPlayerCharacter() const;
     ABasePlayerController* GetPlayerController() const;
     UPlayerMovementComponent* GetPlayerMovementComponent() const;

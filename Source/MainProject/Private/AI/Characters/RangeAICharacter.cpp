@@ -6,6 +6,7 @@
 #include "AI/Characters/RangeAIController.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Pickups/WeaponPickup.h"
 
 ARangeAICharacter::ARangeAICharacter(const FObjectInitializer& ObjInit)
     : Super(ObjInit)
@@ -29,4 +30,7 @@ void ARangeAICharacter::OnDeath()
 
     GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
     GetMesh()->SetSimulatePhysics(true);
+
+    if (PickupClass)
+        GetWorld()->SpawnActor<AWeaponPickup>(PickupClass, GetActorLocation(), FRotator(), FActorSpawnParameters());
 }
