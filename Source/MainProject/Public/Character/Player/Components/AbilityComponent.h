@@ -35,7 +35,7 @@ protected:
     TSubclassOf<UActiveAbility> customAbilityClass;
 
     virtual void InitializeComponent() override;
-    
+
     virtual void BeginPlay() override;
 
 private:
@@ -68,6 +68,8 @@ private:
 
     /** Use custom ability on character in game */
     void UseCustomAbility();
+    
+    void CustomAbilityPressed();
 
     ABaseCharacter* GetCharacter() const { return Cast<ABaseCharacter>(GetOwner()); }
 };
