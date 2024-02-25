@@ -21,11 +21,8 @@ protected:
     UPROPERTY(EditDefaultsOnly, Category = "WeaponType")
     TSubclassOf<ABaseWeapon> weaponClass;
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName = "WeaponMeshComponent")
-    USkeletalMeshComponent* pWeaponMeshComponent;
-
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Rotation")
     float rotationYaw = 0.0f;
 
-    virtual void PickUpHandle() override;
+    virtual void PickUpHandle(APlayerCharacter* Character) override;
 };

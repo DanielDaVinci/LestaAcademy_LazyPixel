@@ -17,9 +17,6 @@ public:
 	AHealthStation();
     
 protected:
-    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName = "HealthStationMeshComponent")
-    UStaticMeshComponent* pHealthStationMeshComponent;
-
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName = "HealthDisplayMeshComponent")
     UStaticMeshComponent* pHealthDisplayMeshComponent;
 
@@ -30,7 +27,7 @@ protected:
     float healAmount = 50.0f;
 
     virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
-    virtual void PickUpHandle() override;
+    virtual void PickUpHandle(APlayerCharacter* Character) override;
 
 private:
     bool isUsed = false;

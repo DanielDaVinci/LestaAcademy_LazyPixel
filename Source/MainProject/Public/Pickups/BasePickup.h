@@ -21,10 +21,11 @@ public:
     virtual void Tick(float DeltaTime) override{};
 
 protected:
-    APlayerCharacter* m_character = nullptr;
-
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName = "CollisionComponent")
     USphereComponent* pCollisionComponent;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName = "MeshComponent")
+    UMeshComponent* pBaseMeshComponent;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName = "InteractWidget")
     UWidgetComponent* pInteractWidget;
@@ -32,9 +33,8 @@ protected:
     virtual void BeginPlay() override;
     virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
     virtual void NotifyActorEndOverlap(AActor* OtherActor) override;
-    virtual void PickUpHandle(){};
+    virtual void PickUpHandle(APlayerCharacter* Character){};
 
 private: 
-    APlayerCharacter* GetPlayerCharacter() const { return m_character; }
-    ABasePlayerController* GetPlayerController() const;
+    ABasePlayerController* GetPlayerController(AActor* Character) const;
 };

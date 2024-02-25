@@ -37,6 +37,6 @@ protected:
         int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 private:
-    TArray<AActor*> alreadydamagedActors;
+    TSet<AActor*> alreadydamagedActors;
     void InitBoxCollision();
 };

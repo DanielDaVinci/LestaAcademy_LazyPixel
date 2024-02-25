@@ -9,14 +9,14 @@
 
 AHealthStation::AHealthStation()
 {
-    pHealthStationMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("HealthStationMeshComponent");
-    pHealthStationMeshComponent->SetupAttachment(GetRootComponent());
+    pBaseMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("HealthStationMeshComponent");
+    pBaseMeshComponent->SetupAttachment(GetRootComponent());
 
     pHealthDisplayMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("HealthDisplayMeshComponent");
-    pHealthDisplayMeshComponent->SetupAttachment(pHealthStationMeshComponent);
+    pHealthDisplayMeshComponent->SetupAttachment(pBaseMeshComponent);
 
     pRectLightComponent = CreateDefaultSubobject<URectLightComponent>("RectLightComponent");
-    pRectLightComponent->SetupAttachment(pHealthStationMeshComponent);
+    pRectLightComponent->SetupAttachment(pBaseMeshComponent);
 }
 
 void AHealthStation::NotifyActorBeginOverlap(AActor* OtherActor) 
@@ -26,11 +26,11 @@ void AHealthStation::NotifyActorBeginOverlap(AActor* OtherActor)
     Super::NotifyActorBeginOverlap(OtherActor);
 }
 
-void AHealthStation::PickUpHandle()
+void AHealthStation::PickUpHandle(APlayerCharacter* Character)
 {
-    if (!m_character || isUsed) return;
+    if (!Character || isUsed) return;
 
-    m_character->GetComponentByClass<UHealthComponent>()->Heal(healAmount);
+    Character->GetComponentByClass<UHealthComponent>()->Heal(healAmount);
     pInteractWidget->SetVisibility(false);
     pHealthDisplayMeshComponent->SetVisibility(false);
     pRectLightComponent->SetIntensity(0.0f);

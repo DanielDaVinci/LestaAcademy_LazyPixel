@@ -34,27 +34,29 @@ void ABasePickup::NotifyActorBeginOverlap(AActor* OtherActor)
 {
     Super::NotifyActorBeginOverlap(OtherActor);
 
-    m_character = Cast<APlayerCharacter>(OtherActor);
-    const auto playerController = GetPlayerController();
+    const auto playerController = GetPlayerController(OtherActor);
     if (!playerController) return;
 
     pInteractWidget->SetVisibility(true);
-    playerController->OnInteract.AddUObject(this, &ABasePickup::PickUpHandle);
+    playerController->OnInteract.AddUObject(this, &ABasePickup::PickUpHandle, Cast<APlayerCharacter>(OtherActor));
 }
 
 void ABasePickup::NotifyActorEndOverlap(AActor* OtherActor) 
 {
     Super::NotifyActorEndOverlap(OtherActor);
 
-    const auto playerController = GetPlayerController();
+    const auto playerController = GetPlayerController(OtherActor);
     if (!playerController) return;
 
     pInteractWidget->SetVisibility(false);
     playerController->OnInteract.RemoveAll(this);
 }
 
-ABasePlayerController* ABasePickup::GetPlayerController() const
+ABasePlayerController* ABasePickup::GetPlayerController(AActor* Character) const
 {
-    return GetPlayerCharacter() ? GetPlayerCharacter()->GetPlayerController() : nullptr;
+    if (const auto PlayerCharacter = Cast<APlayerCharacter>(Character))
+        return PlayerCharacter->GetPlayerController();
+
+    return nullptr;
 }
 

@@ -10,8 +10,8 @@ AWeaponPickup::AWeaponPickup()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-    pWeaponMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>("WeaponMeshComponent");
-    pWeaponMeshComponent->SetupAttachment(GetRootComponent());
+    pBaseMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>("WeaponMeshComponent");
+    pBaseMeshComponent->SetupAttachment(GetRootComponent());
 }
 
 void AWeaponPickup::Tick(float DeltaTime)
@@ -21,10 +21,10 @@ void AWeaponPickup::Tick(float DeltaTime)
     AddActorLocalRotation(FRotator(0.0f, rotationYaw, 0.0f));
 }
 
-void AWeaponPickup::PickUpHandle() 
+void AWeaponPickup::PickUpHandle(APlayerCharacter* Character) 
 {
-    if (!m_character) return;
+    if (!Character) return;
 
-    m_character->GetComponentByClass<UWeaponComponent>()->PickUpWeapon(weaponClass);
+    Character->GetComponentByClass<UWeaponComponent>()->PickUpWeapon(weaponClass);
     Destroy();
 }
