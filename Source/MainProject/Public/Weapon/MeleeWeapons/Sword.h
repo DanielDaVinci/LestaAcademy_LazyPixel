@@ -21,12 +21,13 @@ public:
     void DisableAttackCollision() const;
 
     void OnOffCollision();
+    void ClearDamagedActors();
 
-    TArray<FComboElement> GetComboInfo() { return Combos; }
+    TArray<FComboElement> GetComboInfo() { return combos; }
 
 protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Attack")
-    TArray<FComboElement> Combos;
+    TArray<FComboElement> combos;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName = "BoxComponent")
     UBoxComponent* pBoxCollision;
@@ -36,6 +37,6 @@ protected:
         int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 private:
-
+    TArray<AActor*> alreadydamagedActors;
     void InitBoxCollision();
 };

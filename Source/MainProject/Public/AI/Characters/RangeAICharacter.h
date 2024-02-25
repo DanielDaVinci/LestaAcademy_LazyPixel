@@ -19,5 +19,5 @@ public:
 
 protected:
     UPROPERTY(EditDefaultsOnly, Category = "PickupType")
-    TSubclassOf<AWeaponPickup> PickupClass;
+    TSubclassOf<AWeaponPickup> pickupClass;
 };

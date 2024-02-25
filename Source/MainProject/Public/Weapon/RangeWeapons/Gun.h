@@ -6,7 +6,7 @@
 #include "Weapon/BaseWeapon.h"
 #include "Gun.generated.h"
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnEmptyGunSignature, const TSubclassOf<ABaseWeapon>&);
+DECLARE_MULTICAST_DELEGATE(FOnEmptyGunSignature);
 
 class AProjectile;
 
@@ -17,22 +17,20 @@ class MAINPROJECT_API AGun : public ABaseWeapon
 
 public:
     void MakeShoot(const FVector& Point);
-    FName GetMuzzleSocketName() const { return MuzzleSocketName; }
+    FName GetMuzzleSocketName() const { return muzzleSocketName; }
 
     FOnEmptyGunSignature OnEmptyGun;
 
 protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Projectile")
-    TSubclassOf<AProjectile> ProjectileClass;
+    TSubclassOf<AProjectile> projectileClass;
 
     UPROPERTY(EditDefaultsOnly, Category = "Sockets")
-    FName MuzzleSocketName = "MuzzleSocket";
+    FName muzzleSocketName = "MuzzleSocket";
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Ammo")
-    int32 Bullets = 5;
+    int32 bullets = 5;
     
 private:
-    FVector GetDirection() const;
     uint8 m_nProjTrailCol = 0;
-
 };

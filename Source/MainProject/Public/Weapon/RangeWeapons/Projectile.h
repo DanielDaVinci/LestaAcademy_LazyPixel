@@ -17,22 +17,22 @@ class MAINPROJECT_API AProjectile : public AActor
 public:
     AProjectile();
 
-    void SetShootDirection(const FVector& Direction) { m_ShotDirection = Direction; }
-    void SetDamage(const float Damage) { m_Damage = Damage; }
-    void SetTrailColor(const uint8 nColorIndex) { if (TrailColors.IsValidIndex(nColorIndex)) CurTrailColor = TrailColors[nColorIndex]; }
+    void SetShootDirection(const FVector& Direction) { m_shotDirection = Direction; }
+    void SetDamage(const float Damage) { m_damage = Damage; }
+    void SetTrailColor(const uint8 nColorIndex) { if (trailColors.IsValidIndex(nColorIndex)) curTrailColor = trailColors[nColorIndex]; }
 
 protected:
-    UPROPERTY(VisibleDefaultsOnly, Category = "Weapon")
-    USphereComponent* CollisionComponent;
+    UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Weapon", DisplayName = "CollisionComponent")
+    USphereComponent* pCollisionComponent;
 
-    UPROPERTY(VisibleDefaultsOnly, Category = "Weapon")
-    UProjectileMovementComponent* MovementComponent;
+    UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Weapon", DisplayName = "MovementComponent")
+    UProjectileMovementComponent* pMovementComponent;
 
     UPROPERTY(EditDefaultsOnly, Category = "VFX")
-    TArray<FLinearColor> TrailColors;
+    TArray<FLinearColor> trailColors;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "VFX")
-    FLinearColor CurTrailColor;
+    FLinearColor curTrailColor;
 
     virtual void BeginPlay() override;
 
@@ -41,6 +41,6 @@ private:
     void OnProjectileHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse,
         const FHitResult& Hit);
 
-    FVector m_ShotDirection;
-    float m_Damage;
+    FVector m_shotDirection;
+    float m_damage;
 };
