@@ -42,6 +42,12 @@ void UPlayerMovementComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 
 void UPlayerMovementComponent::OnMoveForward(float Amount)
 {
+    if (!m_bCanMove)
+    {
+        m_inputDirection.Y = 0;
+        return;
+    }
+    
     const auto character = GetPlayerCharacter();
     if (!character)
         return;
@@ -52,8 +58,14 @@ void UPlayerMovementComponent::OnMoveForward(float Amount)
 
 void UPlayerMovementComponent::OnMoveRight(float Amount)
 {
+    if (!m_bCanMove)
+    {
+        m_inputDirection.X = 0;
+        return;
+    }
+    
     const auto character = GetPlayerCharacter();
-    if (!character)
+    if (!character || !m_bCanMove)
         return;
 
     m_inputDirection.X = Amount;
@@ -94,7 +106,7 @@ FVector UPlayerMovementComponent::GetMouseViewDirection() const
     return InputDirToWorldDir(controller->GetMouseVector());
 }
 
-void UPlayerMovementComponent::FixCharacterRotation(FRotator FixRotation)
+void UPlayerMovementComponent::FixCharacterRotation(const FRotator& FixRotation)
 {
     const auto mesh = GetPlayerCharacter()->GetMesh();
     if (!mesh)

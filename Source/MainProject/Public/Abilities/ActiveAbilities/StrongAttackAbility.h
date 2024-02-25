@@ -17,58 +17,61 @@ class MAINPROJECT_API UStrongAttackAbility : public UActiveAbility
 {
     GENERATED_BODY()
 
-public:
-    void OnStrongAbilityStartState();
-    void OnStrongAbilitySecondPartStartState();
-
 protected:
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Params")
-    float abilityDuration = 0.4f;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Params")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Strong Attack")
     float abilityDamage = 100.0f;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Params")
-    float abilityDistance = 2000.0f;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Params")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Strong Attack")
     float timeDilation = 0.3f;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Params")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Strong Attack")
     float defaultTimeDilation = 1.f;
     
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Params")
-    float abilityUseTime = 3.f;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Params")
-    UAnimMontage* pAbilityAnimation;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Strong Attack|Animation")
+    float prepareDuration = 3.f;
     
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Params")
-    UAnimMontage* pAttackPrepareAnimation;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Strong Attack|Animation", DisplayName = "Prepare Animation")
+    UAnimMontage* pPrepareAnimation;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Strong Attack|Animation")
+    float attackDuration = 0.4f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Strong Attack|Animation", DisplayName = "Attack Animation")
+    UAnimMontage* pAttackAnimation;
 
     virtual void BeginPlay() override;
 
-    virtual bool NativeActivate() override;
-
     UFUNCTION()
-    void OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+    void OnCubeCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
     int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-private:
-    bool m_isAbilityActivationButtonPressed;
-    FTimerHandle m_abilityDurationHandle;
-    FTimerHandle m_abilityUseHandle;
-
-protected:
-    void SpawnCubeCollision();
-
-    ABasePlayerController* GetBasePlayerController() const;
-    UPlayerMovementComponent* GetPlayerMovementComponent() const;
-    UStateMachineComponent* GetStateMachineComponent() const;
+    
 private:
     UPROPERTY()
     ACollisionCube* m_pCubeCollision;
     
-    void RotateCharacterInMouseDirection();
-    void OnStrongAbilityEndState(EStateResult StateResult);
-    void OnStrongAbilitySecondPartEndState(EStateResult StateResult);
+    void SpawnCubeCollision();
+
+protected:
+    virtual bool NativeActivate() override;
+    
+    void OnPreparePartStartState();
+    void OnPreparePartEndState(EStateResult StateResult);
+
+    void StartAttackPart();
+    
+    void OnAttackPartStartState();
+    void OnAttackPartEndState(EStateResult StateResult);
+    
+private:
+    FTimerHandle m_rotationTimer;
+
+    void OnCustomAbilityButtonReleased();
+    void OnMouseMove(FVector2D MouseVector);
+    
+    void RotateCharacterToMouse() const;
+
+protected:
+    ABasePlayerController* GetBasePlayerController() const;
+    UPlayerMovementComponent* GetPlayerMovementComponent() const;
+    UStateMachineComponent* GetStateMachineComponent() const;
 };

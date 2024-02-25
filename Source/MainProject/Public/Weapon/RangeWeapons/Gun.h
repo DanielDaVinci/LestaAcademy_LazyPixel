@@ -22,13 +22,13 @@ public:
     FOnEmptyGunSignature OnEmptyGun;
 
 protected:
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Projectile")
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon Properties|Gun|Projectile")
     TSubclassOf<AProjectile> ProjectileClass;
 
-    UPROPERTY(EditDefaultsOnly, Category = "Sockets")
+    UPROPERTY(EditDefaultsOnly, Category = "Weapon Properties|Gun|Projectile")
     FName MuzzleSocketName = "MuzzleSocket";
 
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Ammo")
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon Properties|Gun")
     int32 Bullets = 5;
     
 private:

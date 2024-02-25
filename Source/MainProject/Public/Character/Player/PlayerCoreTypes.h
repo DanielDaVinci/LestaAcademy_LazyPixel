@@ -28,8 +28,8 @@ enum EStatePriority: int32
 UENUM()
 enum EStateResult
 {
-    Successed,
-    Aborted
+    Aborted = 0,
+    Successed = 1
 };
 
 DECLARE_MULTICAST_DELEGATE(FOnStartStateSignature)

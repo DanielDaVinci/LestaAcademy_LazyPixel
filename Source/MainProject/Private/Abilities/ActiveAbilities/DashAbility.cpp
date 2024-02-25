@@ -23,7 +23,7 @@ bool UDashAbility::NativeActivate()
 
     FState dashState(
         "DashAbility",
-        dashTime,
+        dashDuration,
         EStatePriority::Force
     );
     dashState.OnStartState.AddUObject(this, &UDashAbility::OnStartDashState);
@@ -68,7 +68,7 @@ void UDashAbility::OnDashTimerUpdate(FVector Direction)
     if (!GetWorld() || !pCharacter || !pStateMachineComponent)
         return;
     
-    const FVector delta = Direction * dashDistance * FMath::Clamp(m_timerRate / dashTime, 0.0f, 1.0f);
+    const FVector delta = Direction * dashDistance * FMath::Clamp(m_timerRate / dashDuration, 0.0f, 1.0f);
 
     FHitResult* hitResult = nullptr;
     pCharacter->AddActorWorldOffset(delta,true, hitResult);

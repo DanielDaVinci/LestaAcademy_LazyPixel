@@ -1,7 +1,7 @@
 // Lazy Pixel. All Rights Reserved.
 
 
-#include "..\..\..\Public\Abilities\ActiveAbilities\StrongAttackAbility.h"
+#include "Abilities/ActiveAbilities/StrongAttackAbility.h"
 
 #include "MainProjectCoreTypes.h"
 #include "Character/BaseCharacter.h"
@@ -11,7 +11,6 @@
 #include "Common/Objects/CollisionCube.h"
 #include "Engine/DamageEvents.h"
 #include "Kismet/GameplayStatics.h"
-#include "Character/Player/Components/WeaponComponent.h"
 #include "Components/CapsuleComponent.h"
 
 bool UStrongAttackAbility::NativeActivate()
@@ -22,12 +21,12 @@ bool UStrongAttackAbility::NativeActivate()
 
     FState strongAbilityState(
         "StrongAbilityState",
-        abilityUseTime * timeDilation,
+        prepareDuration * timeDilation,
         Force
     );
 
-    strongAbilityState.OnStartState.AddUObject(this, &UStrongAttackAbility::OnStrongAbilityStartState);
-    strongAbilityState.OnEndState.AddUObject(this, &UStrongAttackAbility::OnStrongAbilityEndState);
+    strongAbilityState.OnStartState.AddUObject(this, &UStrongAttackAbility::OnPreparePartStartState);
+    strongAbilityState.OnEndState.AddUObject(this, &UStrongAttackAbility::OnPreparePartEndState);
 
     pStateMachineComponent->AddState(strongAbilityState);
     
@@ -41,7 +40,7 @@ void UStrongAttackAbility::BeginPlay()
     SpawnCubeCollision();
 }
 
-void UStrongAttackAbility::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+void UStrongAttackAbility::OnCubeCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
     int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
     if (OtherActor == GetCharacter())
@@ -67,7 +66,116 @@ void UStrongAttackAbility::SpawnCubeCollision()
     m_pCubeCollision->SetResponseToAllChannels(ECR_Ignore);
     m_pCubeCollision->SetResponseToChannel(ECC_Enemy, ECR_Overlap);
     
-    m_pCubeCollision->OnBeginOverlap.AddUObject(this, &UStrongAttackAbility::OnBeginOverlap);
+    m_pCubeCollision->OnBeginOverlap.AddUObject(this, &UStrongAttackAbility::OnCubeCollisionBeginOverlap);
+}
+
+void UStrongAttackAbility::OnPreparePartStartState()
+{
+    const auto pPlayerMovementComponent = GetPlayerMovementComponent();
+    const auto pPlayerController = GetBasePlayerController();
+    if (!pPlayerMovementComponent || !pPrepareAnimation || !pPlayerController)
+        return;
+
+    UGameplayStatics::SetGlobalTimeDilation(GetWorld(), timeDilation);
+    pPlayerMovementComponent->SetEnableMovementInput(false);
+    
+    pPlayerController->OnCustomAbilityReleased.AddUObject(this, &UStrongAttackAbility::OnCustomAbilityButtonReleased);
+    pPlayerController->OnMouseMove.AddUObject(this, &UStrongAttackAbility::OnMouseMove);
+    GetCharacter()->PlayAnimMontage(pPrepareAnimation);
+}
+
+void UStrongAttackAbility::OnCustomAbilityButtonReleased()
+{
+    const auto pStateMachine = GetStateMachineComponent();
+    const auto pPlayerController = GetBasePlayerController();
+    if (!pStateMachine || !pPlayerController)
+        return;
+    
+    pStateMachine->SkipCurrentState();
+}
+
+void UStrongAttackAbility::OnPreparePartEndState(EStateResult StateResult)
+{
+    const auto pPlayerMovementComponent = GetPlayerMovementComponent();
+    const auto pPlayerController = GetBasePlayerController();
+    if (!pPlayerMovementComponent || !pPlayerController)
+        return;
+    
+    UGameplayStatics::SetGlobalTimeDilation(GetWorld(), defaultTimeDilation);
+    pPlayerMovementComponent->SetEnableMovementInput(true);
+
+    pPlayerController->OnCustomAbilityReleased.RemoveAll(this);
+    pPlayerController->OnMouseMove.RemoveAll(this);
+
+    if (StateResult == EStateResult::Successed)
+        StartAttackPart();
+}
+
+void UStrongAttackAbility::OnMouseMove(FVector2D MouseVector)
+{
+    RotateCharacterToMouse();
+}
+
+void UStrongAttackAbility::RotateCharacterToMouse() const
+{
+    const auto pPlayerController = GetBasePlayerController();
+    if (!pPlayerController)
+        return;
+    
+    const auto point = pPlayerController->GetWorldPointUnderMouse();
+    if (point == FVector::ZeroVector)
+        return;
+
+    FRotator viewRotation = (point - GetCharacter()->GetActorLocation()).Rotation();
+    viewRotation.Pitch = 0.0f;
+    
+    GetCharacter()->GetMesh()->SetRelativeRotation(viewRotation);
+}
+
+void UStrongAttackAbility::StartAttackPart()
+{
+    const auto pStateMachineComponent = GetStateMachineComponent();
+    if (!pStateMachineComponent)
+        return;
+
+    FState strongAbilityState(
+        "StrongAbilitySecondPartState",
+        attackDuration,
+        Hard
+    );
+    strongAbilityState.OnStartState.AddUObject(this, &UStrongAttackAbility::OnAttackPartStartState);
+    strongAbilityState.OnEndState.AddUObject(this, &UStrongAttackAbility::OnAttackPartEndState);
+
+    pStateMachineComponent->AddState(strongAbilityState);
+}
+
+void UStrongAttackAbility::OnAttackPartStartState()
+{
+    const auto pPlayerMovementComponent = GetPlayerMovementComponent();
+    if (!GetCharacter() || !pPlayerMovementComponent || !GetCharacter()->GetMesh() || !pAttackAnimation)
+        return;
+    
+    m_pCubeCollision->Enable();
+    GetCharacter()->GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Enemy, ECR_Ignore);
+    pPlayerMovementComponent->SetEnableMovementInput(false);
+    
+    RotateCharacterToMouse();
+    
+    GetCharacter()->GetMesh()->GetAnimInstance()->SetRootMotionMode(ERootMotionMode::RootMotionFromMontagesOnly);
+    GetCharacter()->PlayAnimMontage(
+        pAttackAnimation,
+        pAttackAnimation->GetSectionLength(0) / attackDuration);
+}
+
+void UStrongAttackAbility::OnAttackPartEndState(EStateResult StateResult)
+{
+    const auto pPlayerMovementComponent = GetPlayerMovementComponent();
+    if (!GetCharacter() || !pPlayerMovementComponent)
+        return;
+    
+    m_pCubeCollision->Disable();
+    GetCharacter()->GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Enemy, ECR_Block);
+    pPlayerMovementComponent->SetEnableMovementInput(true);
 }
 
 ABasePlayerController* UStrongAttackAbility::GetBasePlayerController() const
@@ -83,93 +191,4 @@ UPlayerMovementComponent* UStrongAttackAbility::GetPlayerMovementComponent() con
 UStateMachineComponent* UStrongAttackAbility::GetStateMachineComponent() const
 {
     return GetCharacter() ? GetCharacter()->GetStateMachineComponent() : nullptr;
-}
-
-void UStrongAttackAbility::RotateCharacterInMouseDirection()
-{
-    const auto pPlayerController = GetBasePlayerController();
-    if (!pPlayerController)
-        return;
-    
-    const auto point = pPlayerController->GetWorldPointUnderMouse();
-    if (point == FVector::ZeroVector)
-        return;
-
-    const FRotator viewRotation = (point - GetCharacter()->GetActorLocation()).Rotation();
-    GetCharacter()->GetMesh()->SetRelativeRotation(viewRotation);
-}
-
-void UStrongAttackAbility::OnStrongAbilityStartState()
-{
-    const auto pPlayerMovementComponent = GetPlayerMovementComponent();
-    const auto pPlayerController = GetBasePlayerController();
-    if (!pPlayerMovementComponent || !pAttackPrepareAnimation || !pPlayerController)
-        return;
-
-    UGameplayStatics::SetGlobalTimeDilation(GetWorld(), timeDilation);
-    pPlayerMovementComponent->SetDeceleration(1.0f);
-    pPlayerController->OnCustomAbilityPressed.AddLambda([&]()
-    {
-        const auto pStateMachine = GetStateMachineComponent();
-        pStateMachine->SkipCurrentState();
-        pPlayerController->OnCustomAbilityPressed.Clear();
-    });
-    GetCharacter()->PlayAnimMontage(pAttackPrepareAnimation);
-}
-
-void UStrongAttackAbility::OnStrongAbilityEndState(EStateResult StateResult)
-{
-    UGameplayStatics::SetGlobalTimeDilation(GetWorld(), defaultTimeDilation);
-    UE_LOG(LogTemp, Error, TEXT("123"));
-    
-    if (StateResult == Aborted)
-    {
-        const auto pPlayerMovementComponent = GetPlayerMovementComponent();
-        const auto pPlayerController = GetBasePlayerController();
-        
-        if (!pPlayerMovementComponent || !pPlayerController)
-            return;
-
-        pPlayerController->OnCustomAbilityPressed.RemoveAll(this);
-        pPlayerMovementComponent->SetDeceleration(0.f);
-        UE_LOG(LogTemp, Error, TEXT("321"));
-        return;
-    }
-
-    const auto pStateMachineComponent = GetStateMachineComponent();
-    if (!pStateMachineComponent)
-        return;
-
-    FState strongAbilityState(
-        "StrongAbilitySecondPartState",
-        abilityDuration,
-        Hard
-    );
-
-    strongAbilityState.OnStartState.AddUObject(this, &UStrongAttackAbility::OnStrongAbilitySecondPartStartState);
-    strongAbilityState.OnEndState.AddUObject(this, &UStrongAttackAbility::OnStrongAbilitySecondPartEndState);
-
-    pStateMachineComponent->AddState(strongAbilityState);
-}
-
-void UStrongAttackAbility::OnStrongAbilitySecondPartStartState()
-{
-    if (!GetWorld() || !GetCharacter() || !GetCharacter()->GetMesh() || !pAbilityAnimation)
-        return;
-    
-    m_pCubeCollision->Enable();
-    
-    RotateCharacterInMouseDirection();
-
-    GetCharacter()->GetMesh()->GetAnimInstance()->SetRootMotionMode(ERootMotionMode::RootMotionFromMontagesOnly);
-    GetCharacter()->PlayAnimMontage(pAbilityAnimation);
-    GetCharacter()->SetUltimateActive(1);
-    GetCharacter()->GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Enemy, ECR_Ignore);
-    UGameplayStatics::SetGlobalTimeDilation(GetWorld(), defaultTimeDilation);
-}
-
-void UStrongAttackAbility::OnStrongAbilitySecondPartEndState(EStateResult StateResult)
-{
-    m_pCubeCollision->Disable();
-    GetCharacter()->GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Enemy, ECR_Block);
 }

@@ -18,13 +18,10 @@ class MAINPROJECT_API UDashAbility : public UActiveAbility
 
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dash")
-    float dashImpulse = 2000.0f;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dash")
     float dashDistance = 1000.0f;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dash")
-    float dashTime = 0.2f;
+    float dashDuration = 0.2f;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dash")
     UAnimMontage* dashAnimation;

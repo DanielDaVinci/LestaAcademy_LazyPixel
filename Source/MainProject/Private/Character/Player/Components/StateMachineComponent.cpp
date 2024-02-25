@@ -53,9 +53,11 @@ void UStateMachineComponent::StopCurrentState(EStateResult StateResult)
         return;
 
     ClearStateTimer();
-    m_pCurrentState->OnEndState.Broadcast(StateResult);
-    delete m_pCurrentState;
+    
+    const FState* currentState = m_pCurrentState;
     m_pCurrentState = nullptr;
+    currentState->OnEndState.Broadcast(StateResult);
+    delete currentState;
 }
 
 void UStateMachineComponent::StartState(FState* State)

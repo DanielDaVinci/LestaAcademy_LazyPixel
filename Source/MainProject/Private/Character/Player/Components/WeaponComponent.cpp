@@ -75,8 +75,6 @@ void UWeaponComponent::MeleeAttack()
     
     meleeState.OnStartState.AddUObject(this, &UWeaponComponent::OnStartComboState, m_nextComboIndex);
     meleeState.OnEndState.AddUObject(this, &UWeaponComponent::OnEndComboState, m_nextComboIndex);
-    
-    UE_LOG(LogTemp, Error, TEXT("Current Index: %d"), m_nextComboIndex);
 
     pStateMachine->AddState(meleeState);
     m_nextComboIndex++;

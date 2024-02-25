@@ -44,6 +44,7 @@ protected:
 
 private:
     FVector2D m_inputDirection = {0.0f, 0.0f};
+    bool m_bCanMove = true;
 
     /**
      * Smooth rotate mesh to movement direction
@@ -58,11 +59,10 @@ public:
      * @return Normalized vector converted to character axes
      */
     FVector InputDirToWorldDir(FVector2D InputDirection) const;
+    
+    FVector2D GetInputDirection() const { return m_inputDirection; }
 
-    /**
-     * @return 
-     */
-    FVector2D GetInputDirection() const { return m_inputDirection; };
+    void SetEnableMovementInput(bool bCanMove) { m_bCanMove = bCanMove; }
 
 private:
     bool m_bCanRotation = true;
@@ -77,7 +77,7 @@ public:
      * Fix character rotation
      * @param FixRotation Characters's fix rotation in end
      */
-    void FixCharacterRotation(FRotator FixRotation);
+    void FixCharacterRotation(const FRotator& FixRotation);
 
     /**
      * unfix character rotation

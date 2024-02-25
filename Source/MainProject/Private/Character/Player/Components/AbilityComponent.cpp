@@ -54,8 +54,7 @@ void UAbilityComponent::BindInput()
         return;
 
     playerController->OnDash.AddUObject(this, &UAbilityComponent::UseDash);
-    playerController->OnCustomAbility.AddUObject(this, &UAbilityComponent::UseCustomAbility);
-    playerController->OnCustomAbilityPressed.AddUObject(this, &UAbilityComponent::CustomAbilityPressed);
+    playerController->OnCustomAbilityPressed.AddUObject(this, &UAbilityComponent::UseCustomAbility);
 }
 
 void UAbilityComponent::UseDash()
@@ -74,8 +73,4 @@ void UAbilityComponent::UseCustomAbility()
     m_customAbility->Activate();
 }
 
-void UAbilityComponent::CustomAbilityPressed()
-{
-    if (m_customAbility)
-        Cast<UStrongAttackAbility>(m_customAbility)->OnStrongAbilityStartState();   
-}
+

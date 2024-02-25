@@ -68,8 +68,6 @@ private:
 
     /** Use custom ability on character in game */
     void UseCustomAbility();
-    
-    void CustomAbilityPressed();
 
     ABaseCharacter* GetCharacter() const { return Cast<ABaseCharacter>(GetOwner()); }
 };

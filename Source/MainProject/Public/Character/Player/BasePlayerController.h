@@ -34,8 +34,8 @@ public:
     FOnMeleeAttackSignature OnMeleeAttack;
     FOnRangeAttackSignature OnRangeAttack;
     FOnDashSignature OnDash;
-    FOnCustomAbilitySignature OnCustomAbility;
     FOnCustomAbilitySignature OnCustomAbilityPressed;
+    FOnCustomAbilitySignature OnCustomAbilityReleased;
     FOnInteractSignature OnInteract;
 #pragma endregion delegates
     
@@ -56,8 +56,8 @@ private:
     void HandleMeleeAttack();
     void HandleRangeAttack();
     void HandleDash();
-    void HandleCustomAbility();
     void HandleCustomAbilityPressed();
+    void HandleCustomAbilityReleased();
 
     void HandleInteract();
 };

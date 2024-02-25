@@ -54,8 +54,8 @@ void ABasePlayerController::SetupInputComponent()
     InputComponent->BindAction("MeleeAttack", IE_Pressed, this, &ABasePlayerController::HandleMeleeAttack);
     InputComponent->BindAction("RangeAttack", IE_Pressed, this, &ABasePlayerController::HandleRangeAttack);
     InputComponent->BindAction("Dash", IE_Pressed, this, &ABasePlayerController::HandleDash);
-    InputComponent->BindAction("CustomAbility", IE_Released, this, &ABasePlayerController::HandleCustomAbility);
     InputComponent->BindAction("CustomAbility", IE_Pressed, this, &ABasePlayerController::HandleCustomAbilityPressed);
+    InputComponent->BindAction("CustomAbility", IE_Released, this, &ABasePlayerController::HandleCustomAbilityReleased);
     InputComponent->BindAction("Interact", IE_Pressed, this, &ABasePlayerController::HandleInteract);
 }
 
@@ -85,14 +85,14 @@ void ABasePlayerController::HandleDash()
     OnDash.Broadcast();
 }
 
-void ABasePlayerController::HandleCustomAbility()
-{
-    OnCustomAbility.Broadcast();
-}
-
 void ABasePlayerController::HandleCustomAbilityPressed()
 {
     OnCustomAbilityPressed.Broadcast();
+}
+
+void ABasePlayerController::HandleCustomAbilityReleased()
+{
+    OnCustomAbilityReleased.Broadcast();
 }
 
 void ABasePlayerController::HandleInteract()
