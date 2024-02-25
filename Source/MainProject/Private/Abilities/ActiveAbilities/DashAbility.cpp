@@ -30,7 +30,7 @@ bool UDashAbility::NativeActivate()
     dashState.OnEndState.AddUObject(this, &UDashAbility::OnEndDashState);
 
     pStateMachineComponent->AddState(dashState);
-    
+
     return Super::NativeActivate();
 }
 

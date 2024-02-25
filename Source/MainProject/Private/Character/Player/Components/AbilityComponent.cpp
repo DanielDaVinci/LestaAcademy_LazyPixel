@@ -5,7 +5,7 @@
 
 #include "Abilities/PassiveAbility.h"
 #include "Abilities/ActiveAbilities/DashAbility.h"
-#include "Abilities/ActiveAbilities/FirstCustomAbility.h"
+#include "..\..\..\..\Public\Abilities\ActiveAbilities\StrongAttackAbility.h"
 #include "Character/Player/BasePlayerController.h"
 #include "Character/Player/PlayerCharacter.h"
 #include "Character/Player/Components/BaseWeaponComponent.h"
@@ -77,5 +77,5 @@ void UAbilityComponent::UseCustomAbility()
 void UAbilityComponent::CustomAbilityPressed()
 {
     if (m_customAbility)
-        Cast<UStrongAttackAbility>(m_customAbility)->Press();   
+        Cast<UStrongAttackAbility>(m_customAbility)->OnStrongAbilityStartState();   
 }

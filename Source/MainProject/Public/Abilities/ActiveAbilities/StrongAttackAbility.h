@@ -4,7 +4,8 @@
 
 #include "Abilities/ActiveAbility.h"
 #include "CoreMinimal.h"
-#include "FirstCustomAbility.generated.h"
+#include "DashAbility.h"
+#include "StrongAttackAbility.generated.h"
 
 class ABasePlayerController;
 class UPlayerMovementComponent;
@@ -17,7 +18,8 @@ class MAINPROJECT_API UStrongAttackAbility : public UActiveAbility
     GENERATED_BODY()
 
 public:
-    void Press();
+    void OnStrongAbilityStartState();
+    void OnStrongAbilitySecondPartStartState();
 
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Params")
@@ -40,6 +42,9 @@ protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Params")
     UAnimMontage* pAbilityAnimation;
+    
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Params")
+    UAnimMontage* pAttackPrepareAnimation;
 
     virtual void BeginPlay() override;
 
@@ -48,12 +53,6 @@ protected:
     UFUNCTION()
     void OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
     int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
-    UFUNCTION()
-    void OnMontageEndedHandle(UAnimMontage* Montage, bool bInterrupted);
-
-    void OnStrongAbilityEnd();
-
 private:
     bool m_isAbilityActivationButtonPressed;
     FTimerHandle m_abilityDurationHandle;
@@ -64,11 +63,12 @@ protected:
 
     ABasePlayerController* GetBasePlayerController() const;
     UPlayerMovementComponent* GetPlayerMovementComponent() const;
-
+    UStateMachineComponent* GetStateMachineComponent() const;
 private:
     UPROPERTY()
     ACollisionCube* m_pCubeCollision;
     
     void RotateCharacterInMouseDirection();
-    void UseAbility();
+    void OnStrongAbilityEndState(EStateResult StateResult);
+    void OnStrongAbilitySecondPartEndState(EStateResult StateResult);
 };
