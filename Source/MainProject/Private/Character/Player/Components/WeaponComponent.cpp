@@ -3,7 +3,6 @@
 #include "Character/Player/Components/WeaponComponent.h"
 #include "Weapon/MeleeWeapons/Sword.h"
 #include "Weapon/RangeWeapons/Gun.h"
-#include "Character/BaseCharacter.h"
 #include "Animations/ComboEndAnimNotify.h"
 #include "Character/Player/BasePlayerController.h"
 #include "Character/Player/PlayerCharacter.h"
@@ -17,6 +16,7 @@ void UWeaponComponent::BeginPlay()
     Super::BeginPlay();
 
     BindInput();
+    SubscribeOnDropRangeWeapon();
 }
 
 void UWeaponComponent::BindInput()
@@ -212,6 +212,39 @@ void UWeaponComponent::OnEndRangeState(EStateResult StateResult)
 
     pmComponent->UnfixCharacterRotation();
     pmComponent->SetDeceleration(0.0f);
+}
+
+void UWeaponComponent::DropWeapon(const TSubclassOf<ABaseWeapon>& WeaponClass) 
+{
+    if (const auto Weapon = FindWeapon(WeaponClass))
+    {
+        Weapon->Detach();
+        weapons.Remove(Weapon);
+    }
+}
+
+void UWeaponComponent::SubscribeOnDropRangeWeapon() 
+{
+    if (const auto pRangeWeapon = FindWeapon<AGun>())
+        pRangeWeapon->OnEmptyGun.AddUObject(this, &UWeaponComponent::DropWeapon);
+}
+
+void UWeaponComponent::PickUpWeapon(const TSubclassOf<ABaseWeapon>& WeaponClass)
+{
+    DropWeapon(WeaponClass);
+
+    for (const auto& data : weaponData)
+    {
+        if (data.WeaponClass->StaticClass() == WeaponClass->StaticClass())
+        {
+            const auto weapon = SpawnWeapon(data.WeaponClass);
+            if (!weapon) return;
+
+            AttachWeapon(weapon, data.WeaponAttachPointName);
+            weapons.Add(weapon);
+            SubscribeOnDropRangeWeapon();
+        }
+    }
 }
 
 APlayerCharacter* UWeaponComponent::GetPlayerCharacter() const

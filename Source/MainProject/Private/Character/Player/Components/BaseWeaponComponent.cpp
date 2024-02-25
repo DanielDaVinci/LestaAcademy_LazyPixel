@@ -63,7 +63,7 @@ void UBaseWeaponComponent::AttachWeapon(ABaseWeapon* Weapon, const FName& Socket
     Weapon->SetOwner(character);
 }
 
-void UBaseWeaponComponent::InitAnimations() 
+void UBaseWeaponComponent::InitAnimations()
 {
     for (const auto& weapon: weapons)
     {
@@ -121,4 +121,15 @@ void UBaseWeaponComponent::OnRangeNotifyHandle(USkeletalMeshComponent* MeshComp)
         return;
 
     OnRangeAttackAnim();
+}
+
+ABaseWeapon* UBaseWeaponComponent::FindWeapon(const TSubclassOf<ABaseWeapon>& WeaponClass) const
+{
+    for (const auto& weapon : weapons)
+    {
+        if (weapon->IsA(WeaponClass))
+            return weapon;
+    }
+
+    return nullptr;
 }

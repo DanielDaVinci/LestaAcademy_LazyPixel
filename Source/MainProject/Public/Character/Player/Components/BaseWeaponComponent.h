@@ -29,7 +29,8 @@ protected:
     // Weapons
 private:
     virtual void SpawnAllWeapons();
-    
+
+protected:    
     ABaseWeapon* SpawnWeapon(const TSubclassOf<ABaseWeapon>& WeaponClass) const;
     void AttachWeapon(ABaseWeapon* Weapon, const FName& SocketName) const;
     
@@ -40,6 +41,7 @@ protected:
     template<typename T>
     T* FindWeapon() const;
 
+    ABaseWeapon* FindWeapon(const TSubclassOf<ABaseWeapon>& WeaponClass) const;
     
     // Animations and notifies
 private:

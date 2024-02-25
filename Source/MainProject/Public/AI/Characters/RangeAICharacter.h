@@ -6,9 +6,8 @@
 #include "AI/Characters/AIBaseCharacter.h"
 #include "RangeAICharacter.generated.h"
 
-/**
- * 
- */
+class AWeaponPickup;
+
 UCLASS()
 class MAINPROJECT_API ARangeAICharacter : public AAIBaseCharacter
 {
@@ -17,4 +16,8 @@ class MAINPROJECT_API ARangeAICharacter : public AAIBaseCharacter
 public:
     ARangeAICharacter(const FObjectInitializer& ObjInit);
     virtual void OnDeath() override;
+
+protected:
+    UPROPERTY(EditDefaultsOnly, Category = "PickupType")
+    TSubclassOf<AWeaponPickup> PickupClass;
 };

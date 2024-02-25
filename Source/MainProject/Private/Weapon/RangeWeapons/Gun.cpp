@@ -23,9 +23,15 @@ void AGun::MakeShoot(const FVector& Point)
     projectile->SetShootDirection(shootDirection);
     projectile->SetDamage(damage);
     if (const auto character = Cast<ACharacter>(GetOwner()))
+    {
         projectile->SetTrailColor(character->IsPlayerControlled() ? 0 : 1);
+        character->IsPlayerControlled() ? Bullets-- : Bullets;
+    }
     
     projectile->FinishSpawning(spawnTransform);
+
+    if (Bullets <= 0)
+        OnEmptyGun.Broadcast(this->StaticClass());
 }
 
 FVector AGun::GetDirection() const
