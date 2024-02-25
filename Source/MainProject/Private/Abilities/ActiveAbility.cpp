@@ -5,7 +5,7 @@
 
 void UActiveAbility::NativeInitialize()
 {
-    currentReloadTime = 0.0f;
+    m_currentReloadTime = 0.0f;
     m_currentActivationAmount = activationAmount;
 }
 
@@ -22,17 +22,17 @@ void UActiveAbility::Activate()
     
     if (!GetWorld()->GetTimerManager().IsTimerActive(m_reloadTimerHandle))
     {
-        currentReloadTime = reloadTime;
+        m_currentReloadTime = reloadTime;
         GetWorld()->GetTimerManager().SetTimer(m_reloadTimerHandle, this, &UActiveAbility::TickReloadTimer, m_timerTimeUpdate, true);
     }
 }
 
 void UActiveAbility::TickReloadTimer()
 {
-    currentReloadTime -= m_timerTimeUpdate;
-    currentReloadTime = FMath::Clamp(currentReloadTime, 0.0f, reloadTime);
+    m_currentReloadTime -= m_timerTimeUpdate;
+    m_currentReloadTime = FMath::Clamp(m_currentReloadTime, 0.0f, reloadTime);
 
-    if (FMath::IsNearlyZero(currentReloadTime))
+    if (FMath::IsNearlyZero(m_currentReloadTime))
     {
         m_currentActivationAmount++;
 
@@ -42,6 +42,6 @@ void UActiveAbility::TickReloadTimer()
             return;
         }
 
-        currentReloadTime = reloadTime;
+        m_currentReloadTime = reloadTime;
     }
 }

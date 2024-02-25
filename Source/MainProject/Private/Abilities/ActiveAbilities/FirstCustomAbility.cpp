@@ -11,7 +11,6 @@
 #include "Kismet/GameplayStatics.h"
 #include "Character/Player/Components/WeaponComponent.h"
 #include "Components/CapsuleComponent.h"
-#include "GameFramework/GameSession.h"
 
 bool UStrongAttackAbility::NativeActivate()
 {
@@ -22,28 +21,22 @@ bool UStrongAttackAbility::NativeActivate()
 
 void UStrongAttackAbility::Press()
 {
-    if (FMath::IsNearlyZero(currentReloadTime))
-    {
-        UGameplayStatics::SetGlobalTimeDilation(GetWorld(), timeDilation);
-        m_playerMovementComponent->SetDeceleration(1.0f);
-        GetWorld()->GetTimerManager().SetTimer(m_abilityDurationHandle, this, &UStrongAttackAbility::UseAbility, abilityUseTime * timeDilation);
-        m_isAbilityActivationButtonPressed = true;
-    }
+    if (!FMath::IsNearlyZero(GetTimeToReload()))
+        return;
+
+    const auto pPlayerMovementComponent = GetPlayerMovementComponent();
+    if (!pPlayerMovementComponent)
+        return;
+    
+    UGameplayStatics::SetGlobalTimeDilation(GetWorld(), timeDilation);
+    pPlayerMovementComponent->SetDeceleration(1.0f);
+    GetWorld()->GetTimerManager().SetTimer(m_abilityDurationHandle, this, &UStrongAttackAbility::UseAbility, abilityUseTime * timeDilation);
+    m_isAbilityActivationButtonPressed = true;
 }
 
 void UStrongAttackAbility::BeginPlay()
 {
     Super::BeginPlay();
-
-    m_playerController = Cast<ABasePlayerController>(GetCharacter()->GetController());
-
-    if (!m_playerController)
-        return;
-    
-    m_playerMovementComponent = Cast<UPlayerMovementComponent>(GetCharacter()->GetMovementComponent());
-
-    if (!m_playerMovementComponent)
-        return;
 
     SpawnCubeCollision();
     GetCharacter()->GetMesh()->GetAnimInstance()->OnMontageEnded.AddDynamic(this, &UStrongAttackAbility::OnMontageEndedHandle);
@@ -81,6 +74,16 @@ void UStrongAttackAbility::SpawnCubeCollision()
     m_pCubeCollision->OnBeginOverlap.AddUObject(this, &UStrongAttackAbility::OnBeginOverlap);
 }
 
+ABasePlayerController* UStrongAttackAbility::GetBasePlayerController() const
+{
+    return GetCharacter() ? Cast<ABasePlayerController>(GetCharacter()->GetController()) : nullptr;
+}
+
+UPlayerMovementComponent* UStrongAttackAbility::GetPlayerMovementComponent() const
+{
+    return GetCharacter() ? Cast<UPlayerMovementComponent>(GetCharacter()->GetMovementComponent()) : nullptr;
+}
+
 void UStrongAttackAbility::OnMontageEndedHandle(UAnimMontage* Montage, bool bInterrupted) 
 {
     if (pAbilityAnimation == Montage)
@@ -93,9 +96,12 @@ void UStrongAttackAbility::OnMontageEndedHandle(UAnimMontage* Montage, bool bInt
 
 void UStrongAttackAbility::RotateCharacterInMouseDirection()
 {
-    const auto point = m_playerController->GetWorldPointUnderMouse();
+    const auto pPlayerController = GetBasePlayerController();
+    if (!pPlayerController)
+        return;
     
-    if (point == FVector())
+    const auto point = pPlayerController->GetWorldPointUnderMouse();
+    if (point == FVector::ZeroVector)
         return;
 
     const FRotator viewRotation = (point - GetCharacter()->GetActorLocation()).Rotation();
@@ -104,23 +110,23 @@ void UStrongAttackAbility::RotateCharacterInMouseDirection()
 
 void UStrongAttackAbility::UseAbility()
 {
-    if (m_isAbilityActivationButtonPressed)
-    {
-        m_isAbilityActivationButtonPressed = false;
+    if (!m_isAbilityActivationButtonPressed)
+        return;
+
+    m_isAbilityActivationButtonPressed = false;
         
-        if (!GetWorld() || !GetCharacter())
-            return;
+    if (!GetWorld() || !GetCharacter() || !GetCharacter()->GetMesh() || !pAbilityAnimation)
+        return;
     
-        m_pCubeCollision->Enable();
+    m_pCubeCollision->Enable();
     
-        RotateCharacterInMouseDirection();
+    RotateCharacterInMouseDirection();
 
-        GetCharacter()->GetMesh()->GetAnimInstance()->SetRootMotionMode(ERootMotionMode::RootMotionFromMontagesOnly);
-        GetCharacter()->PlayAnimMontage(pAbilityAnimation);
-        GetCharacter()->SetUltimateActive(1);
-        GetCharacter()->GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
+    GetCharacter()->GetMesh()->GetAnimInstance()->SetRootMotionMode(ERootMotionMode::RootMotionFromMontagesOnly);
+    GetCharacter()->PlayAnimMontage(pAbilityAnimation);
+    GetCharacter()->SetUltimateActive(1);
+    GetCharacter()->GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
 
-        GetWorld()->GetTimerManager().SetTimer(m_abilityDurationHandle, this, &UStrongAttackAbility::OnStrongAbilityEnd, abilityDuration);
-        UGameplayStatics::SetGlobalTimeDilation(GetWorld(), defaultTimeDilation);   
-    }
+    GetWorld()->GetTimerManager().SetTimer(m_abilityDurationHandle, this, &UStrongAttackAbility::OnStrongAbilityEnd, abilityDuration);
+    UGameplayStatics::SetGlobalTimeDilation(GetWorld(), defaultTimeDilation);   
 }

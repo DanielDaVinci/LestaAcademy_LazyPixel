@@ -4,9 +4,10 @@
 
 #include "Abilities/ActiveAbility.h"
 #include "CoreMinimal.h"
-#include "Character/Player/Components/PlayerMovementComponent.h"
 #include "FirstCustomAbility.generated.h"
 
+class ABasePlayerController;
+class UPlayerMovementComponent;
 class ACollisionCube;
 class UBoxComponent;
 
@@ -16,7 +17,6 @@ class MAINPROJECT_API UStrongAttackAbility : public UActiveAbility
     GENERATED_BODY()
 
 public:
-    virtual bool NativeActivate() override;
     void Press();
 
 protected:
@@ -43,6 +43,8 @@ protected:
 
     virtual void BeginPlay() override;
 
+    virtual bool NativeActivate() override;
+
     UFUNCTION()
     void OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
     int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
@@ -60,11 +62,12 @@ private:
 protected:
     void SpawnCubeCollision();
 
+    ABasePlayerController* GetBasePlayerController() const;
+    UPlayerMovementComponent* GetPlayerMovementComponent() const;
+
 private:
     UPROPERTY()
     ACollisionCube* m_pCubeCollision;
-    UPlayerMovementComponent* m_playerMovementComponent;
-    ABasePlayerController* m_playerController;
     
     void RotateCharacterInMouseDirection();
     void UseAbility();

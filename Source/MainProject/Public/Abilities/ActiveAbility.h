@@ -16,6 +16,8 @@ public:
     /** Activate ability and reload */
     virtual void Activate();
 
+    float GetTimeToReload() const { return m_currentReloadTime; }
+
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ActiveAbility", meta = (ClampMin="0.0"))
     float reloadTime = 3.0f;
@@ -32,10 +34,10 @@ protected:
      * @return Is activation successful
      */
     virtual bool NativeActivate() { return true; }
-    float currentReloadTime;
 
 private:
     FTimerHandle m_reloadTimerHandle;
+    float m_currentReloadTime;
 
     float m_currentActivationAmount;
 

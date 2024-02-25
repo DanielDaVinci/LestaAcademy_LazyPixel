@@ -35,7 +35,7 @@ FVector ABasePlayerController::GetWorldPointUnderMouse() const
     FHitResult hitResult;
     GetHitResultUnderCursor(ECC_MAX, false, hitResult);
     
-    return hitResult.ImpactPoint;
+    return hitResult.bBlockingHit ? hitResult.ImpactPoint : FVector::ZeroVector;
 }
 
 FVector ABasePlayerController::GetDirectionToMouseHit(const FVector& StartPoint) const
