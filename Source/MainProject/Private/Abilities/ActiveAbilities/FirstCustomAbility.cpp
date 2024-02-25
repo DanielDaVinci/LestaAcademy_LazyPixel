@@ -59,7 +59,7 @@ void UStrongAttackAbility::OnStrongAbilityEnd()
 
 void UStrongAttackAbility::SpawnCubeCollision()
 {
-    if (!GetWorld())
+    if (!GetWorld() || !GetCharacter())
         return;
     
     m_pCubeCollision = GetWorld()->SpawnActor<ACollisionCube>(ACollisionCube::StaticClass());
@@ -89,8 +89,8 @@ void UStrongAttackAbility::OnMontageEndedHandle(UAnimMontage* Montage, bool bInt
     if (pAbilityAnimation == Montage)
     {
         GetCharacter()->SetUltimateActive(0);
-        UWeaponComponent* weapComp = GetCharacter()->GetComponentByClass<UWeaponComponent>();
-        weapComp->OnNextComboSection();
+        // UWeaponComponent* weapComp = GetCharacter()->GetComponentByClass<UWeaponComponent>();
+        // weapComp->OnNextComboSection();
     }
 }
 

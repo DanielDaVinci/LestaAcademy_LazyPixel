@@ -14,7 +14,12 @@ ABaseWeapon::ABaseWeapon()
     pWeaponMeshComponent->SetupAttachment(GetRootComponent());
 }
 
-void ABaseWeapon::DisableCollision() const
+void ABaseWeapon::DisableMeshCollision() const
 {
     pWeaponMeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+}
+
+void ABaseWeapon::EnableMeshCollision() const
+{
+    pWeaponMeshComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 }

@@ -20,11 +20,19 @@ public:
     
 	ACollisionObject();
 
-    void Enable() const;
+    void Enable(bool bWithUpdateOverlaps = false) const;
     void Disable() const;
 
+    void UpdateOverlaps() const;
+    bool HasOverlappingActors(const TSubclassOf<AActor>& FindClass) const;
+    void GetOverlappingActors(TArray<AActor*>& OverlappingActors, const TSubclassOf<AActor>& ClassFilter = nullptr) const;
+
     void SetObjectType(ECollisionChannel CollisionChannel) const;
+    void SetResponseToChannel(ECollisionChannel CollisionChannel, ECollisionResponse CollisionResponse) const;
+    void SetResponseToAllChannels(ECollisionResponse CollisionResponse) const;
+
     void SetResponseOnlyPawn() const;
+    void SetResponseOnlyEnemy() const;
 
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Component", DisplayName = "Scene Component")

@@ -8,17 +8,20 @@ struct FComboElement
     GENERATED_BODY()
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Animation")
-    FName attackSectionName;
+    FName AttackSectionName;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Animation", meta = (ClampMin = "0.0", ClampMax = "5.0"))
-    float sectionRateScale;
+    float SectionRateScale;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Animation", meta = (ClampMin = "0.0"))
+    float AnimationTime = 0.5f;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Animation")
-    TEnumAsByte<ERootMotionMode::Type> rootMotionMode;
+    TEnumAsByte<ERootMotionMode::Type> RootMotionMode;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Damage")
-    float damage = 50.0f;
+    float Damage = 50.0f;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement", meta = (ClampMin = "0.0", ClampMax = "1.0"))
-    float deceleration = 0.0;
+    float Deceleration = 0.0;
 };

@@ -3,27 +3,78 @@
 
 #include "Abilities/ActiveAbilities/DashAbility.h"
 
+#include "MainProjectCoreTypes.h"
 #include "Character/BaseCharacter.h"
 #include "Character/Player/Components/PlayerMovementComponent.h"
+#include "Character/Player/Components/StateMachineComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "GameFramework/Character.h"
-#include "Character/Player/Components/WeaponComponent.h"
+
+void UDashAbility::BeginPlay()
+{
+    Super::BeginPlay();
+}
 
 bool UDashAbility::NativeActivate()
 {
-    const auto character = GetCharacter();
-    if (!character)
+    const auto pStateMachineComponent = GetStateMachineComponent();
+    if (!pStateMachineComponent)
         return false;
 
-    if (GetWorld()->GetTimerManager().IsTimerActive(m_dashTimerHandle) || character->IsUltimateActive())
-        return false;
+    FState dashState(
+        "DashAbility",
+        dashTime,
+        EStatePriority::Force
+    );
+    dashState.OnStartState.AddUObject(this, &UDashAbility::OnStartDashState);
+    dashState.OnEndState.AddUObject(this, &UDashAbility::OnEndDashState);
 
-    character->PlayAnimMontage(dashAnimation);
-    character->GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
-    GetWorld()->GetTimerManager().SetTimer(m_dashTimerHandle, this, &UDashAbility::OnDashEnd, dashTime, false);
-    
-    character->LaunchCharacter(character->GetMesh()->GetRightVector().GetSafeNormal() * dashImpulse, true, false);
+    pStateMachineComponent->AddState(dashState);
     
     return Super::NativeActivate();
+}
+
+void UDashAbility::OnStartDashState()
+{
+    const auto pCharacter = GetCharacter();
+    if (!GetWorld() || !pCharacter || !pCharacter->GetCapsuleComponent() || !pCharacter->GetMesh())
+        return;
+
+    pCharacter->GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Enemy, ECR_Ignore);
+    pCharacter->PlayAnimMontage(dashAnimation);
+    
+    const FVector dashDirection = pCharacter->GetMesh()->GetRightVector().GetSafeNormal();
+    FTimerDelegate timerDelegate = FTimerDelegate::CreateUObject(this, &UDashAbility::OnDashTimerUpdate, dashDirection);
+    GetWorld()->GetTimerManager().SetTimer(m_dashTimer, timerDelegate, m_timerRate, true);
+}
+
+void UDashAbility::OnEndDashState(EStateResult StateResult)
+{
+    const auto pCharacter = GetCharacter();
+    if (!GetWorld() || !pCharacter || !pCharacter->GetCapsuleComponent())
+        return;
+
+    GetWorld()->GetTimerManager().ClearTimer(m_dashTimer);
+    
+    pCharacter->GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Enemy, ECR_Block);
+    pCharacter->StopAnimMontage(dashAnimation);
+}
+
+
+void UDashAbility::OnDashTimerUpdate(FVector Direction)
+{
+    const auto pCharacter = GetCharacter();
+    const auto pStateMachineComponent = GetStateMachineComponent();
+    if (!GetWorld() || !pCharacter || !pStateMachineComponent)
+        return;
+    
+    const FVector delta = Direction * dashDistance * FMath::Clamp(m_timerRate / dashTime, 0.0f, 1.0f);
+
+    FHitResult* hitResult = nullptr;
+    pCharacter->AddActorWorldOffset(delta,true, hitResult);
+
+    if (hitResult && hitResult->bBlockingHit && pStateMachineComponent->GetCurrentState().Name == "DashAbility")
+        pStateMachineComponent->SkipCurrentState();
 }
 
 UPlayerMovementComponent* UDashAbility::GetPlayerMovementComponent() const
@@ -31,21 +82,8 @@ UPlayerMovementComponent* UDashAbility::GetPlayerMovementComponent() const
     return GetCharacter() ? Cast<UPlayerMovementComponent>(GetCharacter()->GetMovementComponent()) : nullptr;
 }
 
-void UDashAbility::OnDashEnd()
+UStateMachineComponent* UDashAbility::GetStateMachineComponent() const
 {
-    const auto character = GetCharacter();
-    if (!character)
-        return;
-    
-    const auto capsule = character->GetCapsuleComponent();
-        
-    capsule->SetCollisionResponseToChannel(ECC_Pawn, ECR_Block);
-
-    character->StopAnimMontage(dashAnimation);
-        
-    GetWorld()->GetTimerManager().ClearTimer(m_dashTimerHandle);
-
-    UWeaponComponent* weapComp = character->GetComponentByClass<UWeaponComponent>();
-    weapComp->OnNextComboSection();
+    return GetCharacter() ? GetCharacter()->GetStateMachineComponent() : nullptr;
 }
 

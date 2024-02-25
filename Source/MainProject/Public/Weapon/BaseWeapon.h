@@ -14,14 +14,16 @@ class MAINPROJECT_API ABaseWeapon : public AActor
 public:
     ABaseWeapon();
 
-    void SetDamage(const float fDamage) { damage = fDamage; }
+    void SetDamage(const float Damage) { damage = Damage; }
     float GetDamage() const { return damage; }
+    
     float GetAttackSpeed() const { return attackSpeed; }
     float GetRange() const { return range; }
 
-    UAnimMontage* GetAttackMontage() { return attackAnimation; }
+    UAnimMontage* GetAttackMontage() const { return attackAnimation; }
 
-    void DisableCollision() const;
+    void DisableMeshCollision() const;
+    void EnableMeshCollision() const;
 
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="WeaponProperties", meta=(ClampMin="0.0"))

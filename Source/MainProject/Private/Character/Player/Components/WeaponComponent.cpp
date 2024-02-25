@@ -49,104 +49,105 @@ void UWeaponComponent::OnComboNotifyHandle(USkeletalMeshComponent* MeshComp)
 {
     if (MeshComp->GetOwner() != GetOwner())
         return;
-
-    OnNextComboSection();
+    
 }
 
 void UWeaponComponent::MeleeAttack()
 {
-    const auto сharacter = GetPlayerCharacter();
-    if (!сharacter) return;
+    const auto pCharacter = GetPlayerCharacter();
+    const auto pMeleeWeapon = FindWeapon<ASword>();
+    if (!pCharacter || !pMeleeWeapon)
+        return;
 
-    const auto pRangeWeapon = FindWeapon<AGun>();
-    if (!pRangeWeapon)
+    const auto pStateMachine = GetPlayerCharacter()->GetStateMachineComponent();
+    if (!pStateMachine)
+        return;
+
+    const auto comboInfo = pMeleeWeapon->GetComboInfo();
+    if (m_nextComboIndex >= comboInfo.Num())
         return;
     
-    if (m_bIsComboChain || сharacter->IsUltimateActive() || сharacter->GetMesh()->GetAnimInstance()->Montage_IsPlaying(pRangeWeapon->GetAttackMontage()))
-        return;
+    FState meleeState(
+        "ComboAttack",
+        comboInfo[m_nextComboIndex].AnimationTime,
+        m_nextComboIndex == 0 ? EStatePriority::Force : EStatePriority::Light
+    );
+    
+    meleeState.OnStartState.AddUObject(this, &UWeaponComponent::OnStartComboState, m_nextComboIndex);
+    meleeState.OnEndState.AddUObject(this, &UWeaponComponent::OnEndComboState, m_nextComboIndex);
+    
+    UE_LOG(LogTemp, Error, TEXT("Current Index: %d"), m_nextComboIndex);
 
-    if (сharacter->GetMesh()->GetAnimInstance()->IsAnyMontagePlaying())
-    {
-        m_bIsComboChain = true;
-        if (m_bWasFirstAttack)
-            m_nComboIndex++;
-        return;
-    }
-
-    FState state(5.0f, EStatePriority::Hard);
-    state.OnStartState.AddLambda([]()
-    {
-       UE_LOG(LogTemp, Warning, TEXT("Start")); 
-    });
-    state.OnEndState.AddLambda([]()
-    {
-        UE_LOG(LogTemp, Warning, TEXT("End"));
-    });
-
-    GetPlayerCharacter()->GetStateMachineComponent()->AddState(state);
-
-    PlayMeleeAttackAnim();
+    pStateMachine->AddState(meleeState);
+    m_nextComboIndex++;
 }
 
-void UWeaponComponent::PlayMeleeAttackAnim()
+void UWeaponComponent::PlayMeleeWeaponComboAnim(ASword* Weapon, int32 ComboIndex) const
 {
-    const auto character = GetPlayerCharacter();
-    if (!character) return;
-
-    const auto pMeleeWeapon = FindWeapon<ASword>();
-    if (!pMeleeWeapon)
+    const auto pCharacter = GetPlayerCharacter();
+    if (!pCharacter || !pCharacter->GetMesh() || !Weapon || !Weapon->GetAttackMontage())
         return;
 
-    const auto ComboInfo = pMeleeWeapon->GetComboInfo();
-    if (!ComboInfo.IsValidIndex(m_nComboIndex))
-        return;
-
-    const auto pmComponent = GetPlayerMovementComponent();
-    if (!pmComponent) 
-        return;
-
-    FRotator viewRotation = pmComponent->GetMouseViewDirection().Rotation();
-    pmComponent->FixCharacterRotation(viewRotation);
-    pmComponent->SetDeceleration(ComboInfo[m_nComboIndex].deceleration);
-
-    m_bWasFirstAttack = true;
-    pMeleeWeapon->SetDamage(ComboInfo[m_nComboIndex].damage);
-    character->GetMesh()->GetAnimInstance()->SetRootMotionMode(ComboInfo[m_nComboIndex].rootMotionMode);
-    character->PlayAnimMontage(pMeleeWeapon->GetAttackMontage(), ComboInfo[m_nComboIndex].sectionRateScale, ComboInfo[m_nComboIndex].attackSectionName);
-}
-
-void UWeaponComponent::OnNextComboSection()
-{
-    const auto pMeleeWeapon = FindWeapon<ASword>();
-    if (!pMeleeWeapon)
+    const auto comboInfo = Weapon->GetComboInfo();
+    if (!comboInfo.IsValidIndex(ComboIndex))
         return;
     
-    if (!m_bIsComboChain || m_nComboIndex >= pMeleeWeapon->GetComboInfo().Num())
-    {
-        const auto pmComponent = GetPlayerMovementComponent();
-        if (!pmComponent)
-            return;
+    pCharacter->GetMesh()->GetAnimInstance()->SetRootMotionMode(comboInfo[ComboIndex].RootMotionMode);
+    
+    pCharacter->PlayAnimMontage(
+        Weapon->GetAttackMontage(),
+        Weapon->GetAttackMontage()->GetSectionLength(ComboIndex) / comboInfo[ComboIndex].AnimationTime,
+        comboInfo[ComboIndex].AttackSectionName);
+}
 
-        pmComponent->SetDeceleration(0.0f);
-        pmComponent->UnfixCharacterRotation();
+void UWeaponComponent::OnStartComboState(int32 ComboIndex)
+{
+    const auto pMovementComponent = GetPlayerMovementComponent();
+    const auto pMeleeWeapon = FindWeapon<ASword>();
+    
+    if (!pMovementComponent || !pMeleeWeapon)
+        return;
 
-        m_nComboIndex = 0;
-        m_bWasFirstAttack = false;
-    }
-    else
-    {
-        PlayMeleeAttackAnim();
-    }
+    const auto comboInfo = pMeleeWeapon->GetComboInfo();
+    if (!comboInfo.IsValidIndex(ComboIndex))
+        return;
 
-    m_bIsComboChain = false;
+    const FRotator viewRotation = pMovementComponent->GetMouseViewDirection().Rotation();
+    pMovementComponent->FixCharacterRotation(viewRotation);
+    pMovementComponent->SetDeceleration(comboInfo[ComboIndex].Deceleration);
+
+    pMeleeWeapon->EnableAttackCollision();
+    pMeleeWeapon->SetDamage(comboInfo[ComboIndex].Damage);
+    
+    PlayMeleeWeaponComboAnim(pMeleeWeapon, ComboIndex);
+}
+
+void UWeaponComponent::OnEndComboState(EStateResult StateResult, int32 ComboIndex)
+{
+    const auto pMovementComponent = GetPlayerMovementComponent();
+    const auto pMeleeWeapon = FindWeapon<ASword>();
+    const auto pStateMachine = GetStateMachineComponent();
+    if (!pMovementComponent || !pMeleeWeapon || !pStateMachine)
+        return;
+
+    const auto comboInfo = pMeleeWeapon->GetComboInfo();
+    if (!comboInfo.IsValidIndex(ComboIndex))
+        return;
+
+    pMovementComponent->UnfixCharacterRotation();
+    pMovementComponent->SetDeceleration(0.0f);
+    
+    pMeleeWeapon->DisableAttackCollision();
+    
+    if (StateResult == EStateResult::Aborted || ComboIndex == comboInfo.Num() - 1 || pStateMachine->GetNextState().Name != "ComboAttack")
+        m_nextComboIndex = 0;
 }
 
 void UWeaponComponent::OnMeleeStartAttackAnim()
 {
     Super::OnMeleeStartAttackAnim();
+
     
-    if (const auto pSword = FindWeapon<ASword>())
-        pSword->OnOffCollision();
 }
 
 void UWeaponComponent::OnRangeAttackAnim()
@@ -159,32 +160,58 @@ void UWeaponComponent::OnRangeAttackAnim()
 
 void UWeaponComponent::RangeAttack()
 {
-    ABaseCharacter* character = Cast<ABaseCharacter>(GetOwner());
-    if (!character) return;
-
     const auto pRangeWeapon = FindWeapon<AGun>();
-    if (!pRangeWeapon)
+    const auto pPlayerController = GetPlayerController();
+    const auto pStateMachine = GetStateMachineComponent();
+    
+    if (!pRangeWeapon || !pPlayerController || !pStateMachine)
         return;
 
-    if (character->IsUltimateActive() || character->GetMesh()->GetAnimInstance()->Montage_IsPlaying(pRangeWeapon->GetAttackMontage()))
+    if (pStateMachine->GetCurrentState().Name == "RangeState")
         return;
 
-    m_bIsComboChain = false; 
+    FVector attackPoint = pPlayerController->GetWorldPointUnderMouse();
+    if (attackPoint == FVector::ZeroVector)
+        return;
 
-    const auto playerController = Cast<ABasePlayerController>(character->GetController());
+    FState rangeState(
+        "RangeState",
+        pRangeWeapon->GetAttackMontage()->GetSectionLength(0),
+        EStatePriority::Force
+    );
+
+    rangeState.OnStartState.AddUObject(this, &UWeaponComponent::OnStartRangeState, attackPoint);
+    rangeState.OnEndState.AddUObject(this, &UWeaponComponent::OnEndRangeState);
+
+    pStateMachine->AddState(rangeState);
+}
+
+void UWeaponComponent::OnStartRangeState(FVector WorldPointToRotate)
+{
+    const auto pCharacter = GetPlayerCharacter();
+    const auto pRangeWeapon = FindWeapon<AGun>();
     const auto pmComponent = GetPlayerMovementComponent();
-    if (!playerController || !pmComponent)
+    
+    if (!pCharacter || !pRangeWeapon || !pmComponent)
         return;
 
-    m_rangeAttackPoint = playerController->GetWorldPointUnderMouse();
-    if (m_rangeAttackPoint == FVector::ZeroVector)
-        return;
-
-    const FRotator viewRotation = (m_rangeAttackPoint - character->GetActorLocation()).Rotation();
+    m_rangeAttackPoint = WorldPointToRotate;
+    
+    const FRotator viewRotation = (WorldPointToRotate - pCharacter->GetActorLocation()).Rotation();
     pmComponent->FixCharacterRotation(FRotator(0.0f, viewRotation.Yaw, 0.0f));
     pmComponent->SetDeceleration(1.f);
 
-    character->PlayAnimMontage(pRangeWeapon->GetAttackMontage());
+    pCharacter->PlayAnimMontage(pRangeWeapon->GetAttackMontage());
+}
+
+void UWeaponComponent::OnEndRangeState(EStateResult StateResult)
+{
+    const auto pmComponent = GetPlayerMovementComponent();
+    if (!pmComponent)
+        return;
+
+    pmComponent->UnfixCharacterRotation();
+    pmComponent->SetDeceleration(0.0f);
 }
 
 APlayerCharacter* UWeaponComponent::GetPlayerCharacter() const
@@ -200,4 +227,9 @@ ABasePlayerController* UWeaponComponent::GetPlayerController() const
 UPlayerMovementComponent* UWeaponComponent::GetPlayerMovementComponent() const
 {
     return GetPlayerCharacter() ? Cast<UPlayerMovementComponent>(GetPlayerCharacter()->GetMovementComponent()) : nullptr;
+}
+
+UStateMachineComponent* UWeaponComponent::GetStateMachineComponent() const
+{
+    return GetPlayerCharacter() ? GetPlayerCharacter()->GetStateMachineComponent() : nullptr;
 }

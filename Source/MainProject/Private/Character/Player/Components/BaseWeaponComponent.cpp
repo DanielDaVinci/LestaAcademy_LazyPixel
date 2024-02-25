@@ -19,7 +19,7 @@ void UBaseWeaponComponent::DisableAllWeaponsCollision()
 {
     for (const auto& weapon: weapons)
     {
-        weapon->DisableCollision();
+        weapon->DisableMeshCollision();
     }
 }
 

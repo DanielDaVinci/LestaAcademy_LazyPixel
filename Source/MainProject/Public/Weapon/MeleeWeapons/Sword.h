@@ -16,12 +16,11 @@ class MAINPROJECT_API ASword : public ABaseWeapon
 	
 public:	
     ASword();
-    
-    UFUNCTION()
-    void OnOffCollision();
 
-    // UFUNCTION()
-    // void DisableCollision();
+    void EnableAttackCollision() const;
+    void DisableAttackCollision() const;
+
+    void OnOffCollision();
 
     TArray<FComboElement> GetComboInfo() { return Combos; }
 
