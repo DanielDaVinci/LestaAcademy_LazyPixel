@@ -212,7 +212,7 @@ void UWeaponComponent::OnEndRangeState(EStateResult StateResult)
     pmComponent->SetDeceleration(0.0f);
 }
 
-void UWeaponComponent::DropWeapon(const TSubclassOf<ABaseWeapon>& WeaponClass) 
+void UWeaponComponent::DropWeapon(const TSubclassOf<ABaseWeapon> WeaponClass) 
 {
     if (const auto Weapon = FindWeapon(WeaponClass))
     {
@@ -224,7 +224,7 @@ void UWeaponComponent::DropWeapon(const TSubclassOf<ABaseWeapon>& WeaponClass)
 void UWeaponComponent::SubscribeOnDropRangeWeapon() 
 {
     if (const auto pRangeWeapon = FindWeapon<AGun>())
-        pRangeWeapon->OnEmptyGun.AddUObject(this, &UWeaponComponent::DropWeapon);
+        pRangeWeapon->OnEmptyGun.AddUObject(this, &UWeaponComponent::DropWeapon, TSubclassOf<ABaseWeapon>(pRangeWeapon->StaticClass()));
 }
 
 void UWeaponComponent::PickUpWeapon(const TSubclassOf<ABaseWeapon>& WeaponClass)

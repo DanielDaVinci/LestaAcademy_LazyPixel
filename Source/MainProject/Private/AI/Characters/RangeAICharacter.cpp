@@ -27,10 +27,9 @@ void ARangeAICharacter::OnDeath()
     GetCharacterMovement()->DisableMovement();
 
     GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECR_Ignore);
-
     GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
     GetMesh()->SetSimulatePhysics(true);
 
-    if (PickupClass)
-        GetWorld()->SpawnActor<AWeaponPickup>(PickupClass, GetActorLocation(), FRotator(), FActorSpawnParameters());
+    if (pickupClass)
+        GetWorld()->SpawnActor<AWeaponPickup>(pickupClass, GetActorLocation(), FRotator(), FActorSpawnParameters());
 }

@@ -3,34 +3,31 @@
 #include "Weapon/RangeWeapons/Projectile.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
-
 #include "Kismet/GameplayStatics.h"
 #include "Engine/DamageEvents.h"
-
-DEFINE_LOG_CATEGORY_STATIC(LogProjectile, All, All);
 
 AProjectile::AProjectile()
 {
     PrimaryActorTick.bCanEverTick = false;
 
-    CollisionComponent = CreateDefaultSubobject<USphereComponent>("SphereComponent");
-    CollisionComponent->InitSphereRadius(3.0f);
-    CollisionComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-    CollisionComponent->SetCollisionResponseToAllChannels(ECR_Block);
-    SetRootComponent(CollisionComponent);
+    pCollisionComponent = CreateDefaultSubobject<USphereComponent>("SphereComponent");
+    pCollisionComponent->InitSphereRadius(3.0f);
+    pCollisionComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+    pCollisionComponent->SetCollisionResponseToAllChannels(ECR_Block);
+    SetRootComponent(pCollisionComponent);
 
-    MovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>("ProjectileMovementComponent");
-    MovementComponent->InitialSpeed = 2000.f;
-    MovementComponent->ProjectileGravityScale = 0.f;
+    pMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>("ProjectileMovementComponent");
+    pMovementComponent->InitialSpeed = 2000.f;
+    pMovementComponent->ProjectileGravityScale = 0.f;
 }
 
 void AProjectile::BeginPlay()
 {
     Super::BeginPlay();
 
-    check(MovementComponent);
-    MovementComponent->Velocity = m_ShotDirection * MovementComponent->InitialSpeed;
-    CollisionComponent->OnComponentHit.AddDynamic(this, &AProjectile::OnProjectileHit);
+    check(pMovementComponent);
+    pMovementComponent->Velocity = m_shotDirection * pMovementComponent->InitialSpeed;
+    pCollisionComponent->OnComponentHit.AddDynamic(this, &AProjectile::OnProjectileHit);
 
     SetLifeSpan(10.0f);
 }
@@ -39,7 +36,7 @@ void AProjectile::OnProjectileHit(UPrimitiveComponent* HitComponent, AActor* Oth
 {
     //UE_LOG(LogProjectile, Display, TEXT("Proj hit: %s"), *OtherActor->GetName());
     if (OtherActor->GetClass() != GetOwner()->GetClass())
-        OtherActor->TakeDamage(m_Damage, FDamageEvent(), UGameplayStatics::GetPlayerController(GetWorld(), 0), this);
+        OtherActor->TakeDamage(m_damage, FDamageEvent(), UGameplayStatics::GetPlayerController(GetWorld(), 0), this);
 
     Destroy();
 }

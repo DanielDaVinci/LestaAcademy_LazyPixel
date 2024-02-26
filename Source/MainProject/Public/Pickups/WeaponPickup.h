@@ -3,44 +3,26 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "Pickups/BasePickup.h"
 #include "WeaponPickup.generated.h"
 
-class USphereComponent;
-class UWidgetComponent;
 class ABaseWeapon;
 
 UCLASS()
-class MAINPROJECT_API AWeaponPickup : public AActor
+class MAINPROJECT_API AWeaponPickup : public ABasePickup
 {
 	GENERATED_BODY()
 	
-public:	
+public:
 	AWeaponPickup();
     virtual void Tick(float DeltaTime) override;
 
 protected:
     UPROPERTY(EditDefaultsOnly, Category = "WeaponType")
-    TSubclassOf<ABaseWeapon> WeaponClass;
-
-    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
-    USphereComponent* CollisionComponent;
-
-    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
-    USkeletalMeshComponent* WeaponMeshComponent;
-
-    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
-    UWidgetComponent* InteractWidget;
+    TSubclassOf<ABaseWeapon> weaponClass;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Rotation")
-    float RotationYaw = 0.0f;
+    float rotationYaw = 0.0f;
 
-    virtual void BeginPlay() override;
-    virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
-    virtual void NotifyActorEndOverlap(AActor* OtherActor) override;
-
-private:
-    FDelegateHandle m_delegateHandle;
-
-    void PickUpHandle();
+    virtual void PickUpHandle(APlayerCharacter* Character) override;
 };

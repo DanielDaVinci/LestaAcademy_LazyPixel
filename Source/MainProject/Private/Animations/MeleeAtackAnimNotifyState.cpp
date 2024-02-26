@@ -14,6 +14,6 @@ void UMeleeAttackAnimNotifyState::NotifyEnd(
     USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference)
 {
     FOnMeleeAttackNotify.Broadcast(MeshComp);
-    //FOnMeleeAttackDamageNotify.Broadcast();
+    FOnMeleeAttackEndNotify.Broadcast(MeshComp);
     Super::NotifyEnd(MeshComp, Animation, EventReference);
 }

@@ -3,46 +3,32 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
-#include "GameFramework/PlayerController.h"
+#include "Pickups/BasePickup.h"
 #include "HealthStation.generated.h"
 
-class APlayerCharacter;
+class URectLightComponent;
 
 UCLASS()
-class MAINPROJECT_API AHealthStation : public AActor
+class MAINPROJECT_API AHealthStation : public ABasePickup
 {
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
 	AHealthStation();
-
-    // Called every frame
-    virtual void Tick(float DeltaTime) override;
     
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-    virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
-    virtual void NotifyActorEndOverlap(AActor* OtherActor) override;
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName = "HealthDisplayMeshComponent")
+    UStaticMeshComponent* pHealthDisplayMeshComponent;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName = "RectLightComponent")
+    URectLightComponent* pRectLightComponent;
 
     UPROPERTY(EditDefaultsOnly, Category = "Health")
-    float HealAmount = 50;
+    float healAmount = 50.0f;
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
-    class UBoxComponent* Collider;
-
-    // Widget class for the interaction prompt
-    UPROPERTY(EditDefaultsOnly, Category = "UI")
-    TSubclassOf<UUserWidget> InteractionPromptWidgetClass;
-
-    // Instance of the interaction prompt widget
-    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "UI")
-    UUserWidget* InteractionPromptWidget;
+    virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
+    virtual void PickUpHandle(APlayerCharacter* Character) override;
 
 private:
-    FDelegateHandle m_delegateHandle;
-
-    void Heal();
+    bool isUsed = false;
 };

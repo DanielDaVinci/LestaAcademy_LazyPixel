@@ -57,6 +57,7 @@ private:
     
     void OnMeleeNotifyStateHandle(USkeletalMeshComponent* MeshComp);
     // void OnStartAttackState(USkeletalMeshComponent* MeshComp);
+    void OnMeleeNotifyEndHandle(USkeletalMeshComponent* MeshComp);
     void OnRangeNotifyHandle(USkeletalMeshComponent* MeshComp);
 
 protected:

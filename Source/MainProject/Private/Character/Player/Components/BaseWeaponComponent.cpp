@@ -96,6 +96,7 @@ void UBaseWeaponComponent::SubscribeOnMeleeNotify(const FAnimNotifyEvent& Notify
         return;
 
     meleeNotifyState->FOnMeleeAttackNotify.AddUObject(this, &UBaseWeaponComponent::OnMeleeNotifyStateHandle);
+    meleeNotifyState->FOnMeleeAttackEndNotify.AddUObject(this, &UBaseWeaponComponent::OnMeleeNotifyEndHandle);
 }
 
 void UBaseWeaponComponent::SubscribeOnRangeNotify(const FAnimNotifyEvent& NotifyEvent)
@@ -115,7 +116,16 @@ void UBaseWeaponComponent::OnMeleeNotifyStateHandle(USkeletalMeshComponent* Mesh
     OnMeleeStartAttackAnim();
 }
 
-void UBaseWeaponComponent::OnRangeNotifyHandle(USkeletalMeshComponent* MeshComp) 
+void UBaseWeaponComponent::OnMeleeNotifyEndHandle(USkeletalMeshComponent* MeshComp)
+{
+    if (MeshComp->GetOwner() != GetOwner())
+        return;
+
+    if (const auto pMeleeWeapon = FindWeapon<ASword>())
+        pMeleeWeapon->ClearDamagedActors();
+}
+
+void UBaseWeaponComponent::OnRangeNotifyHandle(USkeletalMeshComponent* MeshComp)
 {
     if (MeshComp->GetOwner() != GetOwner())
         return;

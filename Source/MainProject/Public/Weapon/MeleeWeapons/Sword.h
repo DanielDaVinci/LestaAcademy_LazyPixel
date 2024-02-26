@@ -21,21 +21,23 @@ public:
     void DisableAttackCollision() const;
 
     void OnOffCollision();
+    void ClearDamagedActors();
 
-    TArray<FComboElement> GetComboInfo() { return Combos; }
+    TArray<FComboElement> GetComboInfo() { return combos; }
 
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName = "BoxComponent")
     UBoxComponent* pBoxCollision;
     
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon Properties|Sword")
-    TArray<FComboElement> Combos;
+    TArray<FComboElement> combos;
 
     UFUNCTION()
     void OnMeleeWeaponOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
         int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 private:
+    TSet<AActor*> alreadydamagedActors;
     void InitBoxCollision();
     
 };

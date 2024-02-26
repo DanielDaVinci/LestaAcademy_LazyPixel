@@ -7,12 +7,11 @@
 #include "WeaponComponent.generated.h"
 
 class UStateMachineComponent;
+class ABaseWeapon;
 class ASword;
 class APlayerCharacter;
 class ABasePlayerController;
 class UPlayerMovementComponent;
-//class AGun;
-class ABaseWeapon;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class MAINPROJECT_API UWeaponComponent : public UBaseWeaponComponent
@@ -52,7 +51,7 @@ protected:
 private:
     FVector m_rangeAttackPoint;
 
-    void DropWeapon(const TSubclassOf<ABaseWeapon>& WeaponClass);
+    void DropWeapon(const TSubclassOf<ABaseWeapon> WeaponClass);
     void SubscribeOnDropRangeWeapon();
 
 protected:
