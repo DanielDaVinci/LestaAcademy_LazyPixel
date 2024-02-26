@@ -30,12 +30,12 @@ void ASword::InitBoxCollision()
 void ASword::OnMeleeWeaponOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
     int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-    if (alreadydamagedActors.Contains(OtherActor))
+    if (alreadyDamagedActors.Contains(OtherActor))
         return;
 
     OtherActor->TakeDamage(damage, FDamageEvent(), UGameplayStatics::GetPlayerController(GetWorld(), 0), this);
     UE_LOG(LogSwordWeapon, Display, TEXT("Damage %.f to actor %s"), damage, *(OtherActor->GetName()));
-    alreadydamagedActors.Add(OtherActor);
+    alreadyDamagedActors.Add(OtherActor);
 }
 
 void ASword::OnOffCollision() 
@@ -52,7 +52,7 @@ void ASword::OnOffCollision()
 void ASword::ClearDamagedActors()
 {
     DisableAttackCollision();
-    alreadydamagedActors.Empty();
+    alreadyDamagedActors.Empty();
 }
 
 void ASword::EnableAttackCollision() const
