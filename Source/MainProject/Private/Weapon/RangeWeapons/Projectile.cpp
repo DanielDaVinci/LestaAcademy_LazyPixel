@@ -34,9 +34,8 @@ void AProjectile::BeginPlay()
 
 void AProjectile::OnProjectileHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-    //UE_LOG(LogProjectile, Display, TEXT("Proj hit: %s"), *OtherActor->GetName());
-    if (OtherActor->GetClass() != GetOwner()->GetClass())
-        OtherActor->TakeDamage(m_damage, FDamageEvent(), UGameplayStatics::GetPlayerController(GetWorld(), 0), this);
+    //UE_LOG(LogTemp, Display, TEXT("Damage %.f from projectile to actor %s"), damage, *OtherActor->GetName());
+    OtherActor->TakeDamage(damage, FDamageEvent(), UGameplayStatics::GetPlayerController(GetWorld(), 0), this);
 
     Destroy();
 }

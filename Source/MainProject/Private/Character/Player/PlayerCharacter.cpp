@@ -92,6 +92,15 @@ void APlayerCharacter::OnMouseMove(FVector2D MouseVector)
     m_currentTime = m_interpolationMinTime;
 }
 
+void APlayerCharacter::OnDeath() 
+{
+    Super::OnDeath();
+
+    GetCharacterMovement()->DisableMovement();
+    GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+    GetMesh()->SetSimulatePhysics(true);
+}
+
 ABasePlayerController* APlayerCharacter::GetPlayerController() const
 {
     return Cast<ABasePlayerController>(Controller);

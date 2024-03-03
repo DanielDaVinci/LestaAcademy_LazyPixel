@@ -1,4 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Lazy Pixel. All Rights Reserved.
 
 #pragma once
 
@@ -12,9 +12,4 @@ UCLASS()
 class MAINPROJECT_API AMeleeAICharacter : public AAIBaseCharacter
 {
     GENERATED_BODY()
-
-public:
-    AMeleeAICharacter(const FObjectInitializer& ObjInit);
-
-    virtual void OnDeath() override;
 };

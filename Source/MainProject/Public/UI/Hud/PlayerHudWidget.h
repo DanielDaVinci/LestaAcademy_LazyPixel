@@ -26,6 +26,9 @@ protected:
     virtual void NativeOnInitialized() override;
     void TakeDamage(float damage);
 
+    UFUNCTION(BlueprintCallable, Category = "UI")
+    bool IsPlayerDead() const;
+
 private:
     UHealthComponent* m_playerHealthComponent;
 };

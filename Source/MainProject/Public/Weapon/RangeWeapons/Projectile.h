@@ -18,8 +18,7 @@ public:
     AProjectile();
 
     void SetShootDirection(const FVector& Direction) { m_shotDirection = Direction; }
-    void SetDamage(const float Damage) { m_damage = Damage; }
-    void SetTrailColor(const uint8 nColorIndex) { if (trailColors.IsValidIndex(nColorIndex)) curTrailColor = trailColors[nColorIndex]; }
+    bool IsInfinite() { return infinite; }
 
 protected:
     UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Weapon", DisplayName = "CollisionComponent")
@@ -28,11 +27,11 @@ protected:
     UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Weapon", DisplayName = "MovementComponent")
     UProjectileMovementComponent* pMovementComponent;
 
-    UPROPERTY(EditDefaultsOnly, Category = "VFX")
-    TArray<FLinearColor> trailColors;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Properties", meta = (ClampMin = "0.0"))
+    float damage;
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "VFX")
-    FLinearColor curTrailColor;
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Projectile Properties")
+    bool infinite;
 
     virtual void BeginPlay() override;
 
@@ -42,5 +41,4 @@ private:
         const FHitResult& Hit);
 
     FVector m_shotDirection;
-    float m_damage;
 };

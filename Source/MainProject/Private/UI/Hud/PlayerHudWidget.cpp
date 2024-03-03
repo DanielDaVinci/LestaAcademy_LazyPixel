@@ -26,3 +26,8 @@ void UPlayerHudWidget::TakeDamage(float damage)
         PlayAnimation(pDamageIndicatorAnimation);
     }
 }
+
+bool UPlayerHudWidget::IsPlayerDead() const
+{
+    return m_playerHealthComponent->IsDead();
+}

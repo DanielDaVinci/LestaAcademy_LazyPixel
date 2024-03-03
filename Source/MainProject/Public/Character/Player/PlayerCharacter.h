@@ -45,6 +45,7 @@ protected:
     float interpolationFrequency = 0.01f;
     
     void OnMouseMove(FVector2D MouseVector);
+    virtual void OnDeath() override;
     
 private:
     FVector m_currentCameraOffset;

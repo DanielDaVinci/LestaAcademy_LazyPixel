@@ -59,7 +59,7 @@ bool URangeEnemyAttackTask::CheckObstacles(UBehaviorTreeComponent& OwnerComp)
     FHitResult hitResult;
 
     bool actorHit = GetWorld()->LineTraceSingleByChannel(hitResult, start, end, ECC_OverlapAll_Deprecated, FCollisionQueryParams(), FCollisionResponseParams());
-    DrawDebugLine(GetWorld(), start, end, FColor::Red, false, 2, 0, 5);
+    //DrawDebugLine(GetWorld(), start, end, FColor::Red, false, 2, 0, 5);
 
     if (actorHit && hitResult.GetActor()->GetClass()->IsChildOf(APlayerCharacter::StaticClass()))
         return true;

@@ -30,6 +30,6 @@ void UAIWeaponComponent::OnRangeAttackAnim()
         USkeletalMeshComponent* weapSkel = pRangeWeapon->FindComponentByClass<USkeletalMeshComponent>();   
         const auto rangeAttackPoint = weapSkel->GetSocketTransform(pRangeWeapon->GetMuzzleSocketName()).GetLocation() + 
                                       weapSkel->GetSocketRotation(pRangeWeapon->GetMuzzleSocketName()).Vector();
-        pRangeWeapon->MakeShoot(rangeAttackPoint);
+        pRangeWeapon->MakeShoot(projectileClass, rangeAttackPoint);
     }
 }

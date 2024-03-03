@@ -8,6 +8,7 @@
 #include "BaseWeaponComponent.generated.h"
 
 class ABaseWeapon;
+class AProjectile;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class MAINPROJECT_API UBaseWeaponComponent : public UActorComponent
@@ -23,9 +24,11 @@ protected:
     UPROPERTY(EditDefaultsOnly, Category = "Weapon")
     TArray<FWeaponData> weaponData;
 
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
+    TSubclassOf<AProjectile> projectileClass;
+
     virtual void BeginPlay() override;
 
-    
     // Weapons
 private:
     virtual void SpawnAllWeapons();
