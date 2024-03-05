@@ -153,7 +153,7 @@ void UWeaponComponent::OnRangeAttackAnim()
     Super::OnRangeAttackAnim();
     
     if (const auto pRangeWeapon = FindWeapon<AGun>())
-        pRangeWeapon->MakeShoot(projectileClass, m_rangeAttackPoint);
+        pRangeWeapon->MakeShoot(m_rangeAttackPoint);
 }
 
 void UWeaponComponent::RangeAttack()

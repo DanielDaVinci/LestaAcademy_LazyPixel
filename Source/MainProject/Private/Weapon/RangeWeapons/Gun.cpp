@@ -5,10 +5,8 @@
 #include "Character/Player/BasePlayerController.h"
 #include "Weapon/RangeWeapons/Projectile.h"
 
-void AGun::MakeShoot(TSubclassOf<AProjectile>& projectileClass, const FVector& Point)
+void AGun::MakeShoot(const FVector& Point)
 {
-    if (!projectileClass) return;
-
     FVector shootDirection = Point - GetActorLocation();
     shootDirection.Z = 0.0f;
     shootDirection.Normalize();
@@ -22,6 +20,7 @@ void AGun::MakeShoot(TSubclassOf<AProjectile>& projectileClass, const FVector& P
     
     projectile->SetOwner(GetOwner());
     projectile->SetShootDirection(shootDirection);
+    projectile->InitProperties(projectileProperties);
     projectile->FinishSpawning(spawnTransform);
     
     projectile->IsInfinite() ? bullets : bullets--;   

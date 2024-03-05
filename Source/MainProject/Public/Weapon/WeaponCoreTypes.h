@@ -25,3 +25,18 @@ struct FComboElement
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement", meta = (ClampMin = "0.0", ClampMax = "1.0"))
     float Deceleration = 0.0;
 };
+
+USTRUCT(BlueprintType)
+struct FProjectileProperties
+{
+    GENERATED_BODY()
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Projectile Properties", meta = (ClampMin = "0.0"))
+    float damage;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Projectile Properties")
+    TEnumAsByte<ECollisionChannel> projType;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Projectile Properties")
+    FLinearColor trailColor;
+};

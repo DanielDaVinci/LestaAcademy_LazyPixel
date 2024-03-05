@@ -21,6 +21,15 @@ AProjectile::AProjectile()
     pMovementComponent->ProjectileGravityScale = 0.f;
 }
 
+void AProjectile::InitProperties(FProjectileProperties& projProperties) 
+{
+    m_damage = projProperties.damage;
+    trailColor = projProperties.trailColor;
+    pCollisionComponent->SetCollisionObjectType(projProperties.projType);
+    if (projProperties.projType == ECC_Enemy)
+        pCollisionComponent->SetCollisionResponseToChannel(ECC_Enemy, ECR_Ignore);
+}
+
 void AProjectile::BeginPlay()
 {
     Super::BeginPlay();
@@ -35,7 +44,7 @@ void AProjectile::BeginPlay()
 void AProjectile::OnProjectileHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
     //UE_LOG(LogTemp, Display, TEXT("Damage %.f from projectile to actor %s"), damage, *OtherActor->GetName());
-    OtherActor->TakeDamage(damage, FDamageEvent(), UGameplayStatics::GetPlayerController(GetWorld(), 0), this);
+    OtherActor->TakeDamage(m_damage, FDamageEvent(), UGameplayStatics::GetPlayerController(GetWorld(), 0), this);
 
     Destroy();
 }

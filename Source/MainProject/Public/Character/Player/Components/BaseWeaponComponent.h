@@ -24,9 +24,6 @@ protected:
     UPROPERTY(EditDefaultsOnly, Category = "Weapon")
     TArray<FWeaponData> weaponData;
 
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
-    TSubclassOf<AProjectile> projectileClass;
-
     virtual void BeginPlay() override;
 
     // Weapons
