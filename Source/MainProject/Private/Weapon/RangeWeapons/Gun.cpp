@@ -1,10 +1,9 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Lazy Pixel. All Rights Reserved.
 
 #include "Weapon/RangeWeapons/Gun.h"
 
 #include "Character/Player/BasePlayerController.h"
 #include "Weapon/RangeWeapons/Projectile.h"
-#include "GameFramework/Character.h"
 
 void AGun::MakeShoot(const FVector& Point)
 {
@@ -21,15 +20,10 @@ void AGun::MakeShoot(const FVector& Point)
     
     projectile->SetOwner(GetOwner());
     projectile->SetShootDirection(shootDirection);
-    projectile->SetDamage(damage);
-    if (const auto character = Cast<ACharacter>(GetOwner()))
-    {
-        projectile->SetTrailColor(character->IsPlayerControlled() ? 0 : 1);
-        character->IsPlayerControlled() ? bullets-- : bullets;
-    }
-    
+    projectile->InitProperties(projectileProperties);
     projectile->FinishSpawning(spawnTransform);
-
+    
+    projectile->IsInfinite() ? bullets : bullets--;   
     if (bullets <= 0)
         OnEmptyGun.Broadcast();
 }

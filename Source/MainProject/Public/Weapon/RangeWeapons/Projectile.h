@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "MainProjectCoreTypes.h"
 #include "Projectile.generated.h"
 
 class USphereComponent;
@@ -18,8 +19,8 @@ public:
     AProjectile();
 
     void SetShootDirection(const FVector& Direction) { m_shotDirection = Direction; }
-    void SetDamage(const float Damage) { m_damage = Damage; }
-    void SetTrailColor(const uint8 nColorIndex) { if (trailColors.IsValidIndex(nColorIndex)) curTrailColor = trailColors[nColorIndex]; }
+    bool IsInfinite() { return m_isInfiniteAmmo; }
+    void InitProperties(FProjectileProperties& projProperties);
 
 protected:
     UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Weapon", DisplayName = "CollisionComponent")
@@ -28,11 +29,8 @@ protected:
     UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Weapon", DisplayName = "MovementComponent")
     UProjectileMovementComponent* pMovementComponent;
 
-    UPROPERTY(EditDefaultsOnly, Category = "VFX")
-    TArray<FLinearColor> trailColors;
-
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "VFX")
-    FLinearColor curTrailColor;
+    FLinearColor trailColor;
 
     virtual void BeginPlay() override;
 
@@ -43,4 +41,5 @@ private:
 
     FVector m_shotDirection;
     float m_damage;
+    bool m_isInfiniteAmmo;
 };

@@ -1,9 +1,10 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Lazy Pixel. All Rights Reserved.
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "Weapon/BaseWeapon.h"
+#include "MainProjectCoreTypes.h"
 #include "Gun.generated.h"
 
 DECLARE_MULTICAST_DELEGATE(FOnEmptyGunSignature);
@@ -27,6 +28,9 @@ protected:
 
     UPROPERTY(EditDefaultsOnly, Category = "Weapon Properties|Gun|Projectile")
     FName muzzleSocketName = "MuzzleSocket";
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon Properties|Gun|Projectile")
+    FProjectileProperties projectileProperties;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon Properties|Gun")
     int32 bullets = 5;

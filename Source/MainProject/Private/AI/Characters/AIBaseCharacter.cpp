@@ -1,6 +1,5 @@
 // Lazy Pixel. All Rights Reserved.
 
-
 #include "AI/Characters/AIBaseCharacter.h"
 
 #include "MainProjectCoreTypes.h"
@@ -10,6 +9,7 @@
 #include "Environment/Room.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 AAIBaseCharacter::AAIBaseCharacter(const FObjectInitializer& ObjInit)
     : Super(ObjInit.SetDefaultSubobjectClass<UAIWeaponComponent>("WeaponComponent"))
@@ -18,6 +18,10 @@ AAIBaseCharacter::AAIBaseCharacter(const FObjectInitializer& ObjInit)
 
     GetMesh()->SetCollisionObjectType(ECC_Enemy);
     GetCapsuleComponent()->SetCollisionObjectType(ECC_Enemy);
+
+    bUseControllerRotationYaw = false;
+    if (GetCharacterMovement())
+        GetCharacterMovement()->bUseControllerDesiredRotation = true;
 }
 
 void AAIBaseCharacter::BeginPlay() 
@@ -36,4 +40,17 @@ void AAIBaseCharacter::PlayImpactAnim(float Health)
 {
     if (impactAnimations.Num())
         PlayAnimMontage(impactAnimations[FMath::RandRange(0, impactAnimations.Num() - 1)]);
+}
+
+void AAIBaseCharacter::OnDeath()
+{
+    Super::OnDeath();
+
+    Controller->UnPossess();
+    GetCharacterMovement()->DisableMovement();
+
+    GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECR_Ignore);
+
+    GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+    GetMesh()->SetSimulatePhysics(true);
 }

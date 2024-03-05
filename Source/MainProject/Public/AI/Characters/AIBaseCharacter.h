@@ -31,6 +31,8 @@ protected:
 
     virtual void PostInitializeComponents() override;
 
+    virtual void OnDeath() override;
+
 private:
     UFUNCTION()
     void PlayImpactAnim(float Health);

@@ -6,16 +6,8 @@
 #include "AI/Characters/AIBaseCharacter.h"
 #include "BigManAICharacter.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class MAINPROJECT_API ABigManAICharacter : public AAIBaseCharacter
 {
 	GENERATED_BODY()
-    
-public:
-    ABigManAICharacter(const FObjectInitializer& ObjInit);
-
-    virtual void OnDeath() override;
 };
