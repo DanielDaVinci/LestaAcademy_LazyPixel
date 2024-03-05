@@ -22,7 +22,7 @@ bool UStrongAttackAbility::NativeActivate()
     FState strongAbilityState(
         "StrongAbilityState",
         prepareDuration * timeDilation,
-        Force
+        Medium
     );
 
     strongAbilityState.OnStartState.AddUObject(this, &UStrongAttackAbility::OnPreparePartStartState);
@@ -141,7 +141,7 @@ void UStrongAttackAbility::StartAttackPart()
     FState strongAbilityState(
         "StrongAbilitySecondPartState",
         attackDuration,
-        Hard
+        Force
     );
     strongAbilityState.OnStartState.AddUObject(this, &UStrongAttackAbility::OnAttackPartStartState);
     strongAbilityState.OnEndState.AddUObject(this, &UStrongAttackAbility::OnAttackPartEndState);

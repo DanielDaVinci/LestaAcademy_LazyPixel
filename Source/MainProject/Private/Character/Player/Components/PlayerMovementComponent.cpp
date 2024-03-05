@@ -82,7 +82,6 @@ void UPlayerMovementComponent::RotateToInputDirection(float DeltaTime)
         return;
     
     const auto inputDirection = InputDirToWorldDir(m_inputDirection);
-
     mesh->SetRelativeRotation(inputDirection.Rotation());
 }
 
@@ -95,6 +94,11 @@ FVector UPlayerMovementComponent::InputDirToWorldDir(FVector2D InputDirection) c
         GetPlayerCharacter()->GetCameraForwardVector2D() * InputDirection.Y,
         0.0f
         ).GetSafeNormal();
+}
+
+FVector UPlayerMovementComponent::GetWorldInputDirection() const
+{
+    return InputDirToWorldDir(GetInputDirection());
 }
 
 FVector UPlayerMovementComponent::GetMouseViewDirection() const

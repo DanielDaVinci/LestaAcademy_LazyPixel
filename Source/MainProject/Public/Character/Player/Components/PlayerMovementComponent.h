@@ -62,6 +62,8 @@ public:
     
     FVector2D GetInputDirection() const { return m_inputDirection; }
 
+    FVector GetWorldInputDirection() const;
+
     void SetEnableMovementInput(bool bCanMove) { m_bCanMove = bCanMove; }
 
 private:
