@@ -18,13 +18,17 @@ void UDashAbility::BeginPlay()
 bool UDashAbility::NativeActivate()
 {
     const auto pStateMachineComponent = GetStateMachineComponent();
-    if (!pStateMachineComponent)
+    const auto pPlayerMovementComponent = GetPlayerMovementComponent();
+    if (!pStateMachineComponent || !pPlayerMovementComponent)
+        return false;
+
+    if (pPlayerMovementComponent->GetInputDirection() == FVector2D::ZeroVector)
         return false;
 
     FState dashState(
         "DashAbility",
         dashDuration,
-        EStatePriority::Force
+        EStatePriority::Hard
     );
     dashState.OnStartState.AddUObject(this, &UDashAbility::OnStartDashState);
     dashState.OnEndState.AddUObject(this, &UDashAbility::OnEndDashState);
@@ -37,13 +41,17 @@ bool UDashAbility::NativeActivate()
 void UDashAbility::OnStartDashState()
 {
     const auto pCharacter = GetCharacter();
-    if (!GetWorld() || !pCharacter || !pCharacter->GetCapsuleComponent() || !pCharacter->GetMesh())
+    const auto pPlayerMovementComponent = GetPlayerMovementComponent();
+    if (!GetWorld() || !pCharacter || !pCharacter->GetCapsuleComponent() || !pCharacter->GetMesh() || !pPlayerMovementComponent)
         return;
+    
+    const FVector dashDirection = pPlayerMovementComponent->GetWorldInputDirection();
+    pPlayerMovementComponent->FixCharacterRotation(dashDirection.Rotation());
+    pPlayerMovementComponent->SetEnableMovementInput(false);
 
     pCharacter->GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Enemy, ECR_Ignore);
     pCharacter->PlayAnimMontage(dashAnimation);
     
-    const FVector dashDirection = pCharacter->GetMesh()->GetRightVector().GetSafeNormal();
     FTimerDelegate timerDelegate = FTimerDelegate::CreateUObject(this, &UDashAbility::OnDashTimerUpdate, dashDirection);
     GetWorld()->GetTimerManager().SetTimer(m_dashTimer, timerDelegate, m_timerRate, true);
 }
@@ -51,13 +59,17 @@ void UDashAbility::OnStartDashState()
 void UDashAbility::OnEndDashState(EStateResult StateResult)
 {
     const auto pCharacter = GetCharacter();
-    if (!GetWorld() || !pCharacter || !pCharacter->GetCapsuleComponent())
+    const auto pPlayerMovementComponent = GetPlayerMovementComponent();
+    if (!GetWorld() || !pCharacter || !pCharacter->GetCapsuleComponent() || !pPlayerMovementComponent)
         return;
 
     GetWorld()->GetTimerManager().ClearTimer(m_dashTimer);
     
     pCharacter->GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Enemy, ECR_Block);
     pCharacter->StopAnimMontage(dashAnimation);
+
+    pPlayerMovementComponent->UnfixCharacterRotation();
+    pPlayerMovementComponent->SetEnableMovementInput(true);
 }
 
 

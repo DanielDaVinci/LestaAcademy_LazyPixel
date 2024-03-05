@@ -70,7 +70,7 @@ void UWeaponComponent::MeleeAttack()
     FState meleeState(
         "ComboAttack",
         comboInfo[m_nextComboIndex].AnimationTime,
-        m_nextComboIndex == 0 ? EStatePriority::Force : EStatePriority::Light
+        m_nextComboIndex == 0 ? EStatePriority::Light : EStatePriority::Light
     );
     
     meleeState.OnStartState.AddUObject(this, &UWeaponComponent::OnStartComboState, m_nextComboIndex);
@@ -100,17 +100,23 @@ void UWeaponComponent::PlayMeleeWeaponComboAnim(ASword* Weapon, int32 ComboIndex
 
 void UWeaponComponent::OnStartComboState(int32 ComboIndex)
 {
+    const auto pCharacter = GetPlayerCharacter();
+    const auto pPlayerController = GetPlayerController();
     const auto pMovementComponent = GetPlayerMovementComponent();
     const auto pMeleeWeapon = FindWeapon<ASword>();
-    
-    if (!pMovementComponent || !pMeleeWeapon)
+    if (!pCharacter || !pPlayerController || !pMovementComponent || !pMeleeWeapon)
         return;
 
     const auto comboInfo = pMeleeWeapon->GetComboInfo();
     if (!comboInfo.IsValidIndex(ComboIndex))
         return;
-
-    const FRotator viewRotation = pMovementComponent->GetMouseViewDirection().Rotation();
+    
+    const FVector attackPoint = pPlayerController->GetWorldPointUnderMouse();
+    if (attackPoint == FVector::ZeroVector)
+        return;
+    
+    FRotator viewRotation = (attackPoint - pCharacter->GetActorLocation()).Rotation();
+    viewRotation.Pitch = 0.0f;
     pMovementComponent->FixCharacterRotation(viewRotation);
     pMovementComponent->SetDeceleration(comboInfo[ComboIndex].Deceleration);
 
@@ -137,7 +143,7 @@ void UWeaponComponent::OnEndComboState(EStateResult StateResult, int32 ComboInde
     
     pMeleeWeapon->DisableAttackCollision();
     
-    if (StateResult == EStateResult::Aborted || ComboIndex == comboInfo.Num() - 1 || pStateMachine->GetNextState().Name != "ComboAttack")
+    if (StateResult == EStateResult::Aborted || ComboIndex == comboInfo.Num() - 1 || !pStateMachine->HasNextState())
         m_nextComboIndex = 0;
 }
 
@@ -175,7 +181,7 @@ void UWeaponComponent::RangeAttack()
     FState rangeState(
         "RangeState",
         pRangeWeapon->GetAttackMontage()->GetSectionLength(0),
-        EStatePriority::Force
+        EStatePriority::Medium
     );
 
     rangeState.OnStartState.AddUObject(this, &UWeaponComponent::OnStartRangeState, attackPoint);

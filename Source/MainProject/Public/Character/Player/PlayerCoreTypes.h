@@ -53,7 +53,7 @@ private:
     int32 Id;
 
 public:
-    explicit FState(const FString& Name = "Default", const float LifeTime = 0.1f, const EStatePriority& Priority = EStatePriority::Light)
+    explicit FState(const FString& Name = "Empty", const float LifeTime = 0.1f, const EStatePriority& Priority = EStatePriority::Light)
     {
         static int32 idIterator = 0;
         Id = idIterator++;

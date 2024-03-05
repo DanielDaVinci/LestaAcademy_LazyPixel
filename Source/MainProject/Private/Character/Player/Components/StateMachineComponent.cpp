@@ -37,7 +37,12 @@ FState UStateMachineComponent::GetCurrentState() const
 
 FState UStateMachineComponent::GetNextState() const
 {
-    return !m_queueStates.empty() ? *m_queueStates.top() : FState();
+    return HasNextState() ? *m_queueStates.top() : FState();
+}
+
+bool UStateMachineComponent::HasNextState() const
+{
+    return !m_queueStates.empty();
 }
 
 void UStateMachineComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)

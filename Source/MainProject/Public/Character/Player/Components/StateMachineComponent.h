@@ -21,6 +21,7 @@ public:
     
     FState GetCurrentState() const;
     FState GetNextState() const;
+    bool HasNextState() const;
 
 protected:
     virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
