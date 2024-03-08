@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Character/Player/PlayerCoreTypes.h"
 #include "Components/ActorComponent.h"
+#include "Weapon/BaseWeapon.h"
 #include "BaseWeaponComponent.generated.h"
 
 class ABaseWeapon;
@@ -39,9 +40,7 @@ protected:
     TArray<ABaseWeapon*> weapons;
     
     template<typename T>
-    T* FindWeapon() const;
-
-    ABaseWeapon* FindWeapon(const TSubclassOf<ABaseWeapon>& WeaponClass) const;
+    T* FindWeapon(const TSubclassOf<T>& WeaponClass = nullptr) const;
     
     // Animations and notifies
 private:
@@ -66,12 +65,12 @@ protected:
 };
 
 template <typename T>
-T* UBaseWeaponComponent::FindWeapon() const
+T* UBaseWeaponComponent::FindWeapon(const TSubclassOf<T>& WeaponClass) const
 {
     for (const auto& weapon: weapons)
     {
-        if (const auto& castWeapon = Cast<T>(weapon))
-            return castWeapon;
+        if (weapon->IsA<T>())
+            return Cast<T>(weapon);
     }
 
     return nullptr;

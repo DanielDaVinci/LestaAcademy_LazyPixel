@@ -77,7 +77,7 @@ public:
     
     /**
      * Fix character rotation
-     * @param FixRotation Characters's fix rotation in end
+     * @param FixRotation Character's fix rotation in end
      */
     void FixCharacterRotation(const FRotator& FixRotation);
 

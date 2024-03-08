@@ -8,9 +8,10 @@
 #include "Components/ProgressBar.h"
 #include "PlayerHudWidget.generated.h"
 
-/**
- * 
- */
+class UPropertyPanelWidget;
+class ULosePanelWidget;
+class ABaseCharacter;
+
 UCLASS()
 class MAINPROJECT_API UPlayerHudWidget : public UUserWidget
 {
@@ -18,17 +19,28 @@ class MAINPROJECT_API UPlayerHudWidget : public UUserWidget
 
 protected:
     UPROPERTY(meta = (BindWidget))
-    UProgressBar* pHealthBar;
+    UPropertyPanelWidget* pPropertyPanel;
+    
+    UPROPERTY(meta = (BindWidget))
+    ULosePanelWidget* pLosePanel;
+    
     UPROPERTY(meta = (BindWidgetAnim), Transient)
     UWidgetAnimation* pDamageIndicatorAnimation;
     
-    virtual void NativeConstruct() override;
     virtual void NativeOnInitialized() override;
-    void TakeDamage(float damage);
-
+    
     UFUNCTION(BlueprintCallable, Category = "UI")
     bool IsPlayerDead() const;
 
 private:
-    UHealthComponent* m_playerHealthComponent;
+    void BindActions();
+    
+protected:
+    void OnHealthChanged(float DeltaHealth);
+    void OnPlayerDied();
+    
+protected:
+    ABaseCharacter* GetOwningBaseCharacter() const;
+    UHealthComponent* GetHealthComponent() const;
+    
 };

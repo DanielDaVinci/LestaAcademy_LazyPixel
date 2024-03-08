@@ -16,7 +16,8 @@ public class MainProject : ModuleRules
 			"InputCore",
 			"AIModule",
 			"NavigationSystem",
-			"GameplayTasks"
+			"GameplayTasks",
+			"UMG"
 		});
 
 		// Uncomment if you are using Slate UI

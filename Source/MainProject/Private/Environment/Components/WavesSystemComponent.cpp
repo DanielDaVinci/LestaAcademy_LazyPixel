@@ -125,7 +125,7 @@ void UWavesSystemComponent::BindOneEnemyOnDeath(const AAIBaseCharacter* Enemy)
     if (!healthComponent)
         return;
 
-    healthComponent->OnDeath.AddUObject(this, &UWavesSystemComponent::OnEnemyDied);
+    healthComponent->OnDied.AddUObject(this, &UWavesSystemComponent::OnEnemyDied);
 }
 
 void UWavesSystemComponent::CloseDoorAllSpawners(int32 WaveIndex)

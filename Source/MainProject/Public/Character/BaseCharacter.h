@@ -22,6 +22,8 @@ class MAINPROJECT_API ABaseCharacter : public ACharacter
 public:
     ABaseCharacter(const FObjectInitializer& ObjInit);
 
+    UHealthComponent* GetHealthComponent() const;
+
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName = "AbilityComponent")
     UAbilityComponent* pAbilityComponent;

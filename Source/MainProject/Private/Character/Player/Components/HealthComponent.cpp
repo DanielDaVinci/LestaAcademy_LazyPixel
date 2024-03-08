@@ -35,12 +35,15 @@ void UHealthComponent::OnTakeAnyDamage(AActor* DamageActor, float Damage, const 
 
 void UHealthComponent::SetHealth(float Health)
 {
+    const float previousHealth = m_health;
     m_health = FMath::Clamp(Health, 0.0, maxHealth);
-    OnHealthChanged.Broadcast(m_health);
+
+    const float deltaHealth = m_health - previousHealth;
+    OnHealthChanged.Broadcast(deltaHealth);
 
     if (FMath::IsNearlyZero(m_health))
     {
-        OnDeath.Broadcast();
+        OnDied.Broadcast();
     }
 }
 

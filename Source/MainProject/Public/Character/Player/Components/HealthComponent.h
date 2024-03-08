@@ -18,10 +18,11 @@ public:
     UHealthComponent();
 
     FOnHealthChanged OnHealthChanged;
-    FOnDeath OnDeath;
+    FOnDeath OnDied;
 
     float GetHealth() const { return m_health; }
     float GetMaxHealth() const { return maxHealth; }
+    float GetPercentHealth() const { return GetHealth() / GetMaxHealth(); }
 
     UFUNCTION(BlueprintCallable)
     bool IsDead() const { return m_health <= 0; }

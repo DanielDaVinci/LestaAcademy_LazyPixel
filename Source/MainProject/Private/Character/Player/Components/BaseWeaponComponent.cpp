@@ -132,14 +132,3 @@ void UBaseWeaponComponent::OnRangeNotifyHandle(USkeletalMeshComponent* MeshComp)
 
     OnRangeAttackAnim();
 }
-
-ABaseWeapon* UBaseWeaponComponent::FindWeapon(const TSubclassOf<ABaseWeapon>& WeaponClass) const
-{
-    for (const auto& weapon : weapons)
-    {
-        if (weapon->IsA(WeaponClass))
-            return weapon;
-    }
-
-    return nullptr;
-}

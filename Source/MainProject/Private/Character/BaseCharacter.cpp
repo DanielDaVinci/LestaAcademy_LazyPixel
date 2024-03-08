@@ -27,12 +27,17 @@ ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjInit)
     pStateMachineComponent = CreateDefaultSubobject<UStateMachineComponent>("StateMachineComponent");
 }
 
+UHealthComponent* ABaseCharacter::GetHealthComponent() const
+{
+    return pHealthComponent;
+}
+
 void ABaseCharacter::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
 
     pHealthComponent->OnHealthChanged.AddUObject(this, &ABaseCharacter::CheckHealthValue);
-    pHealthComponent->OnDeath.AddUObject(this, &ABaseCharacter::OnDeath);
+    pHealthComponent->OnDied.AddUObject(this, &ABaseCharacter::OnDeath);
 }
 
 void ABaseCharacter::BeginPlay()
