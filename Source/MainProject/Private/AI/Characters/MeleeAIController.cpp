@@ -4,6 +4,7 @@
 #include "AI/Characters/MeleeAIController.h"
 
 #include "AI/Characters/AIBaseCharacter.h"
+#include "AI/Characters/MeleeAICharacter.h"
 
 void AMeleeAIController::AttackPlayer()
 {
@@ -14,7 +15,7 @@ void AMeleeAIController::OnPossess(APawn* InPawn)
 {
     Super::OnPossess(InPawn);
 
-    const auto character = Cast<AAIBaseCharacter>(InPawn);
+    const auto character = Cast<AMeleeAICharacter>(InPawn);
     if (character)
     {
         RunBehaviorTree(character->BehaviorTreeAsset);

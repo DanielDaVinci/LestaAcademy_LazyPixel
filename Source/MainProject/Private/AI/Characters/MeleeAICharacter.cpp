@@ -29,6 +29,9 @@ void AMeleeAICharacter::OnDeath()
 
     GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECR_Ignore);
 
+    const AMeleeAIController* MeleeAIController = Cast<AMeleeAIController>(Controller);
+    MeleeAIController->BrainComponent->StopLogic("Death");
+    
     GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
     GetMesh()->SetSimulatePhysics(true);
 }
