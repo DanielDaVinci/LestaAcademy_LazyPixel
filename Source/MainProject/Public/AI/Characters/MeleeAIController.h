@@ -9,7 +9,8 @@
 UCLASS()
 class MAINPROJECT_API AMeleeAIController : public AAIController
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
+    AMeleeAIController(const FObjectInitializer& ObjInit);
 
 public:
     void AttackPlayer();

@@ -5,6 +5,12 @@
 
 #include "AI/Characters/AIBaseCharacter.h"
 #include "AI/Characters/MeleeAICharacter.h"
+#include "Navigation/CrowdFollowingComponent.h"
+
+AMeleeAIController::AMeleeAIController(const FObjectInitializer& ObjInit)
+    : Super(ObjInit.SetDefaultSubobjectClass<UCrowdFollowingComponent>(TEXT("PathFollowingComponent")))
+{
+}
 
 void AMeleeAIController::AttackPlayer()
 {

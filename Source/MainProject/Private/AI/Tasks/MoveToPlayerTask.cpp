@@ -30,10 +30,11 @@ EBTNodeResult::Type UMoveToPlayerTask::ExecuteTask(UBehaviorTreeComponent& Owner
 
     const auto NavSys = UNavigationSystemV1::GetNavigationSystem(GetWorld());
 
-    FNavLocation Location;
-    NavSys->GetRandomReachablePointInRadius(PlayerPawn->GetActorLocation(), Threshold, Location);
+    //FNavLocation Location;
+    //NavSys->GetRandomReachablePointInRadius(PlayerPawn->GetActorLocation(), Threshold, Location);
 
-    Controller->MoveToLocation(Location.Location);
+    //Controller->MoveToLocation(Location.Location);
+    Controller->MoveToActor(PlayerPawn);
     
     UE_LOG(LogTemp, Display, TEXT("%f"), Distance)
     
