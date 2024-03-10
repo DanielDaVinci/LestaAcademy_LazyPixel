@@ -17,4 +17,7 @@ protected:
 
     virtual void OnMeleeStartAttackAnim() override;
     virtual void OnRangeAttackAnim() override;
+
+private:
+    virtual void SpawnAllWeapons() override;
 };

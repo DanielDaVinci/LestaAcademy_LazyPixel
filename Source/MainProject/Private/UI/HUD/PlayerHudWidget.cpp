@@ -37,7 +37,9 @@ void UPlayerHudWidget::OnHealthChanged(float DeltaHealth)
 
 void UPlayerHudWidget::OnPlayerDied()
 {
-    pLosePanel->SetVisibility(ESlateVisibility::Visible);
+    FTimerHandle deathTimer;
+    GetWorld()->GetTimerManager().SetTimer(
+        deathTimer, [this]() { pLosePanel->SetVisibility(ESlateVisibility::Visible); }, losePanelDelay, false);
 }
 
 ABaseCharacter* UPlayerHudWidget::GetOwningBaseCharacter() const

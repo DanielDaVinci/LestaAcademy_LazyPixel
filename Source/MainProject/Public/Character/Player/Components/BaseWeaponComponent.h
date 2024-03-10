@@ -69,7 +69,10 @@ T* UBaseWeaponComponent::FindWeapon(const TSubclassOf<T>& WeaponClass) const
 {
     for (const auto& weapon: weapons)
     {
-        if (weapon->IsA<T>())
+        if (!WeaponClass && weapon->IsA<T>())
+            return Cast<T>(weapon);
+
+        if (weapon->IsA(WeaponClass))
             return Cast<T>(weapon);
     }
 

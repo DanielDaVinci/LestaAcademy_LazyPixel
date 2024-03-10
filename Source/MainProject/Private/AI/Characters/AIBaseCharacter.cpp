@@ -34,6 +34,9 @@ void AAIBaseCharacter::PostInitializeComponents()
     Super::PostInitializeComponents();
 
     pHealthComponent->OnHealthChanged.AddUObject(this, &AAIBaseCharacter::PlayImpactAnim);
+
+    if (materialInstanses.Num())
+        GetMesh()->SetMaterial(0, materialInstanses[FMath::RandRange(0, materialInstanses.Num() - 1)]);
 }
 
 void AAIBaseCharacter::PlayImpactAnim(float Health) 
@@ -47,10 +50,4 @@ void AAIBaseCharacter::OnDeath()
     Super::OnDeath();
 
     Controller->UnPossess();
-    GetCharacterMovement()->DisableMovement();
-
-    GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECR_Ignore);
-
-    GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-    GetMesh()->SetSimulatePhysics(true);
 }

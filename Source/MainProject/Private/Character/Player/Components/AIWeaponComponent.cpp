@@ -11,6 +11,18 @@ void UAIWeaponComponent::BeginPlay()
     Super::BeginPlay();
 }
 
+void UAIWeaponComponent::SpawnAllWeapons() 
+{
+    if (!weaponData.Num()) return;
+
+    const auto& randData = weaponData[FMath::RandRange(0, weaponData.Num() - 1)];
+    const auto& weapon = SpawnWeapon(randData.WeaponClass);
+    if (!weapon) return;
+
+    AttachWeapon(weapon, randData.WeaponAttachPointName);
+    weapons.Add(weapon);
+}
+
 void UAIWeaponComponent::OnMeleeStartAttackAnim()
 {
     Super::OnMeleeStartAttackAnim();

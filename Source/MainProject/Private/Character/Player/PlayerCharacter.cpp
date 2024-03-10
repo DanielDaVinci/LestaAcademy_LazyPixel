@@ -9,6 +9,7 @@
 #include "Character/Player/Components/WeaponComponent.h"
 #include "Curves/CurveVector.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 APlayerCharacter::APlayerCharacter(const FObjectInitializer& ObjInit)
     : Super(ObjInit.SetDefaultSubobjectClass<UPlayerMovementComponent>(ACharacter::CharacterMovementComponentName).
@@ -96,9 +97,7 @@ void APlayerCharacter::OnDeath()
 {
     Super::OnDeath();
 
-    GetCharacterMovement()->DisableMovement();
-    GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-    GetMesh()->SetSimulatePhysics(true);
+    UGameplayStatics::SetGlobalTimeDilation(GetWorld(), deathTimeDilation);
 }
 
 ABasePlayerController* APlayerCharacter::GetPlayerController() const
