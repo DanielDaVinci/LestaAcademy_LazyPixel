@@ -5,32 +5,42 @@
 
 #include "Character/BaseCharacter.h"
 #include "Character/Player/Components/HealthComponent.h"
-#include "Components/ProgressBar.h"
+#include "Components/TextBlock.h"
 
 void UPropertyPanelWidget::NativeOnInitialized()
 {
     Super::NativeOnInitialized();
 
-    BindActions();
+    BindEvents();
 }
 
-void UPropertyPanelWidget::BindActions()
+void UPropertyPanelWidget::BindEvents()
 {
-    const auto pHealthComponent = GetHealthComponent();
-    if (!pHealthComponent)
-        return;
-
-    pHealthComponent->OnHealthChanged.AddUObject(this, &UPropertyPanelWidget::OnHealthChanged);
+    if (const auto pHealthComponent = GetHealthComponent())
+    {
+        pHealthComponent->OnHealthChanged.AddUObject(this, &UPropertyPanelWidget::OnHealthChanged);
+        // SetCurrentHealthText();
+    }
 }
 
 void UPropertyPanelWidget::OnHealthChanged(float DeltaHealth)
+{
+    SetCurrentHealthText();
+}
+
+void UPropertyPanelWidget::SetCurrentHealthText()
 {
     const auto pHealthComponent = GetHealthComponent();
     if (!pHealthComponent)
         return;
     
-    pHealthBar->SetPercent(pHealthComponent->GetPercentHealth());
+    pHealthText->SetText(FText::FromString(
+        FString::Printf(TEXT("%d / %d"),
+            int32(pHealthComponent->GetHealth()),
+            int32(pHealthComponent->GetMaxHealth()))
+   ));
 }
+
 
 ABaseCharacter* UPropertyPanelWidget::GetOwningBaseCharacter() const
 {

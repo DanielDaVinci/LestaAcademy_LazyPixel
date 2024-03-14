@@ -50,12 +50,3 @@ UHealthComponent* UPlayerHudWidget::GetHealthComponent() const
     const auto pCharacter = GetOwningBaseCharacter();
     return pCharacter ? pCharacter->GetHealthComponent() : nullptr;
 }
-
-bool UPlayerHudWidget::IsPlayerDead() const
-{
-    const auto pHealthComponent = GetHealthComponent();
-    if (!pHealthComponent)
-        return true;
-    
-    return pHealthComponent->IsDead();
-}

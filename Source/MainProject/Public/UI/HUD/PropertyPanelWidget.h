@@ -7,9 +7,10 @@
 #include "PropertyPanelWidget.generated.h"
 
 
+class UTextBlock;
+class UHealthWidget;
 class UHealthComponent;
 class ABaseCharacter;
-class UBulletPanelWidget;
 class UProgressBar;
 
 UCLASS()
@@ -19,21 +20,20 @@ class MAINPROJECT_API UPropertyPanelWidget : public UUserWidget
 
 protected:
     UPROPERTY(meta = (BindWidget))
-    UProgressBar* pHealthBar;
-
-    UPROPERTY(meta = (BindWidget))
     UProgressBar* pAbilityBar;
 
     UPROPERTY(meta = (BindWidget))
-    UBulletPanelWidget* pBulletPanel;
+    UTextBlock* pHealthText;
+
+    UPROPERTY(meta = (BindWidget))
+    UTextBlock* pBulletsText;
 
     virtual void NativeOnInitialized() override;
 
 private:
-    void BindActions();
-
-protected:
+    void BindEvents();
     void OnHealthChanged(float DeltaHealth);
+    void SetCurrentHealthText();
     
 protected:
     ABaseCharacter* GetOwningBaseCharacter() const;

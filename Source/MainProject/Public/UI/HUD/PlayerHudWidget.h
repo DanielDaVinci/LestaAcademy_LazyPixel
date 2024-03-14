@@ -19,18 +19,12 @@ class MAINPROJECT_API UPlayerHudWidget : public UUserWidget
 
 protected:
     UPROPERTY(meta = (BindWidget))
-    UPropertyPanelWidget* pPropertyPanel;
-    
-    UPROPERTY(meta = (BindWidget))
     ULosePanelWidget* pLosePanel;
     
     UPROPERTY(meta = (BindWidgetAnim), Transient)
     UWidgetAnimation* pDamageIndicatorAnimation;
     
     virtual void NativeOnInitialized() override;
-    
-    UFUNCTION(BlueprintCallable, Category = "UI")
-    bool IsPlayerDead() const;
 
 private:
     void BindActions();
