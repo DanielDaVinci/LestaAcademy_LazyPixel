@@ -6,6 +6,9 @@
 #include "GameFramework/Character.h"
 #include "BaseCharacter.generated.h"
 
+class UWeaponComponent;
+DECLARE_MULTICAST_DELEGATE(FOnKillEnemySignature)
+
 class UStateMachineComponent;
 class UBoxComponent;
 class UTextRenderComponent;
@@ -22,20 +25,21 @@ class MAINPROJECT_API ABaseCharacter : public ACharacter
 public:
     ABaseCharacter(const FObjectInitializer& ObjInit);
 
+    FOnKillEnemySignature OnKillEnemy;
+
+    bool IsDead() const;
     UHealthComponent* GetHealthComponent() const;
+    UBaseWeaponComponent* GetWeaponComponent() const;
 
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName = "AbilityComponent")
     UAbilityComponent* pAbilityComponent;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName = "WeaponComponent")
-    UBaseWeaponComponent* pWeaponComp;
+    UBaseWeaponComponent* pWeaponComponent;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName="HealthComponent")
     UHealthComponent* pHealthComponent;
-
-    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName="HealthTextComponent")
-    UTextRenderComponent* pHealthTextComponent;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName="StateMachineComponent")
     UStateMachineComponent* pStateMachineComponent;
@@ -47,10 +51,6 @@ protected:
 
 public:
     virtual void Tick(float DeltaTime) override;
-
-private:
-    UFUNCTION()
-    void CheckHealthValue(float Health);
 
 public:
     UStateMachineComponent* GetStateMachineComponent() const;

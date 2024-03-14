@@ -3,6 +3,7 @@
 
 #include "Weapon/MeleeWeapons/Sword.h"
 
+#include "Character/BaseCharacter.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
@@ -33,8 +34,7 @@ void ASword::OnMeleeWeaponOverlap(UPrimitiveComponent* OverlappedComponent, AAct
     if (alreadyDamagedActors.Contains(OtherActor))
         return;
 
-    OtherActor->TakeDamage(damage, FDamageEvent(), UGameplayStatics::GetPlayerController(GetWorld(), 0), this);
-    UE_LOG(LogSwordWeapon, Display, TEXT("Damage %.f to actor %s"), damage, *(OtherActor->GetName()));
+    GiveDamage(OtherActor);
     alreadyDamagedActors.Add(OtherActor);
 }
 

@@ -4,11 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "Character/Player/Components/BaseWeaponComponent.h"
+#include "Weapon/MeleeWeapons/Sword.h"
+#include "Weapon/RangeWeapons/Gun.h"
 #include "WeaponComponent.generated.h"
 
 class UStateMachineComponent;
 class ABaseWeapon;
-class ASword;
 class APlayerCharacter;
 class ABasePlayerController;
 class UPlayerMovementComponent;
@@ -23,7 +24,7 @@ protected:
 
 private:
     void BindInput();
-
+    
     // Animation and notifies
 protected:
     virtual void OnSubscribeToNotifies(const FAnimNotifyEvent& NotifyEvent) override;
@@ -33,6 +34,11 @@ private:
     void OnComboNotifyHandle(USkeletalMeshComponent* MeshComp);
 
     // Game logic / Attack
+
+    // Melee weapon
+public:
+    ASword* GetMeleeWeapon() const { return FindWeapon<ASword>(); }
+    
 protected:
     void MeleeAttack();
     void OnStartComboState(int32 ComboIndex);
@@ -42,6 +48,10 @@ private:
     int32 m_nextComboIndex = 0;
     
     void PlayMeleeWeaponComboAnim(ASword* Weapon, int32 ComboIndex) const;
+
+    // Range weapon
+public:
+    AGun* GetRangeWeapon() const { return FindWeapon<AGun>(); }
     
 protected:
     void RangeAttack();
@@ -60,6 +70,7 @@ protected:
 
 public:
     void PickUpWeapon(const TSubclassOf<ABaseWeapon>& WeaponClass);
+    
     APlayerCharacter* GetPlayerCharacter() const;
     ABasePlayerController* GetPlayerController() const;
     UPlayerMovementComponent* GetPlayerMovementComponent() const;

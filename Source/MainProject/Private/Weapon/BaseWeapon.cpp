@@ -3,6 +3,9 @@
 
 #include "Weapon/BaseWeapon.h"
 
+#include "Character/BaseCharacter.h"
+#include "Engine/DamageEvents.h"
+
 ABaseWeapon::ABaseWeapon()
 {
     PrimaryActorTick.bCanEverTick = false;
@@ -33,4 +36,13 @@ void ABaseWeapon::Detach()
     pWeaponMeshComponent->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
     pWeaponMeshComponent->SetSimulatePhysics(true);
     SetLifeSpan(5.0f);
+}
+
+void ABaseWeapon::GiveDamage(AActor* DamageTaker)
+{
+    const auto pOwningCharacter = Cast<ABaseCharacter>(GetOwner());
+    if (!pOwningCharacter || !pOwningCharacter->GetController())
+        return;
+    
+    DamageTaker->TakeDamage(damage, FDamageEvent(), pOwningCharacter->GetController(), this);
 }

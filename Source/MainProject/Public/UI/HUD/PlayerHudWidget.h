@@ -8,6 +8,7 @@
 #include "Components/ProgressBar.h"
 #include "PlayerHudWidget.generated.h"
 
+class UBulletPanelWidget;
 class UPropertyPanelWidget;
 class ULosePanelWidget;
 class ABaseCharacter;
@@ -20,6 +21,9 @@ class MAINPROJECT_API UPlayerHudWidget : public UUserWidget
 protected:
     UPROPERTY(meta = (BindWidget))
     UPropertyPanelWidget* pPropertyPanel;
+
+    UPROPERTY(meta = (BindWidget))
+    UBulletPanelWidget* pBulletPanel;
     
     UPROPERTY(meta = (BindWidget))
     ULosePanelWidget* pLosePanel;
@@ -28,16 +32,12 @@ protected:
     UWidgetAnimation* pDamageIndicatorAnimation;
     
     virtual void NativeOnInitialized() override;
-    
-    UFUNCTION(BlueprintCallable, Category = "UI")
-    bool IsPlayerDead() const;
 
 private:
     void BindActions();
     
 protected:
     void OnHealthChanged(float DeltaHealth);
-    void OnPlayerDied();
     
 protected:
     ABaseCharacter* GetOwningBaseCharacter() const;

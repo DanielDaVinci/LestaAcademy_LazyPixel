@@ -7,6 +7,7 @@
 #include "PropertyPanelWidget.generated.h"
 
 
+class UImage;
 class UHealthComponent;
 class ABaseCharacter;
 class UBulletPanelWidget;
@@ -19,18 +20,18 @@ class MAINPROJECT_API UPropertyPanelWidget : public UUserWidget
 
 protected:
     UPROPERTY(meta = (BindWidget))
+    UImage* pPlayerImage;
+    
+    UPROPERTY(meta = (BindWidget))
     UProgressBar* pHealthBar;
 
     UPROPERTY(meta = (BindWidget))
     UProgressBar* pAbilityBar;
 
-    UPROPERTY(meta = (BindWidget))
-    UBulletPanelWidget* pBulletPanel;
-
     virtual void NativeOnInitialized() override;
 
 private:
-    void BindActions();
+    void BindEvents();
 
 protected:
     void OnHealthChanged(float DeltaHealth);

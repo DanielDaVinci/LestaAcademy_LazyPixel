@@ -19,8 +19,7 @@ public:
     AProjectile();
 
     void SetShootDirection(const FVector& Direction) { m_shotDirection = Direction; }
-    bool IsInfinite() { return m_isInfiniteAmmo; }
-    void InitProperties(FProjectileProperties& projProperties);
+    void InitProperties(const FProjectileProperties& projProperties);
 
 protected:
     UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Weapon", DisplayName = "CollisionComponent")
@@ -41,5 +40,4 @@ private:
 
     FVector m_shotDirection;
     float m_damage;
-    bool m_isInfiniteAmmo;
 };

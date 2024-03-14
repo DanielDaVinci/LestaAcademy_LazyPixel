@@ -11,16 +11,15 @@ void UPropertyPanelWidget::NativeOnInitialized()
 {
     Super::NativeOnInitialized();
 
-    BindActions();
+    BindEvents();
 }
 
-void UPropertyPanelWidget::BindActions()
+void UPropertyPanelWidget::BindEvents()
 {
-    const auto pHealthComponent = GetHealthComponent();
-    if (!pHealthComponent)
-        return;
-
-    pHealthComponent->OnHealthChanged.AddUObject(this, &UPropertyPanelWidget::OnHealthChanged);
+    if (const auto pHealthComponent = GetHealthComponent())
+    {
+        pHealthComponent->OnHealthChanged.AddUObject(this, &UPropertyPanelWidget::OnHealthChanged);
+    }
 }
 
 void UPropertyPanelWidget::OnHealthChanged(float DeltaHealth)

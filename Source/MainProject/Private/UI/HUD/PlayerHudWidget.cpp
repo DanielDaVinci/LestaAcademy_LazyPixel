@@ -20,24 +20,14 @@ void UPlayerHudWidget::BindActions()
         return;
     
     pHealthComponent->OnHealthChanged.AddUObject(this, &UPlayerHudWidget::OnHealthChanged);
-    pHealthComponent->OnDied.AddUObject(this, &UPlayerHudWidget::OnPlayerDied);
 }
 
 void UPlayerHudWidget::OnHealthChanged(float DeltaHealth)
 {
-    const auto pHealthComponent = GetHealthComponent();
-    if (!pHealthComponent)
-        return;
-    
     if (!IsAnimationPlaying(pDamageIndicatorAnimation) && DeltaHealth < 0.0f)
     {
         PlayAnimation(pDamageIndicatorAnimation);
     }
-}
-
-void UPlayerHudWidget::OnPlayerDied()
-{
-    pLosePanel->SetVisibility(ESlateVisibility::Visible);
 }
 
 ABaseCharacter* UPlayerHudWidget::GetOwningBaseCharacter() const
@@ -49,13 +39,4 @@ UHealthComponent* UPlayerHudWidget::GetHealthComponent() const
 {
     const auto pCharacter = GetOwningBaseCharacter();
     return pCharacter ? pCharacter->GetHealthComponent() : nullptr;
-}
-
-bool UPlayerHudWidget::IsPlayerDead() const
-{
-    const auto pHealthComponent = GetHealthComponent();
-    if (!pHealthComponent)
-        return true;
-    
-    return pHealthComponent->IsDead();
 }

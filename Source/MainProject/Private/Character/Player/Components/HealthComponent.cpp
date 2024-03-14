@@ -3,6 +3,7 @@
 
 #include "Character/Player/Components/HealthComponent.h"
 
+#include "Character/BaseCharacter.h"
 #include "Character/Player/BasePlayerController.h"
 #include "GameFramework/Actor.h"
 #include "GameFramework/Character.h"
@@ -28,9 +29,18 @@ void UHealthComponent::BeginPlay()
 void UHealthComponent::OnTakeAnyDamage(AActor* DamageActor, float Damage, const UDamageType* DamageType,
         AController* InstigateBy, AActor* DamageCauser)
 {
-    if (Damage <= 0.0f || IsDead()) return;
+    if (Damage <= 0.0f || IsDead())
+        return;
 
     SetHealth(m_health - Damage);
+
+    if (IsDead())
+    {
+        if (const auto pCharacterCauser = Cast<ABaseCharacter>(DamageCauser))
+        {
+            pCharacterCauser->OnKillEnemy.Broadcast();
+        }
+    }
 }
 
 void UHealthComponent::SetHealth(float Health)
