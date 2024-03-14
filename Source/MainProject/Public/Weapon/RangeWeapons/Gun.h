@@ -19,16 +19,21 @@ class MAINPROJECT_API AGun : public ABaseWeapon
 
 public:
     void MakeShoot(const FVector& Point);
-    FName GetMuzzleSocketName() const { return muzzleSocketName; }
 
-    bool IsAmmoEmpty() const { return bullets <= 0; };
+    int32 GetBullets() const { return m_currentBullets; }
+    int32 GetMaxBullets() const { return maxBullets; }
+    FName GetMuzzleSocketName() const { return muzzleSocketName; }
+    bool IsAmmoEmpty() const { return m_currentBullets <= 0; }
 
     FOnEmptyAmmoSignature OnEmptyAmmo;
     FOnAmmoChangedSignature OnAmmoChanged;
 
 protected:
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Properties")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Properties|Gun")
     bool isInfiniteAmmo = false;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon Properties|Gun", meta = (ClampMin = "0"))
+    int32 maxBullets = 5;
     
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon Properties|Gun|Projectile")
     TSubclassOf<AProjectile> projectileClass;
@@ -39,9 +44,9 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon Properties|Gun|Projectile")
     FProjectileProperties projectileProperties;
 
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon Properties|Gun", meta = (ClampMin = "0"))
-    int32 bullets = 5;
+    virtual void BeginPlay() override;
 
 private:
+    int32 m_currentBullets;
     uint8 m_nProjTrailCol = 0;
 };

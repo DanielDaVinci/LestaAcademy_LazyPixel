@@ -4,7 +4,9 @@
 #include "..\..\..\Public\UI\HUD\PropertyPanelWidget.h"
 
 #include "Character/BaseCharacter.h"
+#include "Character/Player/PlayerCharacter.h"
 #include "Character/Player/Components/HealthComponent.h"
+#include "Character/Player/Components/WeaponComponent.h"
 #include "Components/TextBlock.h"
 
 void UPropertyPanelWidget::NativeOnInitialized()
@@ -19,7 +21,24 @@ void UPropertyPanelWidget::BindEvents()
     if (const auto pHealthComponent = GetHealthComponent())
     {
         pHealthComponent->OnHealthChanged.AddUObject(this, &UPropertyPanelWidget::OnHealthChanged);
-        // SetCurrentHealthText();
+        SetCurrentHealthText();
+    }
+
+    if (const auto pWeaponComponent = GetWeaponComponent())
+    {
+        pWeaponComponent->OnAfterSpawnAllWeapons.AddLambda([this]()
+        {
+            if (const auto pRangeWeapon = GetRangeWeapon())
+            {
+                pRangeWeapon->OnAmmoChanged.AddUObject(this, &UPropertyPanelWidget::OnRangeAmmoChanged);
+        
+                pBulletsText->SetText(FText::FromString(
+                    FString::Printf(TEXT("%d / %d"),
+                        pRangeWeapon->GetMaxBullets(),
+                        pRangeWeapon->GetMaxBullets())
+               ));
+            }
+        });
     }
 }
 
@@ -41,14 +60,39 @@ void UPropertyPanelWidget::SetCurrentHealthText()
    ));
 }
 
-
-ABaseCharacter* UPropertyPanelWidget::GetOwningBaseCharacter() const
+void UPropertyPanelWidget::OnRangeAmmoChanged(int32 RemainingBullets)
 {
-    return Cast<ABaseCharacter>(GetOwningPlayerPawn());
+    const auto pRangeWeapon = GetRangeWeapon();
+    if (!pRangeWeapon)
+        return;
+
+    pBulletsText->SetText(FText::FromString(
+        FString::Printf(TEXT("%d / %d"),
+            RemainingBullets,
+            pRangeWeapon->GetMaxBullets())
+   ));
+}
+
+
+APlayerCharacter* UPropertyPanelWidget::GetOwningPlayerCharacter() const
+{
+    return Cast<APlayerCharacter>(GetOwningPlayerPawn());
 }
 
 UHealthComponent* UPropertyPanelWidget::GetHealthComponent() const
 {
-    const auto pCharacter = GetOwningBaseCharacter();
+    const auto pCharacter = GetOwningPlayerCharacter();
     return pCharacter ? pCharacter->GetHealthComponent() : nullptr;
+}
+
+UWeaponComponent* UPropertyPanelWidget::GetWeaponComponent() const
+{
+    const auto pCharacter = GetOwningPlayerCharacter();
+    return pCharacter ? Cast<UWeaponComponent>(pCharacter->GetWeaponComponent()) : nullptr;
+}
+
+AGun* UPropertyPanelWidget::GetRangeWeapon() const
+{
+    const auto pWeaponComponent = GetWeaponComponent();
+    return pWeaponComponent ? pWeaponComponent->GetRangeWeapon() : nullptr;
 }

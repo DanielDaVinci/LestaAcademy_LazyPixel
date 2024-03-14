@@ -68,3 +68,8 @@ UStateMachineComponent* ABaseCharacter::GetStateMachineComponent() const
 {
     return pStateMachineComponent;
 }
+
+UBaseWeaponComponent* ABaseCharacter::GetBaseWeaponComponent() const
+{
+    return pWeaponComponent;
+}

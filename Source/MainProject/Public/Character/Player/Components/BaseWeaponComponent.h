@@ -8,6 +8,8 @@
 #include "Weapon/BaseWeapon.h"
 #include "BaseWeaponComponent.generated.h"
 
+DECLARE_MULTICAST_DELEGATE(FOnAfterSpawnAllWeaponsSignature)
+
 class ABaseWeapon;
 class AProjectile;
 
@@ -18,6 +20,8 @@ class MAINPROJECT_API UBaseWeaponComponent : public UActorComponent
 
 public:	
 	UBaseWeaponComponent();
+
+    FOnAfterSpawnAllWeaponsSignature OnAfterSpawnAllWeapons;
 
     void DisableAllWeaponsCollision();
 
@@ -41,7 +45,10 @@ protected:
 
 public:
     template<typename T>
-    T* FindWeapon(const TSubclassOf<T>& WeaponClass = nullptr) const;
+    T* FindWeapon(const TSubclassOf<T>& WeaponClass) const;
+
+    template<class T>
+    T* FindWeapon() const;
     
     // Animations and notifies
 private:
@@ -66,7 +73,21 @@ protected:
 };
 
 template <typename T>
-T* UBaseWeaponComponent::FindWeapon(const TSubclassOf<T>& WeaponClass) const
+FORCEINLINE T* UBaseWeaponComponent::FindWeapon(const TSubclassOf<T>& WeaponClass) const
+{
+    for (const auto& weapon: weapons)
+    {
+        if (weapon->IsA(WeaponClass))
+        {
+            return Cast<T>(weapon);
+        }
+    }
+
+    return nullptr;
+}
+
+template <class T>
+T* UBaseWeaponComponent::FindWeapon() const
 {
     for (const auto& weapon: weapons)
     {

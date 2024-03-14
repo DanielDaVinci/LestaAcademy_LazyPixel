@@ -10,7 +10,6 @@
 
 class UStateMachineComponent;
 class ABaseWeapon;
-class ASword;
 class APlayerCharacter;
 class ABasePlayerController;
 class UPlayerMovementComponent;

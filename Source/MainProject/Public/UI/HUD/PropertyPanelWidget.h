@@ -7,10 +7,12 @@
 #include "PropertyPanelWidget.generated.h"
 
 
+class AGun;
+class APlayerCharacter;
+class UWeaponComponent;
 class UTextBlock;
 class UHealthWidget;
 class UHealthComponent;
-class ABaseCharacter;
 class UBulletPanelWidget;
 class UProgressBar;
 
@@ -37,8 +39,12 @@ private:
 protected:
     void OnHealthChanged(float DeltaHealth);
     void SetCurrentHealthText();
+
+    void OnRangeAmmoChanged(int32 RemainingBullets);
     
 protected:
-    ABaseCharacter* GetOwningBaseCharacter() const;
+    APlayerCharacter* GetOwningPlayerCharacter() const;
     UHealthComponent* GetHealthComponent() const;
+    UWeaponComponent* GetWeaponComponent() const;
+    AGun* GetRangeWeapon() const; 
 };

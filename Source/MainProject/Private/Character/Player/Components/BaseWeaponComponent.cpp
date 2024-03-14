@@ -42,6 +42,8 @@ void UBaseWeaponComponent::SpawnAllWeapons()
         AttachWeapon(weapon, data.WeaponAttachPointName);
         weapons.Add(weapon);
     }
+
+    OnAfterSpawnAllWeapons.Broadcast();
 }
 
 ABaseWeapon* UBaseWeaponComponent::SpawnWeapon(const TSubclassOf<ABaseWeapon>& WeaponClass) const
