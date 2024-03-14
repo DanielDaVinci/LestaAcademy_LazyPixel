@@ -7,6 +7,9 @@
 
 void AGun::MakeShoot(const FVector& Point)
 {
+    if (IsAmmoEmpty())
+        return;
+    
     FVector shootDirection = Point - GetActorLocation();
     shootDirection.Z = 0.0f;
     shootDirection.Normalize();
@@ -23,7 +26,12 @@ void AGun::MakeShoot(const FVector& Point)
     projectile->InitProperties(projectileProperties);
     projectile->FinishSpawning(spawnTransform);
     
-    projectile->IsInfinite() ? bullets : bullets--;   
-    if (bullets <= 0)
-        OnEmptyGun.Broadcast();
+    if (!isInfiniteAmmo)
+    {
+        bullets--;
+        OnAmmoChanged.Broadcast(bullets);
+        
+        if (IsAmmoEmpty())
+            OnEmptyAmmo.Broadcast();
+    }
 }

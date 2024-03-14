@@ -31,7 +31,6 @@ private:
     
 protected:
     void OnHealthChanged(float DeltaHealth);
-    void OnPlayerDied();
     
 protected:
     ABaseCharacter* GetOwningBaseCharacter() const;

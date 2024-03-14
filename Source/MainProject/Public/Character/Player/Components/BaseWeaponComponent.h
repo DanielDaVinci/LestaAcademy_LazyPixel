@@ -24,7 +24,7 @@ public:
 protected:
     UPROPERTY(EditDefaultsOnly, Category = "Weapon")
     TArray<FWeaponData> weaponData;
-
+    
     virtual void BeginPlay() override;
 
     // Weapons
@@ -38,7 +38,8 @@ protected:
 protected:
     UPROPERTY()
     TArray<ABaseWeapon*> weapons;
-    
+
+public:
     template<typename T>
     T* FindWeapon(const TSubclassOf<T>& WeaponClass = nullptr) const;
     
@@ -70,7 +71,9 @@ T* UBaseWeaponComponent::FindWeapon(const TSubclassOf<T>& WeaponClass) const
     for (const auto& weapon: weapons)
     {
         if (weapon->IsA<T>())
+        {
             return Cast<T>(weapon);
+        }
     }
 
     return nullptr;

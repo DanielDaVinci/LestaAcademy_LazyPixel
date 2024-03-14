@@ -11,6 +11,7 @@ class UTextBlock;
 class UHealthWidget;
 class UHealthComponent;
 class ABaseCharacter;
+class UBulletPanelWidget;
 class UProgressBar;
 
 UCLASS()
@@ -32,6 +33,8 @@ protected:
 
 private:
     void BindEvents();
+
+protected:
     void OnHealthChanged(float DeltaHealth);
     void SetCurrentHealthText();
     

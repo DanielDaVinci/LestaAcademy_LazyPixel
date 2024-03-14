@@ -6,6 +6,8 @@
 #include "Blueprint/UserWidget.h"
 #include "LosePanelWidget.generated.h"
 
+class UHealthComponent;
+class ABaseCharacter;
 class UButton;
 
 UCLASS()
@@ -24,6 +26,7 @@ protected:
 
 private:
     void BindActions();
+    void BindEvents();
 
 protected:
     UFUNCTION()
@@ -31,4 +34,10 @@ protected:
 
     UFUNCTION()
     void OnMenuButtonClicked();
+
+    void OnPlayerDied();
+
+protected:
+    ABaseCharacter* GetOwningPlayerCharacter() const;
+    UHealthComponent* GetHealthComponent() const;
 };

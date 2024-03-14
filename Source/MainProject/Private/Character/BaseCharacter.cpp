@@ -18,13 +18,15 @@ ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjInit)
     pAbilityComponent = CreateDefaultSubobject<UAbilityComponent>("AbilityComponent");
     pAbilityComponent->bWantsInitializeComponent = true;
     
-    pWeaponComp = CreateDefaultSubobject<UBaseWeaponComponent>("WeaponComponent");
+    pWeaponComponent = CreateDefaultSubobject<UBaseWeaponComponent>("WeaponComponent");
     pHealthComponent = CreateDefaultSubobject<UHealthComponent>("HealthComponent");
 
-    pHealthTextComponent = CreateDefaultSubobject<UTextRenderComponent>("HealthTextComponent");
-    pHealthTextComponent->SetupAttachment(GetRootComponent());
-
     pStateMachineComponent = CreateDefaultSubobject<UStateMachineComponent>("StateMachineComponent");
+}
+
+bool ABaseCharacter::IsDead() const
+{
+    return pHealthComponent->IsDead();
 }
 
 UHealthComponent* ABaseCharacter::GetHealthComponent() const
@@ -32,11 +34,15 @@ UHealthComponent* ABaseCharacter::GetHealthComponent() const
     return pHealthComponent;
 }
 
+UBaseWeaponComponent* ABaseCharacter::GetWeaponComponent() const
+{
+    return pWeaponComponent;
+}
+
 void ABaseCharacter::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
-
-    pHealthComponent->OnHealthChanged.AddUObject(this, &ABaseCharacter::CheckHealthValue);
+    
     pHealthComponent->OnDied.AddUObject(this, &ABaseCharacter::OnDeath);
 }
 
@@ -45,13 +51,11 @@ void ABaseCharacter::BeginPlay()
      Super::BeginPlay();
  
      check(pHealthComponent);
-     check(pHealthTextComponent);
- 
  }
 
 void ABaseCharacter::OnDeath()
 {
-    pWeaponComp->DisableAllWeaponsCollision();
+    pWeaponComponent->DisableAllWeaponsCollision();
 }
 
 void ABaseCharacter::Tick(float DeltaTime)
@@ -59,11 +63,6 @@ void ABaseCharacter::Tick(float DeltaTime)
     Super::Tick(DeltaTime);
     
  }
-
-void ABaseCharacter::CheckHealthValue(float Health)
-{
-    pHealthTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
-}
 
 UStateMachineComponent* ABaseCharacter::GetStateMachineComponent() const
 {

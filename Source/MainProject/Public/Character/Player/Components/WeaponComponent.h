@@ -10,6 +10,7 @@
 
 class UStateMachineComponent;
 class ABaseWeapon;
+class ASword;
 class APlayerCharacter;
 class ABasePlayerController;
 class UPlayerMovementComponent;
@@ -24,7 +25,7 @@ protected:
 
 private:
     void BindInput();
-
+    
     // Animation and notifies
 protected:
     virtual void OnSubscribeToNotifies(const FAnimNotifyEvent& NotifyEvent) override;
@@ -32,6 +33,8 @@ protected:
 private:
     void SubscribeOnComboNotify(const FAnimNotifyEvent& NotifyEvent);
     void OnComboNotifyHandle(USkeletalMeshComponent* MeshComp);
+
+    // Game logic / Attack
 
     // Melee weapon
 public:
@@ -68,6 +71,7 @@ protected:
 
 public:
     void PickUpWeapon(const TSubclassOf<ABaseWeapon>& WeaponClass);
+    
     APlayerCharacter* GetPlayerCharacter() const;
     ABasePlayerController* GetPlayerController() const;
     UPlayerMovementComponent* GetPlayerMovementComponent() const;

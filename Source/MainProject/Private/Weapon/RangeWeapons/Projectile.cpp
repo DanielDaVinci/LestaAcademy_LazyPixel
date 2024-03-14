@@ -21,7 +21,7 @@ AProjectile::AProjectile()
     pMovementComponent->ProjectileGravityScale = 0.f;
 }
 
-void AProjectile::InitProperties(FProjectileProperties& projProperties) 
+void AProjectile::InitProperties(const FProjectileProperties& projProperties) 
 {
     m_damage = projProperties.damage;
     trailColor = projProperties.trailColor;

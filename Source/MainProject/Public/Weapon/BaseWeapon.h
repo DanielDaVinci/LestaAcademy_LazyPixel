@@ -33,7 +33,8 @@ protected:
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components", DisplayName="WeaponMeshComponent")
     USkeletalMeshComponent* pWeaponMeshComponent;
-    
+
+protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon Properties", meta=(ClampMin="0.0"))
     float damage = 100.0f;
 
@@ -45,4 +46,7 @@ protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon Properties|Animation")
     UAnimMontage* attackAnimation;
+
+protected:
+    void GiveDamage(AActor* DamageTaker);
 };
