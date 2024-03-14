@@ -23,9 +23,6 @@ protected:
     
     UPROPERTY(meta = (BindWidgetAnim), Transient)
     UWidgetAnimation* pDamageIndicatorAnimation;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Lose Panel Delay")
-    float losePanelDelay = 1.f;
 
     virtual void NativeOnInitialized() override;
 

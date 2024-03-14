@@ -22,6 +22,9 @@ protected:
     UPROPERTY(meta = (BindWidget))
     UButton* pMenuButton;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Lose Panel Delay")
+    float losePanelDelay = 1.f;
+
     virtual void NativeOnInitialized() override;
 
 private:

@@ -49,7 +49,11 @@ void ULosePanelWidget::OnMenuButtonClicked()
 
 void ULosePanelWidget::OnPlayerDied()
 {
-    SetVisibility(ESlateVisibility::Visible);
+    FTimerHandle deathTimer;
+    GetWorld()->GetTimerManager().SetTimer(deathTimer, [this]()
+    {
+        SetVisibility(ESlateVisibility::Visible);
+    }, losePanelDelay, false);
 }
 
 ABaseCharacter* ULosePanelWidget::GetOwningPlayerCharacter() const
