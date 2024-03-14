@@ -26,6 +26,9 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ImpactAnim")
     TArray<UAnimMontage*> impactAnimations;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Material Instances")
+    TArray<UMaterialInstance*> materialInstanses;
+
 protected:
     virtual void BeginPlay() override;
 

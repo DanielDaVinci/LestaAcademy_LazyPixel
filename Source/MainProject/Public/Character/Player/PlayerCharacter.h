@@ -44,6 +44,9 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera|Movement Interpolation")
     float interpolationFrequency = 0.01f;
     
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Death Slow Motion")
+    float deathTimeDilation = 0.3f;
+
     void OnMouseMove(FVector2D MouseVector);
     virtual void OnDeath() override;
     

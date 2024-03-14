@@ -30,6 +30,13 @@ void UPlayerHudWidget::OnHealthChanged(float DeltaHealth)
     }
 }
 
+// void UPlayerHudWidget::OnPlayerDied()
+// {
+//     FTimerHandle deathTimer;
+//     GetWorld()->GetTimerManager().SetTimer(
+//         deathTimer, [this]() { pLosePanel->SetVisibility(ESlateVisibility::Visible); }, losePanelDelay, false);
+// }
+
 ABaseCharacter* UPlayerHudWidget::GetOwningBaseCharacter() const
 {
     return Cast<ABaseCharacter>(GetOwningPlayerPawn());

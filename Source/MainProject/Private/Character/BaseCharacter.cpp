@@ -6,8 +6,8 @@
 #include "Character/Player/Components/HealthComponent.h"
 #include "Character/Player/Components/BaseWeaponComponent.h"
 #include "Character/Player/Components/StateMachineComponent.h"
-#include "Components/BoxComponent.h"
-#include "Components/TextRenderComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 
 ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjInit)
@@ -55,6 +55,12 @@ void ABaseCharacter::BeginPlay()
 
 void ABaseCharacter::OnDeath()
 {
+    pWeaponComponent->DisableAllWeaponsCollision();
+    GetCharacterMovement()->DisableMovement();
+    GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECR_Ignore);
+    GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+    GetMesh()->SetSimulatePhysics(true);
+
     pWeaponComponent->DisableAllWeaponsCollision();
 }
 
