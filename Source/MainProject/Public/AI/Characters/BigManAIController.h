@@ -3,17 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AIController.h"
+#include "BaseAIController.h"
 #include "BigManAIController.generated.h"
 
-/**
- * 
- */
 UCLASS()
-class MAINPROJECT_API ABigManAIController : public AAIController
+class MAINPROJECT_API ABigManAIController : public ABaseAIController
 {
 	GENERATED_BODY()
-
-protected:
-    virtual void OnPossess(APawn* InPawn) override;
 };

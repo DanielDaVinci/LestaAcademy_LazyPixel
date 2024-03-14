@@ -12,4 +12,10 @@ UCLASS()
 class MAINPROJECT_API AMeleeAICharacter : public AAIBaseCharacter
 {
     GENERATED_BODY()
+
+public:
+    AMeleeAICharacter(const FObjectInitializer& ObjInit);
+
+protected:
+    virtual void OnDeath() override;
 };

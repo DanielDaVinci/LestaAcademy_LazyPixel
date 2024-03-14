@@ -27,16 +27,14 @@ public:
     TArray<UAnimMontage*> impactAnimations;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Material Instances")
-    TArray<UMaterialInstance*> materialInstanses;
+    TArray<UMaterialInstance*> materialInstances;
 
 protected:
-    virtual void BeginPlay() override;
-
     virtual void PostInitializeComponents() override;
-
     virtual void OnDeath() override;
 
 private:
-    UFUNCTION()
-    void PlayImpactAnim(float Health);
+    void PlayImpactAnim(float DeltaHealth);
+    void SetRandomMaterial();
+    void EnableRagdoll() const;
 };

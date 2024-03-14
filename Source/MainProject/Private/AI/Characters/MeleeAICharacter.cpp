@@ -12,25 +12,14 @@ AMeleeAICharacter::AMeleeAICharacter(const FObjectInitializer& ObjInit)
     : Super(ObjInit)
 {
     AIControllerClass = AMeleeAIController::StaticClass();
-    bUseControllerRotationYaw = false;
-
-    if (GetCharacterMovement())
-    {
-        GetCharacterMovement()->bUseControllerDesiredRotation = true;
-    }
 }
 
 void AMeleeAICharacter::OnDeath()
 {
     Super::OnDeath();
 
-    GetCharacterMovement()->DisableMovement();
+    // GetCharacterMovement()->DisableMovement();
 
-    GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECR_Ignore);
-
-    const AMeleeAIController* MeleeAIController = Cast<AMeleeAIController>(Controller);
-    MeleeAIController->BrainComponent->StopLogic("Death");
-    
-    GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-    GetMesh()->SetSimulatePhysics(true);
+    // const AMeleeAIController* MeleeAIController = Cast<AMeleeAIController>(Controller);
+    // MeleeAIController->BrainComponent->StopLogic("Death");
 }

@@ -3,18 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AIController.h"
+#include "BaseAIController.h"
 #include "MeleeAIController.generated.h"
 
 UCLASS()
-class MAINPROJECT_API AMeleeAIController : public AAIController
+class MAINPROJECT_API AMeleeAIController : public ABaseAIController
 {
     GENERATED_BODY()
-    AMeleeAIController(const FObjectInitializer& ObjInit);
-
-public:
-    void AttackPlayer();
-
-protected:
-    virtual void OnPossess(APawn* InPawn) override;
 };

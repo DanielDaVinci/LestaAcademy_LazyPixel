@@ -10,4 +10,8 @@ UCLASS()
 class MAINPROJECT_API ABigManAICharacter : public AAIBaseCharacter
 {
 	GENERATED_BODY()
+
+public:
+    ABigManAICharacter(const FObjectInitializer& ObjInit);
+    
 };
