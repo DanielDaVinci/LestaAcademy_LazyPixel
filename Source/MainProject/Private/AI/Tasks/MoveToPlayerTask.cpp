@@ -28,13 +28,16 @@ EBTNodeResult::Type UMoveToPlayerTask::ExecuteTask(UBehaviorTreeComponent& Owner
     Blackboard->SetValueAsFloat(DistanceKey.SelectedKeyName, Distance);
     Blackboard->SetValueAsObject(PlayerKey.SelectedKeyName, PlayerPawn);
 
-    Controller->MoveToActor(PlayerPawn);
+    const auto NavSys = UNavigationSystemV1::GetNavigationSystem(GetWorld());
 
+    //FNavLocation Location;
+    //NavSys->GetRandomReachablePointInRadius(PlayerPawn->GetActorLocation(), Threshold, Location);
+
+    //Controller->MoveToLocation(Location.Location);
+    Controller->MoveToActor(PlayerPawn);
+    
     UE_LOG(LogTemp, Display, TEXT("%f"), Distance)
     
-    if (Distance < Threshold)
-        return EBTNodeResult::Failed;
-
     return EBTNodeResult::Succeeded;
 }
 
