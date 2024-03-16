@@ -72,16 +72,11 @@ void UHealthWidget::SetHealth(float Health, float OneCellHealth)
     if (!pHealthBox)
         return;
 
-    const int32 fullCellsCount = int32(Health / OneCellHealth);
-    for (SIZE_T i = 0; i < fullCellsCount; i++)
+    for (SIZE_T i = 0; i < m_healthCells.Num(); i++)
     {
-        if (m_healthCells.IsValidIndex(i))
-            m_healthCells[i]->SetHealthPercent(1.0f);
-    }
-
-    if (m_healthCells.IsValidIndex(fullCellsCount))
-    {
-        m_healthCells[fullCellsCount]->SetHealthPercent(Health / OneCellHealth - fullCellsCount);
+        m_healthCells[i]->SetHealthPercent(FMath::Clamp(
+            Health / OneCellHealth - i,
+            0.0f, 1.0f));
     }
 }
 
