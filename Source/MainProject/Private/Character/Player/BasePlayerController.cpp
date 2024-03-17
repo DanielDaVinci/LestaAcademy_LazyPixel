@@ -76,7 +76,6 @@ void ABasePlayerController::HandleMeleeAttack()
 
 void ABasePlayerController::HandleRangeAttack()
 {
-    GetWorldPointUnderMouse();
     OnRangeAttack.Broadcast();
 }
 
