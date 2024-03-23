@@ -43,7 +43,7 @@ void UBaseWeaponComponent::SpawnAllWeapons()
         weapons.Add(weapon);
     }
 
-    OnAfterSpawnAllWeapons.Broadcast();
+    //OnAfterSpawnAllWeapons.Broadcast();
 }
 
 ABaseWeapon* UBaseWeaponComponent::SpawnWeapon(const TSubclassOf<ABaseWeapon>& WeaponClass) const

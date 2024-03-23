@@ -10,6 +10,7 @@
 #include "Character/Player/PlayerCharacter.h"
 #include "Kismet/GameplayStatics.h"
 #include "Navigation/PathFollowingComponent.h"
+#include "MainProjectCoreTypes.h"
 
 URangeEnemyAttackTask::URangeEnemyAttackTask()
 {
@@ -37,6 +38,7 @@ EBTNodeResult::Type URangeEnemyAttackTask::ExecuteTask(UBehaviorTreeComponent& O
         NavSys->GetRandomReachablePointInRadius(PlayerPawn->GetActorLocation(), 200, Location);
         Blackboard->SetValueAsVector(LocationKey.SelectedKeyName, Location.Location);
         Controller->MoveTo(Location.Location);
+        return EBTNodeResult::Failed;
     }
     else
     {
@@ -52,13 +54,15 @@ bool URangeEnemyAttackTask::CheckObstacles(UBehaviorTreeComponent& OwnerComp)
     if (!aiCharacter)
         return false;
 
-    FVector start = aiCharacter->GetMesh()->GetSocketLocation("lhWeaponSocket");
+    FVector start = aiCharacter->GetMesh()->GetSocketLocation("lhAimSocket");
     FVector forward = aiCharacter->GetActorForwardVector();
-    start = FVector(start.X + (forward.X * 100), start.Y + (forward.Y * 100), start.Z + (forward.Z * 100));
+    //start = FVector(start.X + (forward.X * 100), start.Y + (forward.Y * 100), start.Z + (forward.Z * 100));
     FVector end = start + forward * 1000;
     FHitResult hitResult;
+    FCollisionResponseParams responseParams;
+    responseParams.CollisionResponse.SetResponse(ECC_Enemy, ECR_Ignore);
 
-    bool actorHit = GetWorld()->LineTraceSingleByChannel(hitResult, start, end, ECC_OverlapAll_Deprecated, FCollisionQueryParams(), FCollisionResponseParams());
+    bool actorHit = GetWorld()->LineTraceSingleByChannel(hitResult, start, end, ECC_Enemy, FCollisionQueryParams(), responseParams);
     //DrawDebugLine(GetWorld(), start, end, FColor::Red, false, 2, 0, 5);
 
     if (actorHit && hitResult.GetActor()->GetClass()->IsChildOf(APlayerCharacter::StaticClass()))

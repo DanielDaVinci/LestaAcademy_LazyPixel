@@ -16,7 +16,13 @@ void UWeaponComponent::BeginPlay()
     Super::BeginPlay();
 
     BindInput();
-    SubscribeOnDropRangeWeapon();
+
+    if (const auto pRangeWeapon = FindWeapon<AGun>())
+    {
+        DropWeapon(pRangeWeapon->StaticClass());
+        pRangeWeapon->Destroy();
+    }
+    //SubscribeOnDropRangeWeapon();
 }
 
 void UWeaponComponent::BindInput()
@@ -61,6 +67,9 @@ void UWeaponComponent::MeleeAttack()
 
     const auto pStateMachine = GetPlayerCharacter()->GetStateMachineComponent();
     if (!pStateMachine)
+        return;
+
+    if (pStateMachine->GetCurrentState().Priority >= EStatePriority::Medium)
         return;
 
     const auto comboInfo = pMeleeWeapon->GetComboInfo();
@@ -180,7 +189,7 @@ void UWeaponComponent::RangeAttack()
 
     FState rangeState(
         "RangeState",
-        pRangeWeapon->GetAttackMontage()->GetSectionLength(0),
+        pRangeWeapon->GetAttackMontage()->GetSectionLength(0) / pRangeWeapon->GetAttackMontage()->RateScale,
         EStatePriority::Medium
     );
 
@@ -246,6 +255,7 @@ void UWeaponComponent::PickUpWeapon(const TSubclassOf<ABaseWeapon>& WeaponClass)
 
             AttachWeapon(weapon, data.WeaponAttachPointName);
             weapons.Add(weapon);
+            OnAfterSpawnAllWeapons.Broadcast();
             SubscribeOnDropRangeWeapon();
         }
     }
