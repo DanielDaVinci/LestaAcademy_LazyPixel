@@ -8,6 +8,7 @@
 #include "AIBaseCharacter.generated.h"
 
 class ARoom;
+class UNiagaraSystem;
 
 UCLASS()
 class MAINPROJECT_API AAIBaseCharacter : public ABaseCharacter
@@ -29,12 +30,16 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Material Instances")
     TArray<UMaterialInstance*> materialInstances;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VFX")
+    UNiagaraSystem* impactEffect;
+
 protected:
     virtual void PostInitializeComponents() override;
     virtual void OnDeath() override;
 
 private:
     void PlayImpactAnim(float DeltaHealth);
+    void PlayImpactFX(float DeltaHealth);
     void SetRandomMaterial();
     void EnableRagdoll() const;
 };

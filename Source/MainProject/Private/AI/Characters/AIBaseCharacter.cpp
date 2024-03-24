@@ -11,6 +11,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "NiagaraFunctionLibrary.h"
 
 AAIBaseCharacter::AAIBaseCharacter(const FObjectInitializer& ObjInit)
     : Super(ObjInit.SetDefaultSubobjectClass<UAIWeaponComponent>("WeaponComponent"))
@@ -30,6 +31,7 @@ void AAIBaseCharacter::PostInitializeComponents()
     Super::PostInitializeComponents();
 
     pHealthComponent->OnHealthChanged.AddUObject(this, &AAIBaseCharacter::PlayImpactAnim);
+    pHealthComponent->OnHealthChanged.AddUObject(this, &AAIBaseCharacter::PlayImpactFX);
     SetRandomMaterial();
 }
 
@@ -47,6 +49,11 @@ void AAIBaseCharacter::PlayImpactAnim(float DeltaHealth)
 {
     if (impactAnimations.Num())
         PlayAnimMontage(impactAnimations[FMath::RandRange(0, impactAnimations.Num() - 1)]);
+}
+
+void AAIBaseCharacter::PlayImpactFX(float DeltaHealth) 
+{
+    UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), impactEffect, this->GetActorLocation(), this->GetActorRotation());
 }
 
 void AAIBaseCharacter::SetRandomMaterial()
