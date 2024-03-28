@@ -7,6 +7,9 @@
 #include "DashAbility.h"
 #include "StrongAttackAbility.generated.h"
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnAbilityChargeChangedSignature, float)
+
+class UWeaponComponent;
 class ABasePlayerController;
 class UPlayerMovementComponent;
 class ACollisionCube;
@@ -17,7 +20,19 @@ class MAINPROJECT_API UStrongAttackAbility : public UActiveAbility
 {
     GENERATED_BODY()
 
+public:
+    FOnAbilityChargeChangedSignature OnAbilityChargeChanged;
+    
+    float GetMaxAbilityCharge() const { return needMaxAbilityCharge; }
+    float GetCurrentAbilityCharge() const { return m_abilityCharge; }
+
 protected:
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Strong Attack")
+    float needMaxAbilityCharge = 100.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Strong Attack")
+    float oneHitAbilityCharge = 10.0f;
+    
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Strong Attack")
     float abilityDamage = 100.0f;
 
@@ -52,6 +67,16 @@ private:
     void SpawnCubeCollision();
 
 protected:
+    void BindEvents();
+    
+private:
+    float m_abilityCharge;
+    
+    void OnMeleeAttackHit();
+    void SetAbilityCharge(float ChargeAmount);
+    void AddAbilityCharge(float ChargeAmount);
+
+protected:
     virtual bool NativeActivate() override;
     
     void OnPreparePartStartState();
@@ -74,4 +99,5 @@ protected:
     ABasePlayerController* GetBasePlayerController() const;
     UPlayerMovementComponent* GetPlayerMovementComponent() const;
     UStateMachineComponent* GetStateMachineComponent() const;
+    UWeaponComponent* GetWeaponComponent() const;
 };

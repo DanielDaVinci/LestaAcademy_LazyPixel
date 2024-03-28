@@ -8,6 +8,8 @@
 #include "Weapon/RangeWeapons/Gun.h"
 #include "WeaponComponent.generated.h"
 
+DECLARE_MULTICAST_DELEGATE(FOnMeleeAttackHasHitSignature)
+
 class UStateMachineComponent;
 class ABaseWeapon;
 class APlayerCharacter;
@@ -24,6 +26,7 @@ protected:
 
 private:
     void BindInput();
+    void BindEvents();
     
     // Animation and notifies
 protected:
@@ -37,6 +40,8 @@ private:
 
     // Melee weapon
 public:
+    FOnMeleeAttackHasHitSignature OnMeleeAttackHasHit;
+    
     ASword* GetMeleeWeapon() const { return FindWeapon<ASword>(); }
     
 protected:

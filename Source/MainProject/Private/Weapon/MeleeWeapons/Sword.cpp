@@ -34,6 +34,11 @@ void ASword::OnMeleeWeaponOverlap(UPrimitiveComponent* OverlappedComponent, AAct
     if (alreadyDamagedActors.Contains(OtherActor))
         return;
 
+    if (alreadyDamagedActors.IsEmpty())
+    {
+        OnImpactHit.Broadcast();
+    }
+    
     GiveDamage(OtherActor);
     alreadyDamagedActors.Add(OtherActor);
 }

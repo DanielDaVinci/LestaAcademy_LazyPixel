@@ -79,3 +79,8 @@ UBaseWeaponComponent* ABaseCharacter::GetBaseWeaponComponent() const
 {
     return pWeaponComponent;
 }
+
+UAbilityComponent* ABaseCharacter::GetAbilityComponent() const
+{
+    return pAbilityComponent;
+}

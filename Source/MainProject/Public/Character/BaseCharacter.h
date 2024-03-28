@@ -55,5 +55,5 @@ public:
 public:
     UStateMachineComponent* GetStateMachineComponent() const;
     UBaseWeaponComponent* GetBaseWeaponComponent() const;
-
+    UAbilityComponent* GetAbilityComponent() const;
 };

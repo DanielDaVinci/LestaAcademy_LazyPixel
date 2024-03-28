@@ -7,6 +7,8 @@
 #include "MainProjectCoreTypes.h"
 #include "Sword.generated.h"
 
+DECLARE_MULTICAST_DELEGATE(FOnImpactHitSignature)
+
 class UBoxComponent;
 
 UCLASS()
@@ -14,7 +16,9 @@ class MAINPROJECT_API ASword : public ABaseWeapon
 {
 	GENERATED_BODY()
 	
-public:	
+public:
+    FOnImpactHitSignature OnImpactHit;
+    
     ASword();
 
     void EnableAttackCollision() const;

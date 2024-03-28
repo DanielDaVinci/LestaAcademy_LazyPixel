@@ -35,6 +35,17 @@ void UWeaponComponent::BindInput()
     controller->OnRangeAttack.AddUObject(this, &UWeaponComponent::RangeAttack);
 }
 
+void UWeaponComponent::BindEvents()
+{
+    if (const auto MeleeWeapon = GetMeleeWeapon())
+    {
+        MeleeWeapon->OnImpactHit.AddWeakLambda(this, [this]()
+        {
+            OnMeleeAttackHasHit.Broadcast(); 
+        });
+    }
+}
+
 void UWeaponComponent::OnSubscribeToNotifies(const FAnimNotifyEvent& NotifyEvent)
 {
     Super::OnSubscribeToNotifies(NotifyEvent);

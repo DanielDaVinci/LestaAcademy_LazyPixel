@@ -90,6 +90,9 @@ void ARoom::BindInputDoorsForEnter()
 {
     for (const auto& door: inputDoors)
     {
+        if (!door)
+            return;
+        
         door->OnEnterDoor.AddUObject(this, &ARoom::OnPlayerEnter);
     }
 }
@@ -105,6 +108,9 @@ void ARoom::BindLightSources()
     TArray<FBox> volumes;
     for (const auto& component: boxComponents)
     {
+        if (!component)
+            continue;
+        
         volumes.Push(component->Bounds.GetBox());
     }
     
@@ -144,12 +150,18 @@ void ARoom::CloseAllDoors()
 {
     for (const auto& door : inputDoors)
     {
+        if (!door)
+            continue;
+        
         door->BlockDoor(ECC_Pawn);
         door->Close();
     }
 
     for (const auto& door : outputDoors)
     {
+        if (!door)
+            continue;
+        
         door->BlockDoor(ECC_Pawn);
         door->Close();
     }
@@ -165,6 +177,9 @@ void ARoom::OpenOutputDoors()
 {
     for (const auto& door : outputDoors)
     {
+        if (!door)
+            continue;
+        
         door->UnblockDoor(ECC_Pawn);
         door->Open();
     }
@@ -174,6 +189,9 @@ void ARoom::OpenInputDoors()
 {
     for (const auto& door : inputDoors)
     {
+        if (!door)
+            continue;
+        
         door->UnblockDoor(ECC_Pawn);
         door->Open();
     }
@@ -190,6 +208,9 @@ void ARoom::DestroyActorsInRoom() const
     TArray<FBox> volumes;
     for (const auto& component: boxComponents)
     {
+        if (!component)
+            continue;
+        
         volumes.Push(component->Bounds.GetBox());
     }
     

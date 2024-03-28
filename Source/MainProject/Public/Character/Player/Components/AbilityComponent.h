@@ -21,6 +21,8 @@ class MAINPROJECT_API UAbilityComponent : public UActorComponent
 public:
     UAbilityComponent();
 
+    UActiveAbility* GetCustomAbility() const { return m_customAbility;  }
+
 protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Ability")
     TArray<TSubclassOf<UActiveAbility>> activeAbilityClasses;

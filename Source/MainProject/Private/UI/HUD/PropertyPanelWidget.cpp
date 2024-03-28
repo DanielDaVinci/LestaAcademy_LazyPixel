@@ -3,10 +3,13 @@
 
 #include "..\..\..\Public\UI\HUD\PropertyPanelWidget.h"
 
+#include "Abilities/ActiveAbilities/StrongAttackAbility.h"
 #include "Character/BaseCharacter.h"
 #include "Character/Player/PlayerCharacter.h"
+#include "Character/Player/Components/AbilityComponent.h"
 #include "Character/Player/Components/HealthComponent.h"
 #include "Character/Player/Components/WeaponComponent.h"
+#include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
 
 void UPropertyPanelWidget::NativeOnInitialized()
@@ -40,11 +43,21 @@ void UPropertyPanelWidget::BindEvents()
             }
         });
     }
+
+    if (const auto pStrongAttackAbility = GetStrongAttackAbility())
+    {
+        pStrongAttackAbility->OnAbilityChargeChanged.AddUObject(this, &UPropertyPanelWidget::OnAbilityChargeChanged);
+    }
 }
 
 void UPropertyPanelWidget::OnHealthChanged(float DeltaHealth)
 {
     SetCurrentHealthText();
+}
+
+void UPropertyPanelWidget::OnAbilityChargeChanged(float ChargeAmount)
+{
+    SetCurrentAbilityCharge();
 }
 
 void UPropertyPanelWidget::SetCurrentHealthText()
@@ -57,7 +70,16 @@ void UPropertyPanelWidget::SetCurrentHealthText()
         FString::Printf(TEXT("%d / %d"),
             int32(pHealthComponent->GetHealth()),
             int32(pHealthComponent->GetMaxHealth()))
-   ));
+    ));
+}
+
+void UPropertyPanelWidget::SetCurrentAbilityCharge()
+{
+    const auto pStrongAttackAbility = GetStrongAttackAbility();
+    if (!pStrongAttackAbility)
+        return;
+
+    pAbilityBar->SetPercent(pStrongAttackAbility->GetCurrentAbilityCharge() / pStrongAttackAbility->GetMaxAbilityCharge());
 }
 
 void UPropertyPanelWidget::OnRangeAmmoChanged(int32 RemainingBullets)
@@ -91,8 +113,20 @@ UWeaponComponent* UPropertyPanelWidget::GetWeaponComponent() const
     return pCharacter ? Cast<UWeaponComponent>(pCharacter->GetWeaponComponent()) : nullptr;
 }
 
+UAbilityComponent* UPropertyPanelWidget::GetAbilityComponent() const
+{
+    const auto pCharacter = GetOwningPlayerCharacter();
+    return pCharacter ? pCharacter->GetAbilityComponent() : nullptr;
+}
+
 AGun* UPropertyPanelWidget::GetRangeWeapon() const
 {
     const auto pWeaponComponent = GetWeaponComponent();
     return pWeaponComponent ? pWeaponComponent->GetRangeWeapon() : nullptr;
+}
+
+UStrongAttackAbility* UPropertyPanelWidget::GetStrongAttackAbility() const
+{
+    const auto pAbilityComponent = GetAbilityComponent();
+    return pAbilityComponent ? Cast<UStrongAttackAbility>(pAbilityComponent->GetCustomAbility()) : nullptr;
 }

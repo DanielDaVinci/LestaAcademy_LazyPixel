@@ -8,6 +8,7 @@
 #include "Character/Player/BasePlayerController.h"
 #include "Character/Player/Components/PlayerMovementComponent.h"
 #include "Character/Player/Components/StateMachineComponent.h"
+#include "Character/Player/Components/WeaponComponent.h"
 #include "Common/Objects/CollisionCube.h"
 #include "Engine/DamageEvents.h"
 #include "Kismet/GameplayStatics.h"
@@ -15,6 +16,9 @@
 
 bool UStrongAttackAbility::NativeActivate()
 {
+    if (!FMath::IsNearlyEqual(GetCurrentAbilityCharge(), GetMaxAbilityCharge()))
+        return false;
+    
     const auto pStateMachineComponent = GetStateMachineComponent();
     if (!pStateMachineComponent)
         return false;
@@ -38,6 +42,7 @@ void UStrongAttackAbility::BeginPlay()
     Super::BeginPlay();
 
     SpawnCubeCollision();
+    SetAbilityCharge(0.0f);
 }
 
 void UStrongAttackAbility::OnCubeCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
@@ -67,6 +72,35 @@ void UStrongAttackAbility::SpawnCubeCollision()
     m_pCubeCollision->SetResponseToChannel(ECC_Enemy, ECR_Overlap);
     
     m_pCubeCollision->OnBeginOverlap.AddUObject(this, &UStrongAttackAbility::OnCubeCollisionBeginOverlap);
+}
+
+void UStrongAttackAbility::BindEvents()
+{
+    if (const auto weaponComponent = GetWeaponComponent())
+    {
+        weaponComponent->OnMeleeAttackHasHit.AddUObject(this, &UStrongAttackAbility::OnMeleeAttackHit);
+    }
+}
+
+void UStrongAttackAbility::OnMeleeAttackHit()
+{
+    AddAbilityCharge(oneHitAbilityCharge);
+}
+
+void UStrongAttackAbility::SetAbilityCharge(float ChargeAmount)
+{
+    const float prevAbilityCharge = m_abilityCharge;
+    m_abilityCharge = FMath::Clamp(ChargeAmount, 0.0f, needMaxAbilityCharge);
+
+    if (!FMath::IsNearlyZero(prevAbilityCharge - m_abilityCharge))
+    {
+        OnAbilityChargeChanged.Broadcast(GetCurrentAbilityCharge());
+    }
+}
+
+void UStrongAttackAbility::AddAbilityCharge(float ChargeAmount)
+{
+    SetAbilityCharge(GetCurrentAbilityCharge() + ChargeAmount);
 }
 
 void UStrongAttackAbility::OnPreparePartStartState()
@@ -191,4 +225,9 @@ UPlayerMovementComponent* UStrongAttackAbility::GetPlayerMovementComponent() con
 UStateMachineComponent* UStrongAttackAbility::GetStateMachineComponent() const
 {
     return GetCharacter() ? GetCharacter()->GetStateMachineComponent() : nullptr;
+}
+
+UWeaponComponent* UStrongAttackAbility::GetWeaponComponent() const
+{
+    return GetCharacter() ? Cast<UWeaponComponent>(GetCharacter()->GetWeaponComponent()) : nullptr;
 }
