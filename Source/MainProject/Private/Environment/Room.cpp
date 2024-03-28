@@ -232,7 +232,6 @@ void ARoom::DestroyActorsInRoom() const
 
         if (isInside)
         {
-            UE_LOG(LogTemp, Warning, TEXT("%s"), *actor->GetName());
             actor->Destroy();
         }   
     }

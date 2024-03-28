@@ -47,6 +47,7 @@ void UPropertyPanelWidget::BindEvents()
     if (const auto pStrongAttackAbility = GetStrongAttackAbility())
     {
         pStrongAttackAbility->OnAbilityChargeChanged.AddUObject(this, &UPropertyPanelWidget::OnAbilityChargeChanged);
+        OnAbilityChargeChanged(pStrongAttackAbility->GetCurrentAbilityCharge());
     }
 }
 

@@ -45,8 +45,6 @@ bool ACollisionObject::HasOverlappingActors(const TSubclassOf<AActor>& FindClass
     TArray<AActor*> overlappingActors;
     GetOverlappingActors(overlappingActors, FindClass);
 
-    UE_LOG(LogTemp, Error, TEXT("%d"), overlappingActors.Num());
-
     return !overlappingActors.IsEmpty();
 }
 

@@ -18,6 +18,8 @@ bool UStrongAttackAbility::NativeActivate()
 {
     if (!FMath::IsNearlyEqual(GetCurrentAbilityCharge(), GetMaxAbilityCharge()))
         return false;
+
+    SetAbilityCharge(0.0f);
     
     const auto pStateMachineComponent = GetStateMachineComponent();
     if (!pStateMachineComponent)
@@ -43,6 +45,8 @@ void UStrongAttackAbility::BeginPlay()
 
     SpawnCubeCollision();
     SetAbilityCharge(0.0f);
+
+    BindEvents();
 }
 
 void UStrongAttackAbility::OnCubeCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,

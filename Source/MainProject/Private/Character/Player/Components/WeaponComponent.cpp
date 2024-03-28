@@ -16,6 +16,7 @@ void UWeaponComponent::BeginPlay()
     Super::BeginPlay();
 
     BindInput();
+    BindEvents();
 
     if (const auto pRangeWeapon = FindWeapon<AGun>())
     {

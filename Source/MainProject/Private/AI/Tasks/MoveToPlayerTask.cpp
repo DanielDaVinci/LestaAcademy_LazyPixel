@@ -36,8 +36,6 @@ EBTNodeResult::Type UMoveToPlayerTask::ExecuteTask(UBehaviorTreeComponent& Owner
     //Controller->MoveToLocation(Location.Location);
     Controller->MoveToActor(PlayerPawn);
     
-    UE_LOG(LogTemp, Display, TEXT("%f"), Distance)
-    
     return EBTNodeResult::Succeeded;
 }
 
