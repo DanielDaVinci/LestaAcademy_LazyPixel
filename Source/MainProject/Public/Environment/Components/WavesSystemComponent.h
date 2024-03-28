@@ -50,7 +50,7 @@ protected:
     void StartWave(int32 WaveIndex);
 
 private:
-    TArray<FTimerHandle> m_timers;
+    TArray<FTimerHandle> m_spawnTimers;
     TArray<int32> m_spawnCounts;
 
     UFUNCTION()

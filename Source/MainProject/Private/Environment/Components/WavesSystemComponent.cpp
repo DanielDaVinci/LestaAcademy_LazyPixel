@@ -54,7 +54,7 @@ void UWavesSystemComponent::FindEnemiesInRoom()
     
     TArray<AActor*> overlappingActors;
     room->UpdateOverlaps(false);
-    room->GetOverlappingActors(overlappingActors);
+    room->GetOverlappingActors(overlappingActors, AAIBaseCharacter::StaticClass());
 
     for (const auto& actor: overlappingActors)
     {
@@ -80,7 +80,11 @@ void UWavesSystemComponent::StartWave(int32 WaveIndex)
     if (!GetWorld())
         return;
 
-    m_timers.Empty();
+    for (auto& timer : m_spawnTimers)
+    {
+        GetWorld()->GetTimerManager().ClearTimer(timer);
+    }
+    m_spawnTimers.Empty();
     m_spawnCounts.Empty();
     m_currentAliveEnemies = 0;
     
@@ -100,11 +104,11 @@ void UWavesSystemComponent::StartWave(int32 WaveIndex)
         GetWorld()->GetTimerManager().SetTimer(openDoorTimer, [&spawner]()
         {
             spawner->OpenDoor();
-        }, wave.StartWaveDelay, false);
+        }, FMath::Max(wave.StartWaveDelay, 0.01f), false);
 
-        m_timers.Add(FTimerHandle());
+        m_spawnTimers.Add(FTimerHandle());
         const FTimerDelegate& timerDelegate = FTimerDelegate::CreateUObject(this, &UWavesSystemComponent::OnSpawnTick, i);
-        GetWorld()->GetTimerManager().SetTimer(m_timers[i], timerDelegate, spawnerProperties.SpawnDelay, true, spawnerProperties.StartDelay + wave.StartWaveDelay);
+        GetWorld()->GetTimerManager().SetTimer(m_spawnTimers[i], timerDelegate, spawnerProperties.SpawnDelay, true, spawnerProperties.StartDelay + wave.StartWaveDelay);
     }
 }
 
@@ -121,7 +125,7 @@ void UWavesSystemComponent::BindOneEnemyOnDeath(const AAIBaseCharacter* Enemy)
     if (!Enemy)
         return;
     
-    const auto healthComponent = Enemy->GetComponentByClass<UHealthComponent>();
+    const auto healthComponent = Enemy->GetHealthComponent();
     if (!healthComponent)
         return;
 
@@ -130,7 +134,7 @@ void UWavesSystemComponent::BindOneEnemyOnDeath(const AAIBaseCharacter* Enemy)
 
 void UWavesSystemComponent::CloseDoorAllSpawners(int32 WaveIndex)
 {
-    if (!FMath::IsWithinInclusive(WaveIndex, 0, waves.Num()))
+    if (!FMath::IsWithinInclusive(WaveIndex, 0, waves.Num() - 1))
         return;
     
     for (const auto& spawnProperties: waves[WaveIndex].Spawners)
@@ -147,16 +151,16 @@ void UWavesSystemComponent::OnSpawnTick(int32 SpawnerIndex)
     if (!GetWorld())
         return;
 
+    if (m_spawnCounts[SpawnerIndex] == 0)
+    {
+        GetWorld()->GetTimerManager().ClearTimer(m_spawnTimers[SpawnerIndex]);
+        return;
+    }
+    
     const auto& spawnerProperties = waves[m_currentWaveIndex].Spawners[SpawnerIndex];
     const auto& spawner = spawnerProperties.pEnemySpawner;
     if (!spawner)
         return;
-    
-    if (m_spawnCounts[SpawnerIndex] == 0)
-    {
-        GetWorld()->GetTimerManager().ClearTimer(m_timers[SpawnerIndex]);
-        return;
-    }
     
     const auto& enemy = spawner->Spawn(spawnerProperties.AICharacterClass);
     if (!enemy)
@@ -179,13 +183,13 @@ void UWavesSystemComponent::OnWaveEnd()
 {
     CloseDoorAllSpawners(m_currentWaveIndex);
     
-    if (++m_currentWaveIndex >= waves.Num())
+    if (m_currentWaveIndex >= waves.Num() - 1)
     {
         OnAllWavesEndEvent.Broadcast();
     }
     else
     {
-        StartWave(m_currentWaveIndex);
+        StartWave(++m_currentWaveIndex);
     }
 }
 
