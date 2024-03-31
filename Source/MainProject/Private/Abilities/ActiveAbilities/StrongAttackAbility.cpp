@@ -16,7 +16,7 @@
 
 bool UStrongAttackAbility::NativeActivate()
 {
-    if (!FMath::IsNearlyEqual(GetCurrentAbilityCharge(), GetMaxAbilityCharge()))
+    if (!IsAbilityCharged())
         return false;
 
     SetAbilityCharge(0.0f);
@@ -100,11 +100,21 @@ void UStrongAttackAbility::SetAbilityCharge(float ChargeAmount)
     {
         OnAbilityChargeChanged.Broadcast(GetCurrentAbilityCharge());
     }
+
+    if (IsAbilityCharged())
+        ChangeMeleeMaterilal();
 }
 
 void UStrongAttackAbility::AddAbilityCharge(float ChargeAmount)
 {
     SetAbilityCharge(GetCurrentAbilityCharge() + ChargeAmount);
+}
+
+void UStrongAttackAbility::ChangeMeleeMaterilal()
+{
+    const auto weaponComponent = GetWeaponComponent();
+    ASword* pMeleeWeapon = weaponComponent->FindWeapon<ASword>();
+    pMeleeWeapon->ChangeMaterial(IsAbilityCharged());
 }
 
 void UStrongAttackAbility::OnPreparePartStartState()
@@ -214,6 +224,7 @@ void UStrongAttackAbility::OnAttackPartEndState(EStateResult StateResult)
     m_pCubeCollision->Disable();
     GetCharacter()->GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Enemy, ECR_Block);
     pPlayerMovementComponent->SetEnableMovementInput(true);
+    ChangeMeleeMaterilal();
 }
 
 ABasePlayerController* UStrongAttackAbility::GetBasePlayerController() const
@@ -234,4 +245,9 @@ UStateMachineComponent* UStrongAttackAbility::GetStateMachineComponent() const
 UWeaponComponent* UStrongAttackAbility::GetWeaponComponent() const
 {
     return GetCharacter() ? Cast<UWeaponComponent>(GetCharacter()->GetWeaponComponent()) : nullptr;
+}
+
+bool UStrongAttackAbility::IsAbilityCharged() const
+{
+    return FMath::IsNearlyEqual(GetCurrentAbilityCharge(), GetMaxAbilityCharge());
 }

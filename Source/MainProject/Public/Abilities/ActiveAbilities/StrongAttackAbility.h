@@ -76,6 +76,8 @@ private:
     void SetAbilityCharge(float ChargeAmount);
     void AddAbilityCharge(float ChargeAmount);
 
+    void ChangeMeleeMaterilal();
+
 protected:
     virtual bool NativeActivate() override;
     
@@ -100,4 +102,6 @@ protected:
     UPlayerMovementComponent* GetPlayerMovementComponent() const;
     UStateMachineComponent* GetStateMachineComponent() const;
     UWeaponComponent* GetWeaponComponent() const;
+
+    bool IsAbilityCharged() const;
 };

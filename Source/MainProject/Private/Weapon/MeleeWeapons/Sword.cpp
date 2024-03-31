@@ -15,6 +15,7 @@ ASword::ASword()
 {
     pBoxCollision = CreateDefaultSubobject<UBoxComponent>("BoxCollision");
     pBoxCollision->SetupAttachment(pWeaponMeshComponent);
+    defaultMaterial = pWeaponMeshComponent->GetMaterial(0);
     InitBoxCollision();
 }
 
@@ -68,4 +69,25 @@ void ASword::EnableAttackCollision() const
 void ASword::DisableAttackCollision() const
 {
     pBoxCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+}
+
+void ASword::ChangeMaterial(bool isCharged)
+{
+    if (isCharged)
+        SetChargedMaterial();
+    else
+        SetDefaultMaterial();
+}
+
+void ASword::SetChargedMaterial()
+{
+    if (!chargedMaterial)
+        return;
+
+    pWeaponMeshComponent->SetMaterial(0, chargedMaterial);
+}
+
+void ASword::SetDefaultMaterial()
+{
+    pWeaponMeshComponent->SetMaterial(0, defaultMaterial);
 }
