@@ -1,11 +1,11 @@
-"C:\Users\danii\RiderProjects\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseProcessing\Module.WwiseProcessing.cpp"
-/FI"C:\Users\danii\RiderProjects\MainProject\Intermediate\Build\Win64\x64\MainProjectEditor\Development\Engine\SharedPCH.Engine.Cpp20.h"
-/FI"C:\Users\danii\RiderProjects\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseProcessing\Definitions.WwiseProcessing.h"
-/Yu"C:\Users\danii\RiderProjects\MainProject\Intermediate\Build\Win64\x64\MainProjectEditor\Development\Engine\SharedPCH.Engine.Cpp20.h"
-/Fp"C:\Users\danii\RiderProjects\MainProject\Intermediate\Build\Win64\x64\MainProjectEditor\Development\Engine\SharedPCH.Engine.Cpp20.h.pch"
-/Fo"C:\Users\danii\RiderProjects\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseProcessing\Module.WwiseProcessing.cpp.obj"
-/sourceDependencies "C:\Users\danii\RiderProjects\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseProcessing\Module.WwiseProcessing.cpp.dep.json"
-@"C:\Users\danii\RiderProjects\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseProcessing\WwiseProcessing.Shared.rsp"
+"G:\Lesta\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseProcessing\Module.WwiseProcessing.cpp"
+/FI"G:\Lesta\MainProject\Intermediate\Build\Win64\x64\MainProjectEditor\Development\Engine\SharedPCH.Engine.Cpp20.h"
+/FI"G:\Lesta\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseProcessing\Definitions.WwiseProcessing.h"
+/Yu"G:\Lesta\MainProject\Intermediate\Build\Win64\x64\MainProjectEditor\Development\Engine\SharedPCH.Engine.Cpp20.h"
+/Fp"G:\Lesta\MainProject\Intermediate\Build\Win64\x64\MainProjectEditor\Development\Engine\SharedPCH.Engine.Cpp20.h.pch"
+/Fo"G:\Lesta\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseProcessing\Module.WwiseProcessing.cpp.obj"
+/sourceDependencies "G:\Lesta\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseProcessing\Module.WwiseProcessing.cpp.dep.json"
+@"G:\Lesta\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseProcessing\WwiseProcessing.Shared.rsp"
 /Zc:inline
 /nologo
 /Oi

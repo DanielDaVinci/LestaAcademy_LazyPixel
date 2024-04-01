@@ -6,7 +6,7 @@
 /NAME:"UnrealEditor-WwiseObjectUtils.dll"
 /IGNORE:4221
 /NODEFAULTLIB
-"C:\Users\danii\RiderProjects\MainProject\Intermediate\Build\Win64\x64\MainProjectEditor\Development\CoreUObject\SharedPCH.CoreUObject.Cpp20.h.obj"
-"C:\Users\danii\RiderProjects\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseObjectUtils\Module.WwiseObjectUtils.cpp.obj"
-"C:\Users\danii\RiderProjects\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseObjectUtils\Default.rc2.res"
-/OUT:"C:\Users\danii\RiderProjects\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseObjectUtils\UnrealEditor-WwiseObjectUtils.lib"
+"G:\Lesta\MainProject\Intermediate\Build\Win64\x64\MainProjectEditor\Development\CoreUObject\SharedPCH.CoreUObject.Cpp20.h.obj"
+"G:\Lesta\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseObjectUtils\Module.WwiseObjectUtils.cpp.obj"
+"G:\Lesta\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseObjectUtils\Default.rc2.res"
+/OUT:"G:\Lesta\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseObjectUtils\UnrealEditor-WwiseObjectUtils.lib"

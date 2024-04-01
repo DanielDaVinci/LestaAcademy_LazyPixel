@@ -1,11 +1,11 @@
-"C:\Users\danii\RiderProjects\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseResourceCooker\Module.WwiseResourceCooker.cpp"
-/FI"C:\Users\danii\RiderProjects\MainProject\Intermediate\Build\Win64\x64\MainProjectEditor\Development\UnrealEd\SharedPCH.UnrealEd.Cpp20.h"
-/FI"C:\Users\danii\RiderProjects\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseResourceCooker\Definitions.WwiseResourceCooker.h"
-/Yu"C:\Users\danii\RiderProjects\MainProject\Intermediate\Build\Win64\x64\MainProjectEditor\Development\UnrealEd\SharedPCH.UnrealEd.Cpp20.h"
-/Fp"C:\Users\danii\RiderProjects\MainProject\Intermediate\Build\Win64\x64\MainProjectEditor\Development\UnrealEd\SharedPCH.UnrealEd.Cpp20.h.pch"
-/Fo"C:\Users\danii\RiderProjects\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseResourceCooker\Module.WwiseResourceCooker.cpp.obj"
-/sourceDependencies "C:\Users\danii\RiderProjects\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseResourceCooker\Module.WwiseResourceCooker.cpp.dep.json"
-@"C:\Users\danii\RiderProjects\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseResourceCooker\WwiseResourceCooker.Shared.rsp"
+"G:\Lesta\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseResourceCooker\Module.WwiseResourceCooker.cpp"
+/FI"G:\Lesta\MainProject\Intermediate\Build\Win64\x64\MainProjectEditor\Development\UnrealEd\SharedPCH.UnrealEd.Cpp20.h"
+/FI"G:\Lesta\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseResourceCooker\Definitions.WwiseResourceCooker.h"
+/Yu"G:\Lesta\MainProject\Intermediate\Build\Win64\x64\MainProjectEditor\Development\UnrealEd\SharedPCH.UnrealEd.Cpp20.h"
+/Fp"G:\Lesta\MainProject\Intermediate\Build\Win64\x64\MainProjectEditor\Development\UnrealEd\SharedPCH.UnrealEd.Cpp20.h.pch"
+/Fo"G:\Lesta\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseResourceCooker\Module.WwiseResourceCooker.cpp.obj"
+/sourceDependencies "G:\Lesta\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseResourceCooker\Module.WwiseResourceCooker.cpp.dep.json"
+@"G:\Lesta\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseResourceCooker\WwiseResourceCooker.Shared.rsp"
 /Zc:inline
 /nologo
 /Oi

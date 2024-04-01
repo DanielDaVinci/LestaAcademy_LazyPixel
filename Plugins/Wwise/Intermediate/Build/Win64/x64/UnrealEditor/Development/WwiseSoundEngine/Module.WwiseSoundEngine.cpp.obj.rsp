@@ -1,11 +1,11 @@
-"C:\Users\danii\RiderProjects\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseSoundEngine\Module.WwiseSoundEngine.cpp"
-/FI"C:\Users\danii\RiderProjects\MainProject\Intermediate\Build\Win64\x64\MainProjectEditor\Development\Core\SharedPCH.Core.Cpp20.h"
-/FI"C:\Users\danii\RiderProjects\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseSoundEngine\Definitions.WwiseSoundEngine.h"
-/Yu"C:\Users\danii\RiderProjects\MainProject\Intermediate\Build\Win64\x64\MainProjectEditor\Development\Core\SharedPCH.Core.Cpp20.h"
-/Fp"C:\Users\danii\RiderProjects\MainProject\Intermediate\Build\Win64\x64\MainProjectEditor\Development\Core\SharedPCH.Core.Cpp20.h.pch"
-/Fo"C:\Users\danii\RiderProjects\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseSoundEngine\Module.WwiseSoundEngine.cpp.obj"
-/sourceDependencies "C:\Users\danii\RiderProjects\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseSoundEngine\Module.WwiseSoundEngine.cpp.dep.json"
-@"C:\Users\danii\RiderProjects\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseSoundEngine\WwiseSoundEngine.Shared.rsp"
+"G:\Lesta\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseSoundEngine\Module.WwiseSoundEngine.cpp"
+/FI"G:\Lesta\MainProject\Intermediate\Build\Win64\x64\MainProjectEditor\Development\Core\SharedPCH.Core.Cpp20.h"
+/FI"G:\Lesta\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseSoundEngine\Definitions.WwiseSoundEngine.h"
+/Yu"G:\Lesta\MainProject\Intermediate\Build\Win64\x64\MainProjectEditor\Development\Core\SharedPCH.Core.Cpp20.h"
+/Fp"G:\Lesta\MainProject\Intermediate\Build\Win64\x64\MainProjectEditor\Development\Core\SharedPCH.Core.Cpp20.h.pch"
+/Fo"G:\Lesta\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseSoundEngine\Module.WwiseSoundEngine.cpp.obj"
+/sourceDependencies "G:\Lesta\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseSoundEngine\Module.WwiseSoundEngine.cpp.dep.json"
+@"G:\Lesta\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseSoundEngine\WwiseSoundEngine.Shared.rsp"
 /Zc:inline
 /nologo
 /Oi

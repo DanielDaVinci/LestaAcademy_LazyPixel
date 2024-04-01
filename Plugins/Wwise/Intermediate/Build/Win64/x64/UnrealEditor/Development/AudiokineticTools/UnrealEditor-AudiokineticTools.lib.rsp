@@ -6,7 +6,7 @@
 /NAME:"UnrealEditor-AudiokineticTools.dll"
 /IGNORE:4221
 /NODEFAULTLIB
-"C:\Users\danii\RiderProjects\MainProject\Intermediate\Build\Win64\x64\MainProjectEditor\Development\UnrealEd\SharedPCH.UnrealEd.Cpp20.h.obj"
-"C:\Users\danii\RiderProjects\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\AudiokineticTools\Module.AudiokineticTools.cpp.obj"
-"C:\Users\danii\RiderProjects\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\AudiokineticTools\Default.rc2.res"
-/OUT:"C:\Users\danii\RiderProjects\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\AudiokineticTools\UnrealEditor-AudiokineticTools.lib"
+"G:\Lesta\MainProject\Intermediate\Build\Win64\x64\MainProjectEditor\Development\UnrealEd\SharedPCH.UnrealEd.Cpp20.h.obj"
+"G:\Lesta\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\AudiokineticTools\Module.AudiokineticTools.cpp.obj"
+"G:\Lesta\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\AudiokineticTools\Default.rc2.res"
+/OUT:"G:\Lesta\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\AudiokineticTools\UnrealEditor-AudiokineticTools.lib"

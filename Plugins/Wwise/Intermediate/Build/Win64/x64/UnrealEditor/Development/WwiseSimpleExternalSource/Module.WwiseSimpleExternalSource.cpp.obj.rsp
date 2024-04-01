@@ -1,11 +1,11 @@
-"C:\Users\danii\RiderProjects\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseSimpleExternalSource\Module.WwiseSimpleExternalSource.cpp"
-/FI"C:\Users\danii\RiderProjects\MainProject\Intermediate\Build\Win64\x64\MainProjectEditor\Development\UnrealEd\SharedPCH.UnrealEd.Cpp20.h"
-/FI"C:\Users\danii\RiderProjects\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseSimpleExternalSource\Definitions.WwiseSimpleExternalSource.h"
-/Yu"C:\Users\danii\RiderProjects\MainProject\Intermediate\Build\Win64\x64\MainProjectEditor\Development\UnrealEd\SharedPCH.UnrealEd.Cpp20.h"
-/Fp"C:\Users\danii\RiderProjects\MainProject\Intermediate\Build\Win64\x64\MainProjectEditor\Development\UnrealEd\SharedPCH.UnrealEd.Cpp20.h.pch"
-/Fo"C:\Users\danii\RiderProjects\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseSimpleExternalSource\Module.WwiseSimpleExternalSource.cpp.obj"
-/sourceDependencies "C:\Users\danii\RiderProjects\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseSimpleExternalSource\Module.WwiseSimpleExternalSource.cpp.dep.json"
-@"C:\Users\danii\RiderProjects\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseSimpleExternalSource\WwiseSimpleExternalSource.Shared.rsp"
+"G:\Lesta\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseSimpleExternalSource\Module.WwiseSimpleExternalSource.cpp"
+/FI"G:\Lesta\MainProject\Intermediate\Build\Win64\x64\MainProjectEditor\Development\UnrealEd\SharedPCH.UnrealEd.Cpp20.h"
+/FI"G:\Lesta\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseSimpleExternalSource\Definitions.WwiseSimpleExternalSource.h"
+/Yu"G:\Lesta\MainProject\Intermediate\Build\Win64\x64\MainProjectEditor\Development\UnrealEd\SharedPCH.UnrealEd.Cpp20.h"
+/Fp"G:\Lesta\MainProject\Intermediate\Build\Win64\x64\MainProjectEditor\Development\UnrealEd\SharedPCH.UnrealEd.Cpp20.h.pch"
+/Fo"G:\Lesta\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseSimpleExternalSource\Module.WwiseSimpleExternalSource.cpp.obj"
+/sourceDependencies "G:\Lesta\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseSimpleExternalSource\Module.WwiseSimpleExternalSource.cpp.dep.json"
+@"G:\Lesta\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseSimpleExternalSource\WwiseSimpleExternalSource.Shared.rsp"
 /Zc:inline
 /nologo
 /Oi

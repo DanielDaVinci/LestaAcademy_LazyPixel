@@ -1,14 +1,14 @@
 {
     "Version": "1.2",
     "Data": {
-        "Source": "c:\\users\\danii\\riderprojects\\mainproject\\plugins\\wwise\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\wwiseengineutils\\module.wwiseengineutils.cpp",
+        "Source": "g:\\lesta\\mainproject\\plugins\\wwise\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\wwiseengineutils\\module.wwiseengineutils.cpp",
         "ProvidedModule": "",
-        "PCH": "c:\\users\\danii\\riderprojects\\mainproject\\intermediate\\build\\win64\\x64\\mainprojecteditor\\development\\engine\\sharedpch.engine.cpp20.h.pch",
+        "PCH": "g:\\lesta\\mainproject\\intermediate\\build\\win64\\x64\\mainprojecteditor\\development\\engine\\sharedpch.engine.cpp20.h.pch",
         "Includes": [
-            "c:\\users\\danii\\riderprojects\\mainproject\\plugins\\wwise\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\wwiseengineutils\\definitions.wwiseengineutils.h",
-            "c:\\users\\danii\\riderprojects\\mainproject\\plugins\\wwise\\source\\wwiseengineutils\\private\\wwiseunrealenginehelper.cpp",
-            "c:\\users\\danii\\riderprojects\\mainproject\\plugins\\wwise\\source\\wwiseengineutils\\public\\wwiseunrealenginehelper.h",
-            "c:\\users\\danii\\riderprojects\\mainproject\\plugins\\wwise\\source\\wwiseutils\\public\\wwiseunrealdefines.h"
+            "g:\\lesta\\mainproject\\plugins\\wwise\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\wwiseengineutils\\definitions.wwiseengineutils.h",
+            "g:\\lesta\\mainproject\\plugins\\wwise\\source\\wwiseengineutils\\private\\wwiseunrealenginehelper.cpp",
+            "g:\\lesta\\mainproject\\plugins\\wwise\\source\\wwiseengineutils\\public\\wwiseunrealenginehelper.h",
+            "g:\\lesta\\mainproject\\plugins\\wwise\\source\\wwiseutils\\public\\wwiseunrealdefines.h"
         ],
         "ImportedModules": [],
         "ImportedHeaderUnits": []

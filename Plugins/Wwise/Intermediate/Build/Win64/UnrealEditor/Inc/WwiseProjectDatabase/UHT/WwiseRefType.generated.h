@@ -16,7 +16,7 @@ PRAGMA_DISABLE_DEPRECATION_WARNINGS
 #define WWISEPROJECTDATABASE_WwiseRefType_generated_h
 
 #undef CURRENT_FILE_ID
-#define CURRENT_FILE_ID FID_Users_danii_RiderProjects_MainProject_Plugins_Wwise_Source_WwiseProjectDatabase_Public_Wwise_Ref_WwiseRefType_h
+#define CURRENT_FILE_ID FID_MainProject_Plugins_Wwise_Source_WwiseProjectDatabase_Public_Wwise_Ref_WwiseRefType_h
 
 
 #define FOREACH_ENUM_EWWISEREFTYPE(op) \

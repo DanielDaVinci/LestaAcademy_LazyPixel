@@ -6,7 +6,7 @@
 /NAME:"UnrealEditor-WwiseUtils.dll"
 /IGNORE:4221
 /NODEFAULTLIB
-"C:\Users\danii\RiderProjects\MainProject\Intermediate\Build\Win64\x64\MainProjectEditor\Development\Core\SharedPCH.Core.Cpp20.h.obj"
-"C:\Users\danii\RiderProjects\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseUtils\Module.WwiseUtils.cpp.obj"
-"C:\Users\danii\RiderProjects\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseUtils\Default.rc2.res"
-/OUT:"C:\Users\danii\RiderProjects\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseUtils\UnrealEditor-WwiseUtils.lib"
+"G:\Lesta\MainProject\Intermediate\Build\Win64\x64\MainProjectEditor\Development\Core\SharedPCH.Core.Cpp20.h.obj"
+"G:\Lesta\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseUtils\Module.WwiseUtils.cpp.obj"
+"G:\Lesta\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseUtils\Default.rc2.res"
+/OUT:"G:\Lesta\MainProject\Plugins\Wwise\Intermediate\Build\Win64\x64\UnrealEditor\Development\WwiseUtils\UnrealEditor-WwiseUtils.lib"

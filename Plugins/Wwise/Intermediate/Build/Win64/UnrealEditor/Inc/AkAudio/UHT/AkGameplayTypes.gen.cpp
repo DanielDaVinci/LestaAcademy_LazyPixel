@@ -4049,13 +4049,13 @@ template<> AKAUDIO_API UScriptStruct* StaticStruct<FAkExternalSourceInfo>()
 		}
 		return Z_Registration_Info_UScriptStruct_AkExternalSourceInfo.InnerSingleton;
 	}
-	struct Z_CompiledInDeferFile_FID_Users_danii_RiderProjects_MainProject_Plugins_Wwise_Source_AkAudio_Classes_AkGameplayTypes_h_Statics
+	struct Z_CompiledInDeferFile_FID_MainProject_Plugins_Wwise_Source_AkAudio_Classes_AkGameplayTypes_h_Statics
 	{
 		static const FEnumRegisterCompiledInInfo EnumInfo[];
 		static const FStructRegisterCompiledInInfo ScriptStructInfo[];
 		static const FClassRegisterCompiledInInfo ClassInfo[];
 	};
-	const FEnumRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Users_danii_RiderProjects_MainProject_Plugins_Wwise_Source_AkAudio_Classes_AkGameplayTypes_h_Statics::EnumInfo[] = {
+	const FEnumRegisterCompiledInInfo Z_CompiledInDeferFile_FID_MainProject_Plugins_Wwise_Source_AkAudio_Classes_AkGameplayTypes_h_Statics::EnumInfo[] = {
 		{ EAkAudioContext_StaticEnum, TEXT("EAkAudioContext"), &Z_Registration_Info_UEnum_EAkAudioContext, CONSTRUCT_RELOAD_VERSION_INFO(FEnumReloadVersionInfo, 4111583554U) },
 		{ PanningRule_StaticEnum, TEXT("PanningRule"), &Z_Registration_Info_UEnum_PanningRule, CONSTRUCT_RELOAD_VERSION_INFO(FEnumReloadVersionInfo, 4075859156U) },
 		{ AkAcousticPortalState_StaticEnum, TEXT("AkAcousticPortalState"), &Z_Registration_Info_UEnum_AkAcousticPortalState, CONSTRUCT_RELOAD_VERSION_INFO(FEnumReloadVersionInfo, 2265453571U) },
@@ -4071,7 +4071,7 @@ template<> AKAUDIO_API UScriptStruct* StaticStruct<FAkExternalSourceInfo>()
 		{ EAkMidiCcValues_StaticEnum, TEXT("EAkMidiCcValues"), &Z_Registration_Info_UEnum_EAkMidiCcValues, CONSTRUCT_RELOAD_VERSION_INFO(FEnumReloadVersionInfo, 2996204083U) },
 		{ AkCodecId_StaticEnum, TEXT("AkCodecId"), &Z_Registration_Info_UEnum_AkCodecId, CONSTRUCT_RELOAD_VERSION_INFO(FEnumReloadVersionInfo, 463579165U) },
 	};
-	const FStructRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Users_danii_RiderProjects_MainProject_Plugins_Wwise_Source_AkAudio_Classes_AkGameplayTypes_h_Statics::ScriptStructInfo[] = {
+	const FStructRegisterCompiledInInfo Z_CompiledInDeferFile_FID_MainProject_Plugins_Wwise_Source_AkAudio_Classes_AkGameplayTypes_h_Statics::ScriptStructInfo[] = {
 		{ FAkChannelMask::StaticStruct, Z_Construct_UScriptStruct_FAkChannelMask_Statics::NewStructOps, TEXT("AkChannelMask"), &Z_Registration_Info_UScriptStruct_AkChannelMask, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FAkChannelMask), 2579291296U) },
 		{ FAkOutputSettings::StaticStruct, Z_Construct_UScriptStruct_FAkOutputSettings_Statics::NewStructOps, TEXT("AkOutputSettings"), &Z_Registration_Info_UScriptStruct_AkOutputSettings, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FAkOutputSettings), 1761225682U) },
 		{ FAkMidiEventBase::StaticStruct, Z_Construct_UScriptStruct_FAkMidiEventBase_Statics::NewStructOps, TEXT("AkMidiEventBase"), &Z_Registration_Info_UScriptStruct_AkMidiEventBase, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FAkMidiEventBase), 1020500531U) },
@@ -4085,7 +4085,7 @@ template<> AKAUDIO_API UScriptStruct* StaticStruct<FAkExternalSourceInfo>()
 		{ FAkSegmentInfo::StaticStruct, Z_Construct_UScriptStruct_FAkSegmentInfo_Statics::NewStructOps, TEXT("AkSegmentInfo"), &Z_Registration_Info_UScriptStruct_AkSegmentInfo, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FAkSegmentInfo), 3440078921U) },
 		{ FAkExternalSourceInfo::StaticStruct, Z_Construct_UScriptStruct_FAkExternalSourceInfo_Statics::NewStructOps, TEXT("AkExternalSourceInfo"), &Z_Registration_Info_UScriptStruct_AkExternalSourceInfo, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FAkExternalSourceInfo), 2944252540U) },
 	};
-	const FClassRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Users_danii_RiderProjects_MainProject_Plugins_Wwise_Source_AkAudio_Classes_AkGameplayTypes_h_Statics::ClassInfo[] = {
+	const FClassRegisterCompiledInInfo Z_CompiledInDeferFile_FID_MainProject_Plugins_Wwise_Source_AkAudio_Classes_AkGameplayTypes_h_Statics::ClassInfo[] = {
 		{ Z_Construct_UClass_UAkCallbackInfo, UAkCallbackInfo::StaticClass, TEXT("UAkCallbackInfo"), &Z_Registration_Info_UClass_UAkCallbackInfo, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UAkCallbackInfo), 3180642672U) },
 		{ Z_Construct_UClass_UAkEventCallbackInfo, UAkEventCallbackInfo::StaticClass, TEXT("UAkEventCallbackInfo"), &Z_Registration_Info_UClass_UAkEventCallbackInfo, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UAkEventCallbackInfo), 1729991346U) },
 		{ Z_Construct_UClass_UAkMIDIEventCallbackInfo, UAkMIDIEventCallbackInfo::StaticClass, TEXT("UAkMIDIEventCallbackInfo"), &Z_Registration_Info_UClass_UAkMIDIEventCallbackInfo, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UAkMIDIEventCallbackInfo), 456496078U) },
@@ -4093,8 +4093,8 @@ template<> AKAUDIO_API UScriptStruct* StaticStruct<FAkExternalSourceInfo>()
 		{ Z_Construct_UClass_UAkDurationCallbackInfo, UAkDurationCallbackInfo::StaticClass, TEXT("UAkDurationCallbackInfo"), &Z_Registration_Info_UClass_UAkDurationCallbackInfo, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UAkDurationCallbackInfo), 57531121U) },
 		{ Z_Construct_UClass_UAkMusicSyncCallbackInfo, UAkMusicSyncCallbackInfo::StaticClass, TEXT("UAkMusicSyncCallbackInfo"), &Z_Registration_Info_UClass_UAkMusicSyncCallbackInfo, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UAkMusicSyncCallbackInfo), 3114671639U) },
 	};
-	static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Users_danii_RiderProjects_MainProject_Plugins_Wwise_Source_AkAudio_Classes_AkGameplayTypes_h_884812586(TEXT("/Script/AkAudio"),
-		Z_CompiledInDeferFile_FID_Users_danii_RiderProjects_MainProject_Plugins_Wwise_Source_AkAudio_Classes_AkGameplayTypes_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Users_danii_RiderProjects_MainProject_Plugins_Wwise_Source_AkAudio_Classes_AkGameplayTypes_h_Statics::ClassInfo),
-		Z_CompiledInDeferFile_FID_Users_danii_RiderProjects_MainProject_Plugins_Wwise_Source_AkAudio_Classes_AkGameplayTypes_h_Statics::ScriptStructInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Users_danii_RiderProjects_MainProject_Plugins_Wwise_Source_AkAudio_Classes_AkGameplayTypes_h_Statics::ScriptStructInfo),
-		Z_CompiledInDeferFile_FID_Users_danii_RiderProjects_MainProject_Plugins_Wwise_Source_AkAudio_Classes_AkGameplayTypes_h_Statics::EnumInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Users_danii_RiderProjects_MainProject_Plugins_Wwise_Source_AkAudio_Classes_AkGameplayTypes_h_Statics::EnumInfo));
+	static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_MainProject_Plugins_Wwise_Source_AkAudio_Classes_AkGameplayTypes_h_884812586(TEXT("/Script/AkAudio"),
+		Z_CompiledInDeferFile_FID_MainProject_Plugins_Wwise_Source_AkAudio_Classes_AkGameplayTypes_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_MainProject_Plugins_Wwise_Source_AkAudio_Classes_AkGameplayTypes_h_Statics::ClassInfo),
+		Z_CompiledInDeferFile_FID_MainProject_Plugins_Wwise_Source_AkAudio_Classes_AkGameplayTypes_h_Statics::ScriptStructInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_MainProject_Plugins_Wwise_Source_AkAudio_Classes_AkGameplayTypes_h_Statics::ScriptStructInfo),
+		Z_CompiledInDeferFile_FID_MainProject_Plugins_Wwise_Source_AkAudio_Classes_AkGameplayTypes_h_Statics::EnumInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_MainProject_Plugins_Wwise_Source_AkAudio_Classes_AkGameplayTypes_h_Statics::EnumInfo));
 PRAGMA_ENABLE_DEPRECATION_WARNINGS

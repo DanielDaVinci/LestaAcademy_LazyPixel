@@ -1,4 +1,4 @@
-#include "C:/Users/danii/RiderProjects/MainProject/Intermediate/Build/Win64/x64/MainProjectEditor/Development/CoreUObject/SharedDefinitions.CoreUObject.Cpp20.h"
+#include "G:/Lesta/MainProject/Intermediate/Build/Win64/x64/MainProjectEditor/Development/CoreUObject/SharedDefinitions.CoreUObject.Cpp20.h"
 #undef UE_IS_ENGINE_MODULE
 #undef DEPRECATED_FORGAME
 #define DEPRECATED_FORGAME DEPRECATED
