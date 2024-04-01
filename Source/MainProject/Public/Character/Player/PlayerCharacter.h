@@ -64,4 +64,5 @@ private:
 
 public:
     ABasePlayerController* GetPlayerController() const;
+    UWeaponComponent* GetWeaponComponent() const; 
 };

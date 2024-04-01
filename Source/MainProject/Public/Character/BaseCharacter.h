@@ -29,7 +29,7 @@ public:
 
     bool IsDead() const;
     UHealthComponent* GetHealthComponent() const;
-    UBaseWeaponComponent* GetWeaponComponent() const;
+    UBaseWeaponComponent* GetBaseWeaponComponent() const;
 
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName = "AbilityComponent")
@@ -54,6 +54,5 @@ public:
 
 public:
     UStateMachineComponent* GetStateMachineComponent() const;
-    UBaseWeaponComponent* GetBaseWeaponComponent() const;
     UAbilityComponent* GetAbilityComponent() const;
 };

@@ -34,7 +34,7 @@ UHealthComponent* ABaseCharacter::GetHealthComponent() const
     return pHealthComponent;
 }
 
-UBaseWeaponComponent* ABaseCharacter::GetWeaponComponent() const
+UBaseWeaponComponent* ABaseCharacter::GetBaseWeaponComponent() const
 {
     return pWeaponComponent;
 }
@@ -73,11 +73,6 @@ void ABaseCharacter::Tick(float DeltaTime)
 UStateMachineComponent* ABaseCharacter::GetStateMachineComponent() const
 {
     return pStateMachineComponent;
-}
-
-UBaseWeaponComponent* ABaseCharacter::GetBaseWeaponComponent() const
-{
-    return pWeaponComponent;
 }
 
 UAbilityComponent* ABaseCharacter::GetAbilityComponent() const

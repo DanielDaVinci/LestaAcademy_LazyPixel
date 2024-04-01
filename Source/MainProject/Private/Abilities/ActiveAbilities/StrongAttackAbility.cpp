@@ -244,7 +244,7 @@ UStateMachineComponent* UStrongAttackAbility::GetStateMachineComponent() const
 
 UWeaponComponent* UStrongAttackAbility::GetWeaponComponent() const
 {
-    return GetCharacter() ? Cast<UWeaponComponent>(GetCharacter()->GetWeaponComponent()) : nullptr;
+    return GetCharacter() ? Cast<UWeaponComponent>(GetCharacter()->GetBaseWeaponComponent()) : nullptr;
 }
 
 bool UStrongAttackAbility::IsAbilityCharged() const

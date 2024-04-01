@@ -74,7 +74,8 @@ protected:
     virtual void OnRangeAttackAnim() override;
 
 public:
-    void PickUpWeapon(const TSubclassOf<ABaseWeapon>& WeaponClass);
+    template<typename T>
+    void PickUpWeapon(const TSubclassOf<T>& WeaponClass);
     
     APlayerCharacter* GetPlayerCharacter() const;
     ABasePlayerController* GetPlayerController() const;
@@ -82,3 +83,27 @@ public:
     UStateMachineComponent* GetStateMachineComponent() const;
     
 };
+
+template <typename T>
+void UWeaponComponent::PickUpWeapon(const TSubclassOf<T>& WeaponClass)
+{
+    DropWeapon(WeaponClass);
+
+    for (const auto& data : weaponData)
+    {
+        if (data.WeaponClass != WeaponClass)
+            continue;
+        
+        const auto weapon = SpawnWeapon(data.WeaponClass);
+        if (!weapon) 
+            continue;
+
+        AttachWeapon(weapon, data.WeaponAttachPointName);
+        weapons.Add(weapon);
+            
+        OnAfterSpawnAllWeapons.Broadcast();
+        SubscribeOnDropRangeWeapon();
+
+        return;
+    }
+}

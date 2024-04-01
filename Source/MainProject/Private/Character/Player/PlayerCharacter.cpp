@@ -104,3 +104,8 @@ ABasePlayerController* APlayerCharacter::GetPlayerController() const
 {
     return Cast<ABasePlayerController>(Controller);
 }
+
+UWeaponComponent* APlayerCharacter::GetWeaponComponent() const
+{
+    return Cast<UWeaponComponent>(GetBaseWeaponComponent());
+}

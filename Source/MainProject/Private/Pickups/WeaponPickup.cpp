@@ -26,6 +26,13 @@ void AWeaponPickup::PickUpHandle(APlayerCharacter* Character)
     if (!Character)
         return;
 
-    Character->GetComponentByClass<UWeaponComponent>()->PickUpWeapon(weaponClass);
-    Destroy();
+    if (const auto playerCharacter = Cast<APlayerCharacter>(Character))
+    {
+        if (const auto weaponComponent = playerCharacter->GetWeaponComponent())
+        {
+            weaponComponent->PickUpWeapon(weaponClass);
+            Destroy();
+        }
+        
+    }
 }

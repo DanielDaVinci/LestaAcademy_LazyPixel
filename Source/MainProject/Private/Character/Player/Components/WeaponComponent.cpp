@@ -254,27 +254,6 @@ void UWeaponComponent::SubscribeOnDropRangeWeapon()
         pRangeWeapon->OnEmptyAmmo.AddUObject(this, &UWeaponComponent::DropWeapon, TSubclassOf<ABaseWeapon>(pRangeWeapon->StaticClass()));
 }
 
-void UWeaponComponent::PickUpWeapon(const TSubclassOf<ABaseWeapon>& WeaponClass)
-{
-    DropWeapon(WeaponClass);
-
-    for (const auto& data : weaponData)
-    {
-        if (data.WeaponClass != WeaponClass)
-            continue;
-        
-        const auto weapon = SpawnWeapon(data.WeaponClass);
-        if (!weapon) 
-            continue;
-
-        AttachWeapon(weapon, data.WeaponAttachPointName);
-        weapons.Add(weapon);
-            
-        OnAfterSpawnAllWeapons.Broadcast();
-        SubscribeOnDropRangeWeapon();
-    }
-}
-
 APlayerCharacter* UWeaponComponent::GetPlayerCharacter() const
 {
     return Cast<APlayerCharacter>(GetOwner());

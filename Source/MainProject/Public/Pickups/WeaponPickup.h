@@ -6,6 +6,7 @@
 #include "Pickups/BasePickup.h"
 #include "WeaponPickup.generated.h"
 
+class AGun;
 class ABaseWeapon;
 
 UCLASS()

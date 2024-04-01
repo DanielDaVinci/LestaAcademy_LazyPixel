@@ -111,7 +111,7 @@ UHealthComponent* UPropertyPanelWidget::GetHealthComponent() const
 UWeaponComponent* UPropertyPanelWidget::GetWeaponComponent() const
 {
     const auto pCharacter = GetOwningPlayerCharacter();
-    return pCharacter ? Cast<UWeaponComponent>(pCharacter->GetWeaponComponent()) : nullptr;
+    return pCharacter ? Cast<UWeaponComponent>(pCharacter->GetBaseWeaponComponent()) : nullptr;
 }
 
 UAbilityComponent* UPropertyPanelWidget::GetAbilityComponent() const
