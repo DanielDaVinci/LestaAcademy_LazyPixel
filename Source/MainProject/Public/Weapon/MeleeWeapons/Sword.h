@@ -50,8 +50,10 @@ private:
     TSet<AActor*> alreadyDamagedActors;
        
     void InitBoxCollision();
-    
+
+    UPROPERTY()
     UMaterialInterface* defaultMaterial;
+    
     void SetChargedMaterial();
     void SetDefaultMaterial();
 };

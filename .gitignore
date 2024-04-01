@@ -10,6 +10,7 @@
 # Precompiled Headers
 *.gch
 *.pch
+*.pdb
 
 # Compiled Dynamic libraries
 *.so
@@ -49,6 +50,7 @@ SourceArt/**/*.tga
 Binaries/*
 # Plugins/*/Binaries/*
 Plugins/**/Binaries/**.pdb
+Plugins/*/Binaries/*.pdb
 
 # Builds
 Build/*
@@ -70,7 +72,7 @@ Saved/*
 # Compiled source files for the engine to use
 Intermediate/*
 Plugins/**/Intermediate/**
-#!Plugins/*/Intermediate/*.lib
+!Plugins/**/Intermediate/**.lib
 
 # Cache files for the editor to use
 DerivedDataCache/*

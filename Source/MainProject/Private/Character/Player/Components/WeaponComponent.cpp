@@ -260,16 +260,18 @@ void UWeaponComponent::PickUpWeapon(const TSubclassOf<ABaseWeapon>& WeaponClass)
 
     for (const auto& data : weaponData)
     {
-        if (data.WeaponClass->StaticClass() == WeaponClass->StaticClass())
-        {
-            const auto weapon = SpawnWeapon(data.WeaponClass);
-            if (!weapon) return;
+        if (data.WeaponClass != WeaponClass)
+            continue;
+        
+        const auto weapon = SpawnWeapon(data.WeaponClass);
+        if (!weapon) 
+            continue;
 
-            AttachWeapon(weapon, data.WeaponAttachPointName);
-            weapons.Add(weapon);
-            OnAfterSpawnAllWeapons.Broadcast();
-            SubscribeOnDropRangeWeapon();
-        }
+        AttachWeapon(weapon, data.WeaponAttachPointName);
+        weapons.Add(weapon);
+            
+        OnAfterSpawnAllWeapons.Broadcast();
+        SubscribeOnDropRangeWeapon();
     }
 }
 

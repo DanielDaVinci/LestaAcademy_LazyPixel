@@ -83,7 +83,7 @@ void ASword::SetChargedMaterial()
 {
     if (!chargedMaterial)
         return;
-
+    
     pWeaponMeshComponent->SetMaterial(0, chargedMaterial);
 }
 

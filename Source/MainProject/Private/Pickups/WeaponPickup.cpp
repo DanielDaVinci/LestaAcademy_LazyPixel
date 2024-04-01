@@ -23,7 +23,8 @@ void AWeaponPickup::Tick(float DeltaTime)
 
 void AWeaponPickup::PickUpHandle(APlayerCharacter* Character) 
 {
-    if (!Character) return;
+    if (!Character)
+        return;
 
     Character->GetComponentByClass<UWeaponComponent>()->PickUpWeapon(weaponClass);
     Destroy();
