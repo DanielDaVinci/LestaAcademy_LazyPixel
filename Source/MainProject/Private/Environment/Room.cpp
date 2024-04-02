@@ -219,19 +219,22 @@ void ARoom::DestroyActorsInRoom() const
     
     for (const auto& actor : findedActors)
     {
-        if (!Cast<AStaticMeshActor>(actor))
-            return;
+        if (actor == roomCeiling)
+            continue;
+        
+        UE_LOG(LogTemp, Display, TEXT("Finded: %s"), *actor->GetName());
         
         bool isInside = false;
-        for (auto box: volumes)
+        for (const auto& box: volumes)
         {
-            isInside = box.IsInside(actor->GetActorLocation());
+            isInside = box.IsInsideXY(actor->GetActorLocation());
             if (isInside)
                 break;
         }
 
         if (isInside)
         {
+            UE_LOG(LogTemp, Display, TEXT("Deleted: %s"), *actor->GetName());
             actor->Destroy();
         }   
     }

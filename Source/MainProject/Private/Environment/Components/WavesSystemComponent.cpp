@@ -158,6 +158,9 @@ void UWavesSystemComponent::OnSpawnTick(int32 SpawnerIndex)
     }
     
     const auto& spawnerProperties = waves[m_currentWaveIndex].Spawners[SpawnerIndex];
+    if (!spawnerProperties.AICharacterClass || !spawnerProperties.pEnemySpawner)
+        return;
+    
     const auto& spawner = spawnerProperties.pEnemySpawner;
     if (!spawner)
         return;
