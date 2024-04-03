@@ -55,6 +55,8 @@ void ABaseCharacter::BeginPlay()
 
 void ABaseCharacter::OnDeath()
 {
+    OnDied();
+    
     pWeaponComponent->DisableAllWeaponsCollision();
     GetCharacterMovement()->DisableMovement();
     GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECR_Ignore);

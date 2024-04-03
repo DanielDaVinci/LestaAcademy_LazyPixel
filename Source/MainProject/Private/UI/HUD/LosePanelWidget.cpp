@@ -44,7 +44,7 @@ void ULosePanelWidget::OnRestartButtonClicked()
 
 void ULosePanelWidget::OnMenuButtonClicked()
 {
-    
+    UKismetSystemLibrary::QuitGame(GetWorld(), GetOwningPlayer(), EQuitPreference::Quit, true);
 }
 
 void ULosePanelWidget::OnPlayerDied()

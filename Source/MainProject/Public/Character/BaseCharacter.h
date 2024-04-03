@@ -49,6 +49,9 @@ protected:
     
     virtual void OnDeath();
 
+    UFUNCTION(BlueprintImplementableEvent)
+    void OnDied();
+
 public:
     virtual void Tick(float DeltaTime) override;
 
