@@ -8,6 +8,14 @@ UStateMachineComponent::UStateMachineComponent()
 	PrimaryComponentTick.bCanEverTick = false;
 }
 
+void UStateMachineComponent::SetMaxNumStates(SIZE_T MaxNum)
+{
+    if (MaxNum <= 0)
+        return;
+
+    m_maxNumStates = MaxNum;
+}
+
 void UStateMachineComponent::AddState(const FState& State)
 {
     if (State.Priority == EStatePriority::Force)
@@ -15,11 +23,22 @@ void UStateMachineComponent::AddState(const FState& State)
         StopCurrentState(EStateResult::Aborted);
         ClearQueue();
     }
-
-    FState* pNewState = new FState(State);
-    m_queueStates.push(pNewState);
     
-    if (!m_pCurrentState)
+    m_queueStates.Insert(new FState(State), FindLastStateByPriority(State.Priority));
+    
+    if (m_queueStates.Num() > m_maxNumStates)
+    {
+        RemoveLastState();
+    }
+    
+    // if (m_pCurrentState)
+    //     UE_LOG(LogTemp, Error, TEXT("%s"), *m_pCurrentState->Name);
+    // for (SIZE_T i = 0; i < m_queueStates.Num(); i++)
+    // {
+    //     UE_LOG(LogTemp, Warning, TEXT("%s"), *m_queueStates[i]->Name);
+    // }
+    
+    if (!InternalGetCurrentState())
     {
         NextState();
     }
@@ -30,19 +49,19 @@ void UStateMachineComponent::SkipCurrentState()
     NextState();
 }
 
-FState UStateMachineComponent::GetCurrentState() const
+const FState* UStateMachineComponent::GetCurrentState() const
 {
-    return m_pCurrentState? *m_pCurrentState : FState();
+    return InternalGetCurrentState();
 }
 
-FState UStateMachineComponent::GetNextState() const
+const FState* UStateMachineComponent::GetNextState() const
 {
-    return HasNextState() ? *m_queueStates.top() : FState();
+    return InternalGetNextState();
 }
 
 bool UStateMachineComponent::HasNextState() const
 {
-    return !m_queueStates.empty();
+    return !m_queueStates.IsEmpty();
 }
 
 void UStateMachineComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -52,9 +71,9 @@ void UStateMachineComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
     ClearQueue();
 }
 
-void UStateMachineComponent::StopCurrentState(EStateResult StateResult)
+void UStateMachineComponent::StopCurrentState(const EStateResult StateResult)
 {
-    if (!m_pCurrentState)
+    if (!InternalGetCurrentState())
         return;
 
     ClearStateTimer();
@@ -63,6 +82,29 @@ void UStateMachineComponent::StopCurrentState(EStateResult StateResult)
     m_pCurrentState = nullptr;
     currentState->OnEndState.Broadcast(StateResult);
     delete currentState;
+}
+
+void UStateMachineComponent::RemoveLastState()
+{
+    if (m_queueStates.IsValidIndex(m_queueStates.Num() - 1))
+    {
+        const FState* state = m_queueStates[m_queueStates.Num() - 1];
+        state->OnEndState.Broadcast(EStateResult::Cancel);
+        delete state;
+        
+        m_queueStates.RemoveAt(m_queueStates.Num() - 1);
+    }
+}
+
+FState* UStateMachineComponent::RemoveNextStateFromQueue()
+{
+    FState* nextState = InternalGetNextState();
+    if (nextState && m_queueStates.IsValidIndex(0))
+    {
+        m_queueStates.RemoveAt(0);
+    }
+
+    return nextState;
 }
 
 void UStateMachineComponent::StartState(FState* State)
@@ -77,19 +119,42 @@ void UStateMachineComponent::StartState(FState* State)
     m_pCurrentState->OnStartState.Broadcast();
 }
 
+
 void UStateMachineComponent::NextState()
 {
-    if (m_pCurrentState)
+    if (InternalGetCurrentState())
     {
         StopCurrentState(EStateResult::Successed);
     }
     
-    if (m_queueStates.empty())
-        return;
+    if (FState* pNextState = RemoveNextStateFromQueue())
+    {
+        StartState(pNextState);
+    }
+}
 
-    const auto pNextState = m_queueStates.top();
-    m_queueStates.pop();
-    StartState(pNextState);
+SIZE_T UStateMachineComponent::FindLastStateByPriority(EStatePriority StatePriority)
+{
+    SIZE_T i;
+    for (i = 0; i < m_queueStates.Num(); i++)
+    {
+        if (StatePriority > m_queueStates[i]->Priority)
+        {
+            return i;
+        }
+    }
+
+    return i;
+}
+
+FState* UStateMachineComponent::InternalGetCurrentState() const
+{
+    return m_pCurrentState;
+}
+
+FState* UStateMachineComponent::InternalGetNextState() const
+{
+    return HasNextState() ? m_queueStates[0] : nullptr;
 }
 
 void UStateMachineComponent::ClearStateTimer()
@@ -102,11 +167,16 @@ void UStateMachineComponent::ClearStateTimer()
 
 void UStateMachineComponent::ClearQueue()
 {
-    while (!m_queueStates.empty())
+    for (const FState* state: m_queueStates)
     {
-        delete m_queueStates.top();
-        m_queueStates.pop();
+        if (!state)
+            continue;
+
+        state->OnEndState.Broadcast(EStateResult::Cancel);
+        delete state;
     }
+
+    m_queueStates.Reset();
 }
 
 void UStateMachineComponent::OnEndStateTimer()

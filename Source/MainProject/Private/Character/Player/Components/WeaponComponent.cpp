@@ -1,6 +1,8 @@
 // Lazy Pixel. All Rights Reserved.
 
 #include "Character/Player/Components/WeaponComponent.h"
+
+#include "AsyncTreeDifferences.h"
 #include "Weapon/MeleeWeapons/Sword.h"
 #include "Weapon/RangeWeapons/Gun.h"
 #include "Animations/ComboEndAnimNotify.h"
@@ -70,6 +72,30 @@ void UWeaponComponent::OnComboNotifyHandle(USkeletalMeshComponent* MeshComp)
     
 }
 
+void UWeaponComponent::PlayMeleeWeaponComboAnim(ASword* Weapon, int32 ComboIndex) const
+{
+    const auto pCharacter = GetPlayerCharacter();
+    if (!pCharacter || !Weapon)
+        return;
+
+    const auto comboInfo = Weapon->GetComboInfo();
+    if (!comboInfo.IsValidIndex(ComboIndex))
+        return;
+    
+    if (pCharacter->GetMesh())
+    {
+        pCharacter->GetMesh()->GetAnimInstance()->SetRootMotionMode(comboInfo[ComboIndex].RootMotionMode);
+    }
+
+    if (Weapon->GetAttackMontage())
+    {
+        pCharacter->PlayAnimMontage(
+        Weapon->GetAttackMontage(),
+        Weapon->GetAttackMontage()->GetSectionLength(ComboIndex) / comboInfo[ComboIndex].AnimationTime,
+        comboInfo[ComboIndex].AttackSectionName);
+    }
+}
+
 void UWeaponComponent::MeleeAttack()
 {
     const auto pCharacter = GetPlayerCharacter();
@@ -81,9 +107,6 @@ void UWeaponComponent::MeleeAttack()
     if (!pStateMachine)
         return;
 
-    if (pStateMachine->GetCurrentState().Priority >= EStatePriority::Medium)
-        return;
-
     const auto comboInfo = pMeleeWeapon->GetComboInfo();
     if (m_nextComboIndex >= comboInfo.Num())
         return;
@@ -91,32 +114,13 @@ void UWeaponComponent::MeleeAttack()
     FState meleeState(
         "ComboAttack",
         comboInfo[m_nextComboIndex].AnimationTime,
-        m_nextComboIndex == 0 ? EStatePriority::Light : EStatePriority::Light
+        EStatePriority::Light
     );
     
     meleeState.OnStartState.AddUObject(this, &UWeaponComponent::OnStartComboState, m_nextComboIndex);
     meleeState.OnEndState.AddUObject(this, &UWeaponComponent::OnEndComboState, m_nextComboIndex);
-
+    
     pStateMachine->AddState(meleeState);
-    m_nextComboIndex++;
-}
-
-void UWeaponComponent::PlayMeleeWeaponComboAnim(ASword* Weapon, int32 ComboIndex) const
-{
-    const auto pCharacter = GetPlayerCharacter();
-    if (!pCharacter || !pCharacter->GetMesh() || !Weapon || !Weapon->GetAttackMontage())
-        return;
-
-    const auto comboInfo = Weapon->GetComboInfo();
-    if (!comboInfo.IsValidIndex(ComboIndex))
-        return;
-    
-    pCharacter->GetMesh()->GetAnimInstance()->SetRootMotionMode(comboInfo[ComboIndex].RootMotionMode);
-    
-    pCharacter->PlayAnimMontage(
-        Weapon->GetAttackMontage(),
-        Weapon->GetAttackMontage()->GetSectionLength(ComboIndex) / comboInfo[ComboIndex].AnimationTime,
-        comboInfo[ComboIndex].AttackSectionName);
 }
 
 void UWeaponComponent::OnStartComboState(int32 ComboIndex)
@@ -145,6 +149,8 @@ void UWeaponComponent::OnStartComboState(int32 ComboIndex)
     pMeleeWeapon->SetDamage(comboInfo[ComboIndex].Damage);
     
     PlayMeleeWeaponComboAnim(pMeleeWeapon, ComboIndex);
+
+    m_nextComboIndex++;
 }
 
 void UWeaponComponent::OnEndComboState(EStateResult StateResult, int32 ComboIndex)
@@ -163,9 +169,25 @@ void UWeaponComponent::OnEndComboState(EStateResult StateResult, int32 ComboInde
     pMovementComponent->SetDeceleration(0.0f);
     
     pMeleeWeapon->DisableAttackCollision();
-    
-    if (StateResult == EStateResult::Aborted || ComboIndex == comboInfo.Num() - 1 || !pStateMachine->HasNextState())
-        m_nextComboIndex = 0;
+
+    switch (StateResult)
+    {
+        case EStateResult::Aborted:
+        {
+            m_nextComboIndex = 0;
+        }
+        break;
+        case EStateResult::Successed:
+        {
+            if (!pStateMachine->GetNextState()
+                || (pStateMachine->GetNextState() && pStateMachine->GetNextState()->Name != "ComboAttack")
+                || ComboIndex == comboInfo.Num() - 1)
+            {
+                m_nextComboIndex = 0;
+            }
+        }
+        break;
+    }
 }
 
 void UWeaponComponent::OnMeleeStartAttackAnim()
@@ -192,7 +214,7 @@ void UWeaponComponent::RangeAttack()
     if (!pRangeWeapon || !pPlayerController || !pStateMachine)
         return;
 
-    if (pStateMachine->GetCurrentState().Name == "RangeState")
+    if (pStateMachine->GetCurrentState() && pStateMachine->GetCurrentState()->Name == "RangeState")
         return;
 
     FVector attackPoint = pPlayerController->GetWorldPointUnderMouse();
