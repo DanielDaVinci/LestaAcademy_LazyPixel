@@ -16,15 +16,16 @@ UWavesSystemComponent::UWavesSystemComponent()
 
 void UWavesSystemComponent::StartWaves()
 {
-    if (sceneEnemies.Num())
+    if (m_currentAliveEnemies)
     {
-        m_currentAliveEnemies = sceneEnemies.Num();
         m_currentWaveIndex = -1;
     }
     else
     {
         StartWave(0);
     }
+    
+    CheckEnemyCount();
 }
 
 void UWavesSystemComponent::BeginPlay()
@@ -42,20 +43,20 @@ void UWavesSystemComponent::BindEvents()
 
 void UWavesSystemComponent::BindSceneEnemies()
 {
-    FindEnemiesInRoom();
-    BindEnemiesOnDeath(sceneEnemies);
+    BindEnemiesOnDeath(FindEnemiesInRoom());
 }
 
-void UWavesSystemComponent::FindEnemiesInRoom()
+TArray<AAIBaseCharacter*> UWavesSystemComponent::FindEnemiesInRoom()
 {
     ARoom* room = GetOwningRoom();
     if (!room)
-        return;
+        return TArray<AAIBaseCharacter*>();
     
     TArray<AActor*> overlappingActors;
     room->UpdateOverlaps(false);
     room->GetOverlappingActors(overlappingActors, AAIBaseCharacter::StaticClass());
 
+    TArray<AAIBaseCharacter*> sceneEnemies;
     for (const auto& actor: overlappingActors)
     {
         auto enemy = Cast<AAIBaseCharacter>(actor);
@@ -64,11 +65,17 @@ void UWavesSystemComponent::FindEnemiesInRoom()
 
         sceneEnemies.Add(enemy);
         enemy->enemyRoom = room;
+        m_currentAliveEnemies++;
     }
+
+    return sceneEnemies;
 }
 
 void UWavesSystemComponent::StartWave(int32 WaveIndex)
 {
+    if (WaveIndex < 0)
+        return;
+    
     m_currentWaveIndex = WaveIndex;
     
     if (m_currentWaveIndex >= waves.Num())
@@ -84,8 +91,8 @@ void UWavesSystemComponent::StartWave(int32 WaveIndex)
     {
         GetWorld()->GetTimerManager().ClearTimer(timer);
     }
-    m_spawnTimers.Empty();
-    m_spawnCounts.Empty();
+    m_spawnTimers.Reset();
+    m_spawnCounts.Reset();
     m_currentAliveEnemies = 0;
     
     for (int i = 0; i < waves[WaveIndex].Spawners.Num(); i++)
@@ -112,7 +119,7 @@ void UWavesSystemComponent::StartWave(int32 WaveIndex)
     }
 }
 
-void UWavesSystemComponent::BindEnemiesOnDeath(const TArray<AAIBaseCharacter*>& Enemies)
+void UWavesSystemComponent::BindEnemiesOnDeath(const TArray<AAIBaseCharacter*>&& Enemies)
 {
     for (const auto& enemy : Enemies)
     {
@@ -176,7 +183,13 @@ void UWavesSystemComponent::OnSpawnTick(int32 SpawnerIndex)
 
 void UWavesSystemComponent::OnEnemyDied()
 {
-    if (--m_currentAliveEnemies == 0)
+    m_currentAliveEnemies--;
+    CheckEnemyCount();
+}
+
+void UWavesSystemComponent::CheckEnemyCount()
+{
+    if (m_currentAliveEnemies <= 0)
     {
         OnWaveEndEvent.Broadcast();
     }
