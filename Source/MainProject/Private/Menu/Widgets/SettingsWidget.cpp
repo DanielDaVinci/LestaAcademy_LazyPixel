@@ -9,6 +9,11 @@ void USettingsWidget::NativeOnInitialized()
 {
     Super::NativeOnInitialized();
 
+    BindActions();
+}
+
+void USettingsWidget::BindActions()
+{
     if (Exit)
     {
         Exit->OnClicked.AddDynamic(this, &USettingsWidget::OnExit);
@@ -17,5 +22,5 @@ void USettingsWidget::NativeOnInitialized()
 
 void USettingsWidget::OnExit()
 {
-    this->RemoveFromParent();
+    SetVisibility(ESlateVisibility::Hidden);
 }

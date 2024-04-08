@@ -20,6 +20,4 @@ public:
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Environment")
     AFloorManager* floorManager;
-    
-    virtual void BeginPlay() override;
 };

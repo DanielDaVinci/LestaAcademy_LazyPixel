@@ -5,11 +5,20 @@
 
 #include "Components/Button.h"
 #include "Kismet/GameplayStatics.h"
+#include "Menu/Widgets/AboutUsWidget.h"
+#include "Menu/Widgets/ChoiceSaveSlotUserWidget.h"
+#include "Menu/Widgets/ExitWidget.h"
+#include "Menu/Widgets/SettingsWidget.h"
 
 void UMenuWidget::NativeOnInitialized()
 {
     Super::NativeOnInitialized();
 
+    BindActions();
+}
+
+void UMenuWidget::BindActions()
+{
     if (StartGameButton)
     {
         StartGameButton->OnClicked.AddDynamic(this, &UMenuWidget::OnStartGame);
@@ -33,39 +42,32 @@ void UMenuWidget::NativeOnInitialized()
 
 void UMenuWidget::OnStartGame()
 {
-    const FName FirstLevel = "FirstLevel";
-    UGameplayStatics::OpenLevel(this, FirstLevel);
+    if (ChoiceSaveSlotUserWidget)
+    {
+        ChoiceSaveSlotUserWidget->SetVisibility(ESlateVisibility::Visible);
+    }
 }
 
 void UMenuWidget::OnAboutUs()
 {
-    if (AboutUsWidgetClass)
+    if (AboutUsUserWidget)
     {
-        if (const auto AboutUsWidget = CreateWidget<UUserWidget>(GetWorld(), AboutUsWidgetClass))
-        {
-            AboutUsWidget->AddToViewport();
-        }
+        AboutUsUserWidget->SetVisibility(ESlateVisibility::Visible);
     }
 }
 
 void UMenuWidget::OnSettings()
 {
-    if (SettingsWidgetClass)
+    if (SettingsUserWidget)
     {
-        if (const auto SettingsWidget = CreateWidget<UUserWidget>(GetWorld(), SettingsWidgetClass))
-        {
-            SettingsWidget->AddToViewport();
-        }
+        SettingsUserWidget->SetVisibility(ESlateVisibility::Visible);
     }
 }
 
 void UMenuWidget::OnExit()
 {
-    if (ExitWidgetClass)
+    if (ExitUserWidget)
     {
-        if (const auto ExitWidget = CreateWidget<UUserWidget>(GetWorld(), ExitWidgetClass))
-        {
-            ExitWidget->AddToViewport();
-        }
+        ExitUserWidget->SetVisibility(ESlateVisibility::Visible);
     }
 }

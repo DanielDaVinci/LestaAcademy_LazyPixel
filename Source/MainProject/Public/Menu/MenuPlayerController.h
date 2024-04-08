@@ -13,5 +13,13 @@ UCLASS()
 class MAINPROJECT_API AMenuPlayerController : public APlayerController
 {
 	GENERATED_BODY()
+
+public:
+    AMenuPlayerController();
+    
+protected:
+    virtual void BeginPlay() override;
+
+private:
     
 };

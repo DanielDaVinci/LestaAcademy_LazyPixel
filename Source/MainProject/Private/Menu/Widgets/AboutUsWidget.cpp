@@ -9,6 +9,11 @@ void UAboutUsWidget::NativeOnInitialized()
 {
     Super::NativeOnInitialized();
 
+    BindActions();
+}
+
+void UAboutUsWidget::BindActions()
+{
     if (Exit)
     {
         Exit->OnClicked.AddDynamic(this, &UAboutUsWidget::OnExit);
@@ -17,5 +22,5 @@ void UAboutUsWidget::NativeOnInitialized()
 
 void UAboutUsWidget::OnExit()
 {
-    this->RemoveFromParent();
+    SetVisibility(ESlateVisibility::Hidden);
 }

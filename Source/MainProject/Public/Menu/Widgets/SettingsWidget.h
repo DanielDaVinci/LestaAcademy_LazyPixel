@@ -16,7 +16,11 @@ protected:
     UPROPERTY(meta = (BindWidget))
     UButton* Exit;
 
-    virtual void NativeOnInitialized() override;    
+    virtual void NativeOnInitialized() override;
+
+protected:
+    void BindActions();
+
 private:
     UFUNCTION()
     void OnExit();

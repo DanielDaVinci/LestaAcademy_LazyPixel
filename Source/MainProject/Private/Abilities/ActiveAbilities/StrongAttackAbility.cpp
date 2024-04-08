@@ -102,7 +102,7 @@ void UStrongAttackAbility::SetAbilityCharge(float ChargeAmount)
     }
 
     if (IsAbilityCharged())
-        ChangeMeleeMaterilal();
+        ChangeMeleeMaterial();
 }
 
 void UStrongAttackAbility::AddAbilityCharge(float ChargeAmount)
@@ -110,7 +110,7 @@ void UStrongAttackAbility::AddAbilityCharge(float ChargeAmount)
     SetAbilityCharge(GetCurrentAbilityCharge() + ChargeAmount);
 }
 
-void UStrongAttackAbility::ChangeMeleeMaterilal()
+void UStrongAttackAbility::ChangeMeleeMaterial()
 {
     const auto weaponComponent = GetWeaponComponent();
     ASword* pMeleeWeapon = weaponComponent->FindWeapon<ASword>();
@@ -224,7 +224,7 @@ void UStrongAttackAbility::OnAttackPartEndState(EStateResult StateResult)
     m_pCubeCollision->Disable();
     GetCharacter()->GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Enemy, ECR_Block);
     pPlayerMovementComponent->SetEnableMovementInput(true);
-    ChangeMeleeMaterilal();
+    ChangeMeleeMaterial();
 }
 
 ABasePlayerController* UStrongAttackAbility::GetBasePlayerController() const

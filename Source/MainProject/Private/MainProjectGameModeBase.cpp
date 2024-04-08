@@ -12,8 +12,3 @@ AMainProjectGameModeBase::AMainProjectGameModeBase()
     DefaultPawnClass = APlayerCharacter::StaticClass();
     PlayerControllerClass = ABasePlayerController::StaticClass();
 }
-
-void AMainProjectGameModeBase::BeginPlay()
-{
-    Super::BeginPlay();
-}

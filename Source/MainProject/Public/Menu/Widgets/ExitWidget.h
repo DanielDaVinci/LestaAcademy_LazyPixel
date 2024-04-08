@@ -20,6 +20,9 @@ protected:
 
     virtual void NativeOnInitialized() override;
     
+protected:
+    void BindActions();
+    
 private:
     UFUNCTION()
     void OnAgree();

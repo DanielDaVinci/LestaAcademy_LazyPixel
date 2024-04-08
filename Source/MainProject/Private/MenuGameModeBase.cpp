@@ -3,11 +3,11 @@
 
 #include "MenuGameModeBase.h"
 
-#include "Menu/MenuHUD.h"
 #include "Menu/MenuPlayerController.h"
+#include "UI/GameHUD.h"
 
 AMenuGameModeBase::AMenuGameModeBase()
 {
-    HUDClass = AMenuHUD::StaticClass();
+    HUDClass = AGameHUD::StaticClass();
     PlayerControllerClass = AMenuPlayerController::StaticClass();
 }

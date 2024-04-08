@@ -76,7 +76,7 @@ private:
     void SetAbilityCharge(float ChargeAmount);
     void AddAbilityCharge(float ChargeAmount);
 
-    void ChangeMeleeMaterilal();
+    void ChangeMeleeMaterial();
 
 protected:
     virtual bool NativeActivate() override;
