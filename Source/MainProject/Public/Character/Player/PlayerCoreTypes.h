@@ -26,10 +26,11 @@ enum EStatePriority: int32
 };
 
 UENUM()
-enum EStateResult
+enum EStateResult : uint8
 {
-    Aborted = 0,
-    Successed = 1
+    Aborted,
+    Cancel,
+    Successed,
 };
 
 DECLARE_MULTICAST_DELEGATE(FOnStartStateSignature)
@@ -72,13 +73,4 @@ public:
     {
         return Priority < Other.Priority || (Priority == Other.Priority && Id > Other.Id);
     }
-
-    static class Comparator
-    {
-    public:
-        bool operator () (FState* left, FState* right) const
-        {
-            return *left < *right;
-        }
-    };
 };

@@ -85,7 +85,7 @@ void UDashAbility::OnDashTimerUpdate(FVector Direction)
     FHitResult* hitResult = nullptr;
     pCharacter->AddActorWorldOffset(delta,true, hitResult);
 
-    if (hitResult && hitResult->bBlockingHit && pStateMachineComponent->GetCurrentState().Name == "DashAbility")
+    if (hitResult && hitResult->bBlockingHit && pStateMachineComponent->GetCurrentState()->Name == "DashAbility")
         pStateMachineComponent->SkipCurrentState();
 }
 
