@@ -9,6 +9,8 @@
 
 AHealthStation::AHealthStation()
 {
+    PrimaryActorTick.bCanEverTick = true;
+
     pBaseMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("HealthStationMeshComponent");
     pBaseMeshComponent->SetupAttachment(GetRootComponent());
 
@@ -19,7 +21,14 @@ AHealthStation::AHealthStation()
     pRectLightComponent->SetupAttachment(pBaseMeshComponent);
 }
 
-void AHealthStation::NotifyActorBeginOverlap(AActor* OtherActor) 
+void AHealthStation::Tick(float DeltaTime) 
+{
+    Super::Tick(DeltaTime);
+
+    pHealthDisplayMeshComponent->AddLocalRotation(FRotator(0.0f, rotationYaw, 0.0f));
+}
+
+void AHealthStation::NotifyActorBeginOverlap(AActor* OtherActor)
 {
     if (isUsed) return;
 
@@ -34,5 +43,6 @@ void AHealthStation::PickUpHandle(APlayerCharacter* Character)
     pInteractWidget->SetVisibility(false);
     pHealthDisplayMeshComponent->SetVisibility(false);
     pRectLightComponent->SetIntensity(0.0f);
+    PrimaryActorTick.bCanEverTick = false;
     isUsed = true;
 }
