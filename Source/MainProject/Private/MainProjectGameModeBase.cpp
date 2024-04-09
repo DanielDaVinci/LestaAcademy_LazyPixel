@@ -6,6 +6,7 @@
 #include "Character/Player/BasePlayerController.h"
 #include "Character/Player/PlayerCharacter.h"
 #include "Environment/FloorManager.h"
+#include "AI/Characters/RangeAICharacter.h"
 
 AMainProjectGameModeBase::AMainProjectGameModeBase()
 {
@@ -16,4 +17,5 @@ AMainProjectGameModeBase::AMainProjectGameModeBase()
 void AMainProjectGameModeBase::BeginPlay()
 {
     Super::BeginPlay();
+    ARangeAICharacter::InitDropRate();
 }

@@ -6,11 +6,10 @@
 #include "Components/WidgetComponent.h"
 #include "Character/Player/PlayerCharacter.h"
 #include "Character/Player/Components/HealthComponent.h"
+#include "Components/TimelineComponent.h"
 
 AHealthStation::AHealthStation()
 {
-    PrimaryActorTick.bCanEverTick = true;
-
     pBaseMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("HealthStationMeshComponent");
     pBaseMeshComponent->SetupAttachment(GetRootComponent());
 
@@ -19,13 +18,22 @@ AHealthStation::AHealthStation()
 
     pRectLightComponent = CreateDefaultSubobject<URectLightComponent>("RectLightComponent");
     pRectLightComponent->SetupAttachment(pBaseMeshComponent);
+
+    pTimelineComponent = CreateDefaultSubobject<UTimelineComponent>("TimelineComponent");
 }
 
-void AHealthStation::Tick(float DeltaTime) 
+void AHealthStation::BeginPlay() 
 {
-    Super::Tick(DeltaTime);
+    Super::BeginPlay();
 
-    pHealthDisplayMeshComponent->AddLocalRotation(FRotator(0.0f, rotationYaw, 0.0f));
+    if (!pCurveFloat)
+        return;
+
+    FOnTimelineFloat ProgressFunction;
+    ProgressFunction.BindUFunction(this, FName("HandleTimeline"));
+    pTimelineComponent->AddInterpFloat(pCurveFloat, ProgressFunction);
+    pTimelineComponent->SetLooping(true);
+    pTimelineComponent->Play();
 }
 
 void AHealthStation::NotifyActorBeginOverlap(AActor* OtherActor)
@@ -43,6 +51,12 @@ void AHealthStation::PickUpHandle(APlayerCharacter* Character)
     pInteractWidget->SetVisibility(false);
     pHealthDisplayMeshComponent->SetVisibility(false);
     pRectLightComponent->SetIntensity(0.0f);
-    PrimaryActorTick.bCanEverTick = false;
+    pTimelineComponent->Stop();
     isUsed = true;
+}
+
+void AHealthStation::HandleTimeline(float Value) 
+{
+    //UE_LOG(LogTemp, Display, TEXT("%f"), Value);
+    pHealthDisplayMeshComponent->AddLocalRotation(FRotator(0.0f, Value, 0.0f));
 }

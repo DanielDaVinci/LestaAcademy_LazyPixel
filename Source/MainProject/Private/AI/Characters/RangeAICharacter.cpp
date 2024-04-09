@@ -15,7 +15,8 @@ void ARangeAICharacter::OnDeath()
 {
     Super::OnDeath();
 
-    SpawnPickup();
+    if (UpdateDropRate())
+        SpawnPickup();
 }
 
 void ARangeAICharacter::SpawnPickup() const
@@ -24,4 +25,28 @@ void ARangeAICharacter::SpawnPickup() const
         return;
     
     GetWorld()->SpawnActor<AWeaponPickup>(pickupClass, GetActorLocation(), FRotator(), FActorSpawnParameters());
+}
+
+bool ARangeAICharacter::UpdateDropRate()
+{
+    bool result = false;
+    float initRate = curDropRate; 
+    
+    float Rand = FMath::RandRange(minDropRate, maxDropRate);
+    //UE_LOG(LogTemp, Warning, TEXT("Roll %f of %f"), Rand, curDropRate);
+    if (Rand >= curDropRate)
+    {
+        curDropRate += dropRateStep;
+        result = true;
+    }
+    else
+    {
+        curDropRate -= dropRateStep;
+        result = false;
+    }
+
+    if (initRate == minDropRate || initRate == maxDropRate)
+        InitDropRate();
+
+    return result;
 }
