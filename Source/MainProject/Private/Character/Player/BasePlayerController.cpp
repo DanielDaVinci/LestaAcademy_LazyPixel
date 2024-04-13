@@ -96,7 +96,7 @@ void ABasePlayerController::HandleCustomAbilityReleased()
 
 void ABasePlayerController::HandleInteract()
 {
-    OnInteract.Broadcast();
+    OnInteract.ExecuteIfBound();
 }
 
 void ABasePlayerController::HandleMouseMove(float Amount)

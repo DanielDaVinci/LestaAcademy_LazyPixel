@@ -26,11 +26,6 @@ void UAIWeaponComponent::SpawnAllWeapons()
 void UAIWeaponComponent::OnMeleeStartAttackAnim()
 {
     Super::OnMeleeStartAttackAnim();
-
-    if (const auto pMeleeWeapon = FindWeapon<ASword>())
-    {
-        pMeleeWeapon->OnOffCollision();
-    }
 }
 
 void UAIWeaponComponent::OnRangeAttackAnim()

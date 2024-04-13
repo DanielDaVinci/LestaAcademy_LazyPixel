@@ -145,7 +145,6 @@ void UWeaponComponent::OnStartComboState(int32 ComboIndex)
     pMovementComponent->FixCharacterRotation(viewRotation);
     pMovementComponent->SetDeceleration(comboInfo[ComboIndex].Deceleration);
 
-    pMeleeWeapon->EnableAttackCollision();
     pMeleeWeapon->SetDamage(comboInfo[ComboIndex].Damage);
     
     PlayMeleeWeaponComboAnim(pMeleeWeapon, ComboIndex);
@@ -167,8 +166,6 @@ void UWeaponComponent::OnEndComboState(EStateResult StateResult, int32 ComboInde
 
     pMovementComponent->UnfixCharacterRotation();
     pMovementComponent->SetDeceleration(0.0f);
-    
-    pMeleeWeapon->DisableAttackCollision();
 
     switch (StateResult)
     {

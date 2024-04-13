@@ -53,6 +53,9 @@ void AHealthStation::PickUpHandle(APlayerCharacter* Character)
     pRectLightComponent->SetIntensity(0.0f);
     pTimelineComponent->Stop();
     isUsed = true;
+
+    DisableCollision();
+    Character->ResetCollisions();
 }
 
 void AHealthStation::HandleTimeline(float Value) 

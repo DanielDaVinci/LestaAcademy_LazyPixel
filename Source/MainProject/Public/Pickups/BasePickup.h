@@ -35,6 +35,8 @@ protected:
     virtual void NotifyActorEndOverlap(AActor* OtherActor) override;
     virtual void PickUpHandle(APlayerCharacter* Character){};
 
-private: 
+    void DisableCollision();
+
+private:
     ABasePlayerController* GetPlayerController(AActor* Character) const;
 };

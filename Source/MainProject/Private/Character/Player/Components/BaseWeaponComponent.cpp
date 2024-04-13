@@ -115,6 +115,9 @@ void UBaseWeaponComponent::OnMeleeNotifyStateHandle(USkeletalMeshComponent* Mesh
     if (MeshComp->GetOwner() != GetOwner())
         return;
 
+    if (const auto pMeleeWeapon = FindWeapon<ASword>())
+        pMeleeWeapon->EnableAttackCollision();
+
     OnMeleeStartAttackAnim();
 }
 
@@ -124,7 +127,10 @@ void UBaseWeaponComponent::OnMeleeNotifyEndHandle(USkeletalMeshComponent* MeshCo
         return;
 
     if (const auto pMeleeWeapon = FindWeapon<ASword>())
+    {
+        pMeleeWeapon->DisableAttackCollision();
         pMeleeWeapon->ClearDamagedActors();
+    }
 }
 
 void UBaseWeaponComponent::OnRangeNotifyHandle(USkeletalMeshComponent* MeshComp)

@@ -10,9 +10,6 @@ struct FComboElement
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Animation")
     FName AttackSectionName;
 
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Animation", meta = (ClampMin = "0.0", ClampMax = "5.0"))
-    float SectionRateScale;
-
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Animation", meta = (ClampMin = "0.0"))
     float AnimationTime = 0.5f;
 
