@@ -8,7 +8,7 @@
 #include "AIBaseCharacter.generated.h"
 
 class ARoom;
-class UNiagaraSystem;
+class UGoreComponent;
 
 UCLASS()
 class MAINPROJECT_API AAIBaseCharacter : public ABaseCharacter
@@ -18,6 +18,9 @@ class MAINPROJECT_API AAIBaseCharacter : public ABaseCharacter
 public:
     AAIBaseCharacter(const FObjectInitializer& ObjInit);
     
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName = "GoreComponent")
+    UGoreComponent* pGoreComponent;
+
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "AI")
     UBehaviorTree* BehaviorTreeAsset;
     
@@ -30,16 +33,18 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Material Instances")
     TArray<UMaterialInstance*> materialInstances;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VFX")
-    UNiagaraSystem* impactEffect;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dismemberment")
+    float dismembermentForce = 500.f;
 
 protected:
     virtual void PostInitializeComponents() override;
     virtual void OnDeath() override;
 
 private:
+    FName dismemberedBone;
+
     void PlayImpactAnim(float DeltaHealth);
     void PlayImpactFX(float DeltaHealth);
     void SetRandomMaterial();
-    void EnableRagdoll() const;
+    void EnableRagdoll() const; 
 };

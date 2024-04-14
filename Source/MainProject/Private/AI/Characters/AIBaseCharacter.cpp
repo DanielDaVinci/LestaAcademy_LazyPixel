@@ -12,10 +12,14 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "NiagaraFunctionLibrary.h"
+#include "Gore/GoreComponent.h"
+#include "PhysicsEngine/ConstraintInstance.h"
 
 AAIBaseCharacter::AAIBaseCharacter(const FObjectInitializer& ObjInit)
     : Super(ObjInit.SetDefaultSubobjectClass<UAIWeaponComponent>("WeaponComponent"))
 {
+    pGoreComponent = CreateDefaultSubobject<UGoreComponent>("GoreComponent");
+
     AIControllerClass = ABaseAIController::StaticClass();
     AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 
@@ -33,6 +37,10 @@ void AAIBaseCharacter::PostInitializeComponents()
     pHealthComponent->OnHealthChanged.AddUObject(this, &AAIBaseCharacter::PlayImpactAnim);
     pHealthComponent->OnHealthChanged.AddUObject(this, &AAIBaseCharacter::PlayImpactFX);
     SetRandomMaterial();
+
+    TArray<FConstraintInstance*> physConstraints = GetMesh()->Constraints;
+    if (physConstraints.Num())
+        dismemberedBone = physConstraints[FMath::RandRange(0, physConstraints.Num() - 1)]->JointName;
 }
 
 void AAIBaseCharacter::OnDeath()
@@ -42,6 +50,8 @@ void AAIBaseCharacter::OnDeath()
     if (Controller)
         Controller->UnPossess();
     
+    pGoreComponent->DismemberLimb(dismemberedBone, GetActorRotation().Vector() * dismembermentForce * (-1));
+
     EnableRagdoll();
 }
 
@@ -53,7 +63,8 @@ void AAIBaseCharacter::PlayImpactAnim(float DeltaHealth)
 
 void AAIBaseCharacter::PlayImpactFX(float DeltaHealth) 
 {
-    UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), impactEffect, this->GetActorLocation(), this->GetActorRotation());
+    pGoreComponent->PreDismemberment(dismemberedBone, GetActorRotation().Vector());
+    pGoreComponent->PostDismemberment(dismemberedBone, GetMesh());
 }
 
 void AAIBaseCharacter::SetRandomMaterial()
