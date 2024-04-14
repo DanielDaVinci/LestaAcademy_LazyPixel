@@ -1,8 +1,0 @@
-{
-	"RemapUnityFiles": 
-	{
-		"Module.WwiseEngineUtils.cpp.obj": [
-			"WwiseUnrealEngineHelper.cpp.obj"
-		]
-	}
-}
