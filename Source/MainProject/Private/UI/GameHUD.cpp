@@ -21,5 +21,13 @@ void AGameHUD::AddMainWidgetToViewport() const
     if (!MainWidgetClass)
         return;
 
+    if (!ImpactWidgetClass)
+        return;
+
+    const auto impactWidget = CreateWidget(GetWorld(), ImpactWidgetClass);
+    if (!impactWidget)
+        return;
+    
     mainWidget->AddToViewport();
+    impactWidget->AddToViewport();
 }

@@ -33,6 +33,7 @@ void UHealthComponent::OnTakeAnyDamage(AActor* DamageActor, float Damage, const 
         return;
 
     SetHealth(m_health - Damage);
+    OnTakeDamage.Broadcast();
 
     if (IsDead())
     {
@@ -60,5 +61,6 @@ void UHealthComponent::SetHealth(float Health)
 void UHealthComponent::Heal(float HealthValue)
 {
     SetHealth(GetHealth() + HealthValue);
+    OnHeal.Broadcast();
 }
 

@@ -8,6 +8,8 @@
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnHealthChanged, float);
 DECLARE_MULTICAST_DELEGATE(FOnDeath);
+DECLARE_MULTICAST_DELEGATE(FOnTakeDamage);
+DECLARE_MULTICAST_DELEGATE(FOnHeal);
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class MAINPROJECT_API UHealthComponent : public UActorComponent
@@ -19,6 +21,8 @@ public:
 
     FOnHealthChanged OnHealthChanged;
     FOnDeath OnDied;
+    FOnTakeDamage OnTakeDamage;
+    FOnHeal OnHeal;
 
     float GetHealth() const { return m_health; }
     float GetMaxHealth() const { return maxHealth; }
