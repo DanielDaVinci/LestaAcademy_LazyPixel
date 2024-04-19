@@ -5,8 +5,8 @@
 #include "CoreMinimal.h"
 #include "Data/ProgressSaveGame.h"
 #include "Engine/GameInstance.h"
+#include "Kismet/GameplayStatics.h"
 #include "MainProjectGameInstance.generated.h"
-
 
 class UProgressSaveGame;
 
@@ -16,30 +16,122 @@ class MAINPROJECT_API UMainProjectGameInstance : public UGameInstance
 	GENERATED_BODY()
 
 public:
-    DECLARE_MULTICAST_DELEGATE(FOnLoadSlotSignature);
-    FOnLoadSlotSignature OnLoadSlot;
+    DECLARE_MULTICAST_DELEGATE_OneParam(FOnPreSaveCurrentSlotSignature, USaveGame*);
+    FOnPreSaveCurrentSlotSignature OnPreSaveCurrentSlotEvent;
 
-    DECLARE_MULTICAST_DELEGATE_OneParam(FOnUpdateProgressSignature, bool)
-    FOnUpdateProgressSignature OnUpdateProgress;
-        
-    void SetCurrentSlot(const FString& SlotName);
-    FString GetCurrentSlot() const;
+    DECLARE_MULTICAST_DELEGATE_OneParam(FOnPostSaveCurrentSlotSignature, USaveGame*);
+    FOnPostSaveCurrentSlotSignature OnPostSaveCurrentSlotEvent;
     
-    void UpdateProgressData(const FProgressData& ProgressData) const;
-    FProgressData GetProgressData() const;
+    FString GetCurrentSlotName() const { return currentSlotName; }
 
-private:
-    FString m_currentSlotName = "";
+    template<class T> requires std::is_base_of_v<USaveGame, T>
+    T* SetCurrentSlot(const FString& SlotName);
+
+    template<class T> requires std::is_base_of_v<USaveGame, T>
+    T* GetCurrentSlot() const;
+    USaveGame* GetCurrentSlot() const { return GetCurrentSlot<USaveGame>(); }
     
+    void SaveCurrentSlot() const;
+
+protected:
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Data")
+    FString currentSlotName = "";
+
     UPROPERTY()
-    UProgressSaveGame* m_currentProgressSaveGame = nullptr;
-
-    void LoadProgressSlot(const FString& SlotName);
-    void CreateProgressSlot(const FString& SlotName);
+    USaveGame* currentSaveGame = nullptr;
 
 public:
-    void AsyncLevelLoad(const FString& LevelPath);
+    template<class T> requires std::is_base_of_v<USaveGame, T>
+    static T* LoadSlot(const FString& SlotName);
+    static USaveGame* LoadSlot(const FString& SlotName) { return LoadSlot<USaveGame>(SlotName); }
+
+    template<class T> requires std::is_base_of_v<USaveGame, T>
+    static T* CreateSlot(const FString& SlotName);
+    static USaveGame* CreateSlot(const FString& SlotName) { return CreateSlot<USaveGame>(SlotName); }
+
+    template<class T> requires std::is_base_of_v<USaveGame, T>
+    static void SaveSlot(const FString& SlotName, T* SaveGame);
+
+    static void DeleteSlot(const FString& SlotName);
+
+public:
+    void AsyncLevelLoad(const FString& LevelPath) const;
     
 private:
-    void AsyncLevelLoadFinished(const FString& LevelName) const; 
+    void AsyncLevelLoadFinished(const FString& LevelName) const;
+    
 };
+
+template <class T> requires std::is_base_of_v<USaveGame, T>
+T* UMainProjectGameInstance::GetCurrentSlot() const
+{
+    if (!currentSaveGame)
+        return LoadSlot<T>(currentSlotName);
+
+    return Cast<T>(currentSaveGame);
+}
+
+template <class T> requires std::is_base_of_v<USaveGame, T>
+T* UMainProjectGameInstance::SetCurrentSlot(const FString& SlotName)
+{
+    T* saveGame = nullptr;
+    if (UGameplayStatics::DoesSaveGameExist(SlotName, 0))
+    {
+        saveGame = LoadSlot<T>(SlotName);
+    }
+    else
+    {
+        saveGame = CreateSlot<T>(SlotName);
+    }
+
+    if (!saveGame)
+        return nullptr;
+
+    if (currentSaveGame)
+    {
+        SaveSlot(currentSlotName, currentSaveGame);
+    }
+    
+    UE_LOG(LogTemp, Error, TEXT("Current slot: %s"), *SlotName);
+
+    currentSlotName = SlotName;
+    currentSaveGame = saveGame;
+    return saveGame;
+}
+
+template <class T> requires std::is_base_of_v<USaveGame, T>
+T* UMainProjectGameInstance::LoadSlot(const FString& SlotName)
+{
+    UE_LOG(LogTemp, Error, TEXT("Load slot: %s"), *SlotName);
+    return Cast<T>(UGameplayStatics::LoadGameFromSlot(SlotName, 0));
+}
+
+template <class T> requires std::is_base_of_v<USaveGame, T>
+T* UMainProjectGameInstance::CreateSlot(const FString& SlotName)
+{
+    const auto saveGame = Cast<T>(UGameplayStatics::CreateSaveGameObject(T::StaticClass()));
+    if (saveGame)
+    {
+        SaveSlot(SlotName, saveGame);
+    }
+
+    return saveGame;
+}
+
+template <class T> requires std::is_base_of_v<USaveGame, T>
+void UMainProjectGameInstance::SaveSlot(const FString& SlotName, T* SaveGame)
+{
+    UE_LOG(LogTemp, Error, TEXT("Save slot: %s"), *SlotName);
+    if (SaveGame)
+    {
+        if (const auto progressSaveGame = Cast<UProgressSaveGame>(SaveGame))
+        {
+            UE_LOG(LogTemp, Error, TEXT("DATA room: %d"), progressSaveGame->ProgressData.RoomIndex);
+        }
+        UGameplayStatics::SaveGameToSlot(SaveGame, SlotName, 0);
+    }
+    else
+    {
+        DeleteSlot(SlotName);
+    }
+}

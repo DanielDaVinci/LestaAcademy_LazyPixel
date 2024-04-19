@@ -6,7 +6,7 @@
 #include "Character/Player/Components/BaseWeaponComponent.h"
 #include "Weapon/MeleeWeapons/Sword.h"
 #include "Weapon/RangeWeapons/Gun.h"
-#include "WeaponComponent.generated.h"
+#include "PlayerWeaponComponent.generated.h"
 
 DECLARE_MULTICAST_DELEGATE(FOnMeleeAttackHasHitSignature)
 
@@ -17,9 +17,11 @@ class ABasePlayerController;
 class UPlayerMovementComponent;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class MAINPROJECT_API UWeaponComponent : public UBaseWeaponComponent
+class MAINPROJECT_API UPlayerWeaponComponent : public UBaseWeaponComponent
 {
 	GENERATED_BODY()
+
+    friend class UDataSaveComponent;
 
 protected:
 	virtual void BeginPlay() override;
@@ -56,6 +58,9 @@ private:
 
     // Range weapon
 public:
+    DECLARE_MULTICAST_DELEGATE_OneParam(FOnRangeWeaponChangeSignature, AGun*);
+    FOnRangeWeaponChangeSignature OnRangeWeaponChange;
+    
     AGun* GetRangeWeapon() const { return FindWeapon<AGun>(); }
     
 protected:
@@ -85,25 +90,14 @@ public:
 };
 
 template <typename T>
-void UWeaponComponent::PickUpWeapon(const TSubclassOf<T>& WeaponClass)
+void UPlayerWeaponComponent::PickUpWeapon(const TSubclassOf<T>& WeaponClass)
 {
     DropWeapon(WeaponClass);
 
-    for (const auto& data : weaponData)
-    {
-        if (data.WeaponClass != WeaponClass)
-            continue;
-        
-        const auto weapon = SpawnWeapon(data.WeaponClass);
-        if (!weapon) 
-            continue;
-
-        AttachWeapon(weapon, data.WeaponAttachPointName);
-        weapons.Add(weapon);
-            
-        OnAfterSpawnAllWeapons.Broadcast();
-        SubscribeOnDropRangeWeapon();
-
+    const auto weapon = AddWeapon(WeaponClass);
+    if (!weapon)
         return;
-    }
+    
+    OnAfterSpawnAllWeapons.Broadcast();
+    SubscribeOnDropRangeWeapon();
 }

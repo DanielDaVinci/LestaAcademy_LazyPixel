@@ -15,4 +15,5 @@ class MAINPROJECT_API AMenuGameModeBase : public AGameModeBase
 	GENERATED_BODY()
 
     AMenuGameModeBase();
+    
 };

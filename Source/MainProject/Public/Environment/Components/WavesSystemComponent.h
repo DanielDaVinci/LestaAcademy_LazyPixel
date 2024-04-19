@@ -36,7 +36,7 @@ protected:
     void BindSceneEnemies();
     
 private:
-    TArray<AAIBaseCharacter*> FindEnemiesInRoom();
+    TArray<AAIBaseCharacter*> FindEnemiesInRoom() const;
 
     
     // Manual Enemies

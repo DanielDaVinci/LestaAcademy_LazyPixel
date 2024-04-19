@@ -17,7 +17,19 @@ class MAINPROJECT_API AMainProjectGameModeBase : public AGameModeBase
 public:
     AMainProjectGameModeBase();
 
+public:
+    AFloorManager* GetFloorManager() const { return floorManager; }
+
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Environment")
     AFloorManager* floorManager;
+
+    virtual void StartPlay() override;
+    
+protected:
+    virtual void PrePlayerStart();
+    virtual void PostPlayerStart();
+
+public:
+    virtual AActor* FindPlayerStart_Implementation(AController* Player, const FString& IncomingName) override;
 };

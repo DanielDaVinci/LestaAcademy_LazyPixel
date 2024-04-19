@@ -46,29 +46,14 @@ void UWavesSystemComponent::BindSceneEnemies()
     BindEnemiesOnDeath(FindEnemiesInRoom());
 }
 
-TArray<AAIBaseCharacter*> UWavesSystemComponent::FindEnemiesInRoom()
+TArray<AAIBaseCharacter*> UWavesSystemComponent::FindEnemiesInRoom() const
 {
-    ARoom* room = GetOwningRoom();
-    if (!room)
-        return TArray<AAIBaseCharacter*>();
-    
-    TArray<AActor*> overlappingActors;
-    room->UpdateOverlaps(false);
-    room->GetOverlappingActors(overlappingActors, AAIBaseCharacter::StaticClass());
-
-    TArray<AAIBaseCharacter*> sceneEnemies;
-    for (const auto& actor: overlappingActors)
+    if (const auto room = GetOwningRoom())
     {
-        auto enemy = Cast<AAIBaseCharacter>(actor);
-        if (!enemy)
-            continue;
-
-        sceneEnemies.Add(enemy);
-        enemy->enemyRoom = room;
-        m_currentAliveEnemies++;
+        return room->GetOverlapActorsInRoom<AAIBaseCharacter>(AAIBaseCharacter::StaticClass());
     }
 
-    return sceneEnemies;
+    return {};
 }
 
 void UWavesSystemComponent::StartWave(int32 WaveIndex)
@@ -123,7 +108,12 @@ void UWavesSystemComponent::BindEnemiesOnDeath(const TArray<AAIBaseCharacter*>&&
 {
     for (const auto& enemy : Enemies)
     {
+        if (!enemy)
+            continue;
+        
         BindOneEnemyOnDeath(enemy);
+        enemy->enemyRoom = GetOwningRoom();
+        m_currentAliveEnemies++;
     }
 }
 

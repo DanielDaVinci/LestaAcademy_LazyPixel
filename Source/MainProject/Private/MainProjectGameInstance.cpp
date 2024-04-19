@@ -4,63 +4,20 @@
 #include "MainProjectGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 
-void UMainProjectGameInstance::SetCurrentSlot(const FString& SlotName)
+void UMainProjectGameInstance::SaveCurrentSlot() const
 {
-    if (UGameplayStatics::DoesSaveGameExist(SlotName, 0))
-    {
-        LoadProgressSlot(SlotName);
-    }
-    else
-    {
-        CreateProgressSlot(SlotName);
-    }
+    OnPreSaveCurrentSlotEvent.Broadcast(GetCurrentSlot());
+    SaveSlot(currentSlotName, currentSaveGame);
+    OnPostSaveCurrentSlotEvent.Broadcast(GetCurrentSlot());
 }
 
-FString UMainProjectGameInstance::GetCurrentSlot() const
+void UMainProjectGameInstance::DeleteSlot(const FString& SlotName)
 {
-    return m_currentSlotName;
+    UE_LOG(LogTemp, Error, TEXT("Delete slot: %s"), *SlotName);
+    UGameplayStatics::DeleteGameInSlot(SlotName, 0);
 }
 
-void UMainProjectGameInstance::UpdateProgressData(const FProgressData& ProgressData) const
-{
-    m_currentProgressSaveGame->ProgressData = ProgressData;
-    const auto delegate = FAsyncSaveGameToSlotDelegate::CreateLambda([this](const FString& SlotName, const int32 UserIndex, bool bIsSuccess)
-    {
-        OnUpdateProgress.Broadcast(bIsSuccess);
-    });
-    UGameplayStatics::AsyncSaveGameToSlot(m_currentProgressSaveGame, m_currentSlotName, 0, delegate);
-}
-
-FProgressData UMainProjectGameInstance::GetProgressData() const
-{
-    return m_currentProgressSaveGame->ProgressData;
-}
-
-void UMainProjectGameInstance::LoadProgressSlot(const FString& SlotName)
-{
-    const auto delegate = FAsyncLoadGameFromSlotDelegate::CreateLambda([this](const FString& SlotName, const int32 UserIndex, USaveGame* SaveGameInstance)
-    {
-        m_currentSlotName = SlotName;
-        m_currentProgressSaveGame = Cast<UProgressSaveGame>(SaveGameInstance);
-        OnLoadSlot.Broadcast();
-        OnLoadSlot.Clear();
-    });
-    UGameplayStatics::AsyncLoadGameFromSlot(SlotName, 0, delegate);
-}
-
-void UMainProjectGameInstance::CreateProgressSlot(const FString& SlotName)
-{
-    const auto progressSaveGameInstance = Cast<UProgressSaveGame>(UGameplayStatics::CreateSaveGameObject(UProgressSaveGame::StaticClass()));
-    if (!progressSaveGameInstance)
-        return;
-    
-    m_currentSlotName = SlotName;
-    m_currentProgressSaveGame = progressSaveGameInstance;
-    OnLoadSlot.Broadcast();
-    OnLoadSlot.Clear();
-}
-
-void UMainProjectGameInstance::AsyncLevelLoad(const FString& LevelPath)
+void UMainProjectGameInstance::AsyncLevelLoad(const FString& LevelPath) const
 {
     LoadPackageAsync(LevelPath, FLoadPackageAsyncDelegate::CreateLambda([this](const FName& PackageName, UPackage* LoadedPackage, EAsyncLoadingResult::Type Result)
     {
@@ -78,5 +35,8 @@ void UMainProjectGameInstance::AsyncLevelLoad(const FString& LevelPath)
 
 void UMainProjectGameInstance::AsyncLevelLoadFinished(const FString& LevelName) const
 {
+    if (!GetWorld())
+        return;
+    
     UGameplayStatics::OpenLevel(GetWorld(), FName(LevelName));
 }

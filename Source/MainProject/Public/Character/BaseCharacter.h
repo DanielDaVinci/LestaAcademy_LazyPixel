@@ -6,7 +6,7 @@
 #include "GameFramework/Character.h"
 #include "BaseCharacter.generated.h"
 
-class UWeaponComponent;
+class UPlayerWeaponComponent;
 DECLARE_MULTICAST_DELEGATE(FOnKillEnemySignature)
 
 class UStateMachineComponent;
@@ -17,6 +17,7 @@ class UBaseWeaponComponent;
 class UAbilityComponent;
 
 DEFINE_LOG_CATEGORY_STATIC(LogFistWeapon, All, All);
+
 UCLASS()
 class MAINPROJECT_API ABaseCharacter : public ACharacter
 {

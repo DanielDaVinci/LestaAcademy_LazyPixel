@@ -3,12 +3,9 @@
 
 #include "Character/Player/Components/BaseWeaponComponent.h"
 #include "Weapon/MeleeWeapons/Sword.h"
-#include "Weapon/RangeWeapons/Gun.h"
 #include "Character/BaseCharacter.h"
 #include "Animations/MeleeAtackAnimNotifyState.h"
 #include "Animations/RangeAttackNotify.h"
-
-//DEFINE_LOG_CATEGORY_STATIC(LogBaseWeaponComponent, All, All);
 
 UBaseWeaponComponent::UBaseWeaponComponent()
 {
@@ -27,8 +24,18 @@ void UBaseWeaponComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-    SpawnAllWeapons();
+    SpawnStarWeapons();
     InitAnimations();
+}
+
+void UBaseWeaponComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+    Super::EndPlay(EndPlayReason);
+
+    if (EndPlayReason == EEndPlayReason::Destroyed)
+    {
+        DestroyWeapons();
+    }
 }
 
 void UBaseWeaponComponent::SpawnAllWeapons() 
@@ -42,8 +49,46 @@ void UBaseWeaponComponent::SpawnAllWeapons()
         AttachWeapon(weapon, data.WeaponAttachPointName);
         weapons.Add(weapon);
     }
+}
 
-    //OnAfterSpawnAllWeapons.Broadcast();
+void UBaseWeaponComponent::SpawnStarWeapons()
+{
+    for (const auto weaponClass: startWeapons)
+    {
+        AddWeapon(weaponClass);
+    }
+
+    OnAfterSpawnAllWeapons.Broadcast();
+}
+
+void UBaseWeaponComponent::DestroyWeapons()
+{
+    for (const auto weapon: weapons)
+    {
+        if (!weapon)
+            continue;
+
+        weapon->Destroy();
+    }
+    weapons.Reset();
+}
+
+ABaseWeapon* UBaseWeaponComponent::AddWeapon(const TSubclassOf<ABaseWeapon>& WeaponClass)
+{
+    const auto data = FindDataByChildWeaponClass(WeaponClass);
+    if (!data)
+        return nullptr;
+    
+    const auto weapon = SpawnWeapon(data->WeaponClass);
+    if (!weapon)
+        return nullptr;
+
+    AttachWeapon(weapon, data->WeaponAttachPointName);
+    weapons.Add(weapon);
+
+    OnAfterSpawnAllWeapons.Broadcast();
+
+    return weapon;
 }
 
 ABaseWeapon* UBaseWeaponComponent::SpawnWeapon(const TSubclassOf<ABaseWeapon>& WeaponClass) const
@@ -65,15 +110,31 @@ void UBaseWeaponComponent::AttachWeapon(ABaseWeapon* Weapon, const FName& Socket
     Weapon->SetOwner(character);
 }
 
+FWeaponData* UBaseWeaponComponent::FindDataByChildWeaponClass(const TSubclassOf<ABaseWeapon>& WeaponClass)
+{
+    return weaponData.FindByPredicate([&WeaponClass](const FWeaponData& Data)
+    {
+        return WeaponClass.GetDefaultObject()->IsA(Data.WeaponClass);
+    });
+}
+
+FWeaponData* UBaseWeaponComponent::FindDataByBaseWeaponClass(const TSubclassOf<ABaseWeapon>& WeaponClass)
+{
+    return weaponData.FindByPredicate([&WeaponClass](const FWeaponData& Data)
+    {
+        return Data.WeaponClass.GetDefaultObject()->IsA(WeaponClass);
+    });
+}
+
 void UBaseWeaponComponent::InitAnimations()
 {
-    for (const auto& weapon: weapons)
+    for (const auto& data: weaponData)
     {
-        SubscribeAnimationNotifies(weapon);
+        SubscribeAnimationNotifies(data.WeaponClass.GetDefaultObject());
     }
 }
 
-void UBaseWeaponComponent::SubscribeAnimationNotifies(ABaseWeapon* Weapon)
+void UBaseWeaponComponent::SubscribeAnimationNotifies(const ABaseWeapon* Weapon)
 {
     if (!Weapon || !Weapon->GetAttackMontage())
         return;
@@ -93,7 +154,7 @@ void UBaseWeaponComponent::OnSubscribeToNotifies(const FAnimNotifyEvent& NotifyE
 
 void UBaseWeaponComponent::SubscribeOnMeleeNotify(const FAnimNotifyEvent& NotifyEvent)
 {
-    auto meleeNotifyState = Cast<UMeleeAttackAnimNotifyState>(NotifyEvent.NotifyStateClass);
+    const auto meleeNotifyState = Cast<UMeleeAttackAnimNotifyState>(NotifyEvent.NotifyStateClass);
     if (!meleeNotifyState)
         return;
 
@@ -103,7 +164,7 @@ void UBaseWeaponComponent::SubscribeOnMeleeNotify(const FAnimNotifyEvent& Notify
 
 void UBaseWeaponComponent::SubscribeOnRangeNotify(const FAnimNotifyEvent& NotifyEvent)
 {
-    auto rangeNotify = Cast<URangeAttackNotify>(NotifyEvent.Notify);
+    const auto rangeNotify = Cast<URangeAttackNotify>(NotifyEvent.Notify);
     if (!rangeNotify)
         return;
 

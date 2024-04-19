@@ -1,6 +1,8 @@
 // Lazy Pixel. All Rights Reserved.
 
-#include "Character/Player/Components/WeaponComponent.h"
+#include "Character/Player/Components/PlayerWeaponComponent.h"
+
+#include "MainProjectGameInstance.h"
 #include "Weapon/MeleeWeapons/Sword.h"
 #include "Weapon/RangeWeapons/Gun.h"
 #include "Animations/ComboEndAnimNotify.h"
@@ -11,14 +13,14 @@
 
 DEFINE_LOG_CATEGORY_STATIC(LogWeaponComponent, All, All);
 
-void UWeaponComponent::BeginPlay()
+void UPlayerWeaponComponent::BeginPlay()
 {
     Super::BeginPlay();
 
     BindInput();
     BindEvents();
 
-    if (const auto pRangeWeapon = FindWeapon<AGun>())
+    if (const auto pRangeWeapon = GetRangeWeapon())
     {
         DropWeapon(pRangeWeapon->StaticClass());
         pRangeWeapon->Destroy();
@@ -26,17 +28,17 @@ void UWeaponComponent::BeginPlay()
     //SubscribeOnDropRangeWeapon();
 }
 
-void UWeaponComponent::BindInput()
+void UPlayerWeaponComponent::BindInput()
 {
     const auto controller = GetPlayerController();
     if (!controller)
         return;
 
-    controller->OnMeleeAttack.AddUObject(this, &UWeaponComponent::MeleeAttack);
-    controller->OnRangeAttack.AddUObject(this, &UWeaponComponent::RangeAttack);
+    controller->OnMeleeAttack.AddUObject(this, &UPlayerWeaponComponent::MeleeAttack);
+    controller->OnRangeAttack.AddUObject(this, &UPlayerWeaponComponent::RangeAttack);
 }
 
-void UWeaponComponent::BindEvents()
+void UPlayerWeaponComponent::BindEvents()
 {
     if (const auto MeleeWeapon = GetMeleeWeapon())
     {
@@ -47,30 +49,30 @@ void UWeaponComponent::BindEvents()
     }
 }
 
-void UWeaponComponent::OnSubscribeToNotifies(const FAnimNotifyEvent& NotifyEvent)
+void UPlayerWeaponComponent::OnSubscribeToNotifies(const FAnimNotifyEvent& NotifyEvent)
 {
     Super::OnSubscribeToNotifies(NotifyEvent);
 
     SubscribeOnComboNotify(NotifyEvent);
 }
 
-void UWeaponComponent::SubscribeOnComboNotify(const FAnimNotifyEvent& NotifyEvent)
+void UPlayerWeaponComponent::SubscribeOnComboNotify(const FAnimNotifyEvent& NotifyEvent)
 {
     auto comboNotify = Cast<UComboEndAnimNotify>(NotifyEvent.Notify);
     if (!comboNotify)
         return;
     
-    comboNotify->FOnComboEndNotify.AddUObject(this, &UWeaponComponent::OnComboNotifyHandle);
+    comboNotify->FOnComboEndNotify.AddUObject(this, &UPlayerWeaponComponent::OnComboNotifyHandle);
 }
 
-void UWeaponComponent::OnComboNotifyHandle(USkeletalMeshComponent* MeshComp)
+void UPlayerWeaponComponent::OnComboNotifyHandle(USkeletalMeshComponent* MeshComp)
 {
     if (MeshComp->GetOwner() != GetOwner())
         return;
     
 }
 
-void UWeaponComponent::MeleeAttack()
+void UPlayerWeaponComponent::MeleeAttack()
 {
     const auto pCharacter = GetPlayerCharacter();
     const auto pMeleeWeapon = FindWeapon<ASword>();
@@ -94,14 +96,14 @@ void UWeaponComponent::MeleeAttack()
         m_nextComboIndex == 0 ? EStatePriority::Light : EStatePriority::Light
     );
     
-    meleeState.OnStartState.AddUObject(this, &UWeaponComponent::OnStartComboState, m_nextComboIndex);
-    meleeState.OnEndState.AddUObject(this, &UWeaponComponent::OnEndComboState, m_nextComboIndex);
+    meleeState.OnStartState.AddUObject(this, &UPlayerWeaponComponent::OnStartComboState, m_nextComboIndex);
+    meleeState.OnEndState.AddUObject(this, &UPlayerWeaponComponent::OnEndComboState, m_nextComboIndex);
 
     pStateMachine->AddState(meleeState);
     m_nextComboIndex++;
 }
 
-void UWeaponComponent::PlayMeleeWeaponComboAnim(ASword* Weapon, int32 ComboIndex) const
+void UPlayerWeaponComponent::PlayMeleeWeaponComboAnim(ASword* Weapon, int32 ComboIndex) const
 {
     const auto pCharacter = GetPlayerCharacter();
     if (!pCharacter || !pCharacter->GetMesh() || !Weapon || !Weapon->GetAttackMontage())
@@ -119,7 +121,7 @@ void UWeaponComponent::PlayMeleeWeaponComboAnim(ASword* Weapon, int32 ComboIndex
         comboInfo[ComboIndex].AttackSectionName);
 }
 
-void UWeaponComponent::OnStartComboState(int32 ComboIndex)
+void UPlayerWeaponComponent::OnStartComboState(int32 ComboIndex)
 {
     const auto pCharacter = GetPlayerCharacter();
     const auto pPlayerController = GetPlayerController();
@@ -147,7 +149,7 @@ void UWeaponComponent::OnStartComboState(int32 ComboIndex)
     PlayMeleeWeaponComboAnim(pMeleeWeapon, ComboIndex);
 }
 
-void UWeaponComponent::OnEndComboState(EStateResult StateResult, int32 ComboIndex)
+void UPlayerWeaponComponent::OnEndComboState(EStateResult StateResult, int32 ComboIndex)
 {
     const auto pMovementComponent = GetPlayerMovementComponent();
     const auto pMeleeWeapon = FindWeapon<ASword>();
@@ -168,22 +170,24 @@ void UWeaponComponent::OnEndComboState(EStateResult StateResult, int32 ComboInde
         m_nextComboIndex = 0;
 }
 
-void UWeaponComponent::OnMeleeStartAttackAnim()
+void UPlayerWeaponComponent::OnMeleeStartAttackAnim()
 {
     Super::OnMeleeStartAttackAnim();
 
     
 }
 
-void UWeaponComponent::OnRangeAttackAnim()
+void UPlayerWeaponComponent::OnRangeAttackAnim()
 {
     Super::OnRangeAttackAnim();
     
     if (const auto pRangeWeapon = FindWeapon<AGun>())
+    {
         pRangeWeapon->MakeShoot(m_rangeAttackPoint);
+    }
 }
 
-void UWeaponComponent::RangeAttack()
+void UPlayerWeaponComponent::RangeAttack()
 {
     const auto pRangeWeapon = FindWeapon<AGun>();
     const auto pPlayerController = GetPlayerController();
@@ -205,13 +209,13 @@ void UWeaponComponent::RangeAttack()
         EStatePriority::Medium
     );
 
-    rangeState.OnStartState.AddUObject(this, &UWeaponComponent::OnStartRangeState, attackPoint);
-    rangeState.OnEndState.AddUObject(this, &UWeaponComponent::OnEndRangeState);
+    rangeState.OnStartState.AddUObject(this, &UPlayerWeaponComponent::OnStartRangeState, attackPoint);
+    rangeState.OnEndState.AddUObject(this, &UPlayerWeaponComponent::OnEndRangeState);
 
     pStateMachine->AddState(rangeState);
 }
 
-void UWeaponComponent::OnStartRangeState(FVector WorldPointToRotate)
+void UPlayerWeaponComponent::OnStartRangeState(FVector WorldPointToRotate)
 {
     const auto pCharacter = GetPlayerCharacter();
     const auto pRangeWeapon = FindWeapon<AGun>();
@@ -229,7 +233,7 @@ void UWeaponComponent::OnStartRangeState(FVector WorldPointToRotate)
     pCharacter->PlayAnimMontage(pRangeWeapon->GetAttackMontage());
 }
 
-void UWeaponComponent::OnEndRangeState(EStateResult StateResult)
+void UPlayerWeaponComponent::OnEndRangeState(EStateResult StateResult)
 {
     const auto pmComponent = GetPlayerMovementComponent();
     if (!pmComponent)
@@ -239,7 +243,7 @@ void UWeaponComponent::OnEndRangeState(EStateResult StateResult)
     pmComponent->SetDeceleration(0.0f);
 }
 
-void UWeaponComponent::DropWeapon(const TSubclassOf<ABaseWeapon> WeaponClass) 
+void UPlayerWeaponComponent::DropWeapon(const TSubclassOf<ABaseWeapon> WeaponClass) 
 {
     if (const auto Weapon = FindWeapon(WeaponClass))
     {
@@ -248,28 +252,28 @@ void UWeaponComponent::DropWeapon(const TSubclassOf<ABaseWeapon> WeaponClass)
     }
 }
 
-void UWeaponComponent::SubscribeOnDropRangeWeapon() 
+void UPlayerWeaponComponent::SubscribeOnDropRangeWeapon() 
 {
     if (const auto pRangeWeapon = FindWeapon<AGun>())
-        pRangeWeapon->OnEmptyAmmo.AddUObject(this, &UWeaponComponent::DropWeapon, TSubclassOf<ABaseWeapon>(pRangeWeapon->StaticClass()));
+        pRangeWeapon->OnEmptyAmmo.AddUObject(this, &UPlayerWeaponComponent::DropWeapon, TSubclassOf<ABaseWeapon>(pRangeWeapon->StaticClass()));
 }
 
-APlayerCharacter* UWeaponComponent::GetPlayerCharacter() const
+APlayerCharacter* UPlayerWeaponComponent::GetPlayerCharacter() const
 {
     return Cast<APlayerCharacter>(GetOwner());
 }
 
-ABasePlayerController* UWeaponComponent::GetPlayerController() const
+ABasePlayerController* UPlayerWeaponComponent::GetPlayerController() const
 {
     return GetPlayerCharacter() ? GetPlayerCharacter()->GetPlayerController() : nullptr;
 }
 
-UPlayerMovementComponent* UWeaponComponent::GetPlayerMovementComponent() const
+UPlayerMovementComponent* UPlayerWeaponComponent::GetPlayerMovementComponent() const
 {
     return GetPlayerCharacter() ? Cast<UPlayerMovementComponent>(GetPlayerCharacter()->GetMovementComponent()) : nullptr;
 }
 
-UStateMachineComponent* UWeaponComponent::GetStateMachineComponent() const
+UStateMachineComponent* UPlayerWeaponComponent::GetStateMachineComponent() const
 {
     return GetPlayerCharacter() ? GetPlayerCharacter()->GetStateMachineComponent() : nullptr;
 }

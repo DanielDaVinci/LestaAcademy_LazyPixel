@@ -3,17 +3,22 @@
 
 #include "Character/Player/PlayerCharacter.h"
 
+#include "MainProjectGameInstance.h"
+#include "Abilities/ActiveAbilities/StrongAttackAbility.h"
 #include "Camera/CameraComponent.h"
 #include "Character/Player/BasePlayerController.h"
+#include "Character/Player/Components/AbilityComponent.h"
+#include "Character/Player/Components/DataSaveComponent.h"
+#include "Character/Player/Components/HealthComponent.h"
 #include "Character/Player/Components/PlayerMovementComponent.h"
-#include "Character/Player/Components/WeaponComponent.h"
+#include "Character/Player/Components/PlayerWeaponComponent.h"
 #include "Curves/CurveVector.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 APlayerCharacter::APlayerCharacter(const FObjectInitializer& ObjInit)
     : Super(ObjInit.SetDefaultSubobjectClass<UPlayerMovementComponent>(ACharacter::CharacterMovementComponentName).
-        SetDefaultSubobjectClass<UWeaponComponent>("WeaponComponent"))
+        SetDefaultSubobjectClass<UPlayerWeaponComponent>("WeaponComponent"))
 {
     PrimaryActorTick.bCanEverTick = true;
 
@@ -24,18 +29,65 @@ APlayerCharacter::APlayerCharacter(const FObjectInitializer& ObjInit)
 
     pCameraComponent = CreateDefaultSubobject<UCameraComponent>("CameraComponent");
     pCameraComponent->SetupAttachment(pSpringArmComponent);
+
+    pDataSaveComponent = CreateDefaultSubobject<UDataSaveComponent>("DataSaveComponent");
 }
 
 void APlayerCharacter::BeginPlay()
 {
     Super::BeginPlay();
 
+    BindEvents();
+    StartCameraMovement();
+}
+
+void APlayerCharacter::BindEvents()
+{
     if (const auto playerController = GetPlayerController())
     {
         playerController->OnMouseMove.AddUObject(this, &APlayerCharacter::OnMouseMove);
     }
 
-    StartCameraMovement();
+    if (const auto gameInstance = GetGameInstance<UMainProjectGameInstance>())
+    {
+        gameInstance->OnPreSaveCurrentSlotEvent.AddUObject(this, &APlayerCharacter::PreSaveCurrentSlot);
+    }
+}
+
+void APlayerCharacter::PreSaveCurrentSlot(USaveGame* SaveGame)
+{
+    const auto progressSaveGame = Cast<UProgressSaveGame>(SaveGame);
+    if (!progressSaveGame)
+        return;
+
+    if (pHealthComponent)
+    {
+        UE_LOG(LogTemp, Error, TEXT("Save health: %f"), pHealthComponent->GetPercentHealth());
+        progressSaveGame->ProgressData.HealthPercent = pHealthComponent->GetPercentHealth();
+    }
+
+    if (pAbilityComponent)
+    {
+        if (const auto customAbility = pAbilityComponent->GetCustomAbility<UStrongAttackAbility>())
+        {
+            UE_LOG(LogTemp, Error, TEXT("Save Custom ability: %f"), customAbility->GetCurrentAbilityCharge());
+            progressSaveGame->ProgressData.AbilityCharge = customAbility->GetCurrentAbilityCharge();
+        }
+    }
+
+    if (const auto weaponComponent = Cast<UPlayerWeaponComponent>(pWeaponComponent))
+    {
+        if (const auto rangeWeapon = weaponComponent->GetRangeWeapon())
+        {
+            UE_LOG(LogTemp, Error, TEXT("Save bullets num: %d"), rangeWeapon->GetBullets());
+            progressSaveGame->ProgressData.BulletsNum = rangeWeapon->GetBullets();
+        }
+        else
+        {
+            UE_LOG(LogTemp, Error, TEXT("Save bullets num: %d"), 0);
+            progressSaveGame->ProgressData.BulletsNum = 0;
+        }
+    }
 }
 
 void APlayerCharacter::Tick(float DeltaTime)
@@ -105,7 +157,7 @@ ABasePlayerController* APlayerCharacter::GetPlayerController() const
     return Cast<ABasePlayerController>(Controller);
 }
 
-UWeaponComponent* APlayerCharacter::GetWeaponComponent() const
+UPlayerWeaponComponent* APlayerCharacter::GetPlayerWeaponComponent() const
 {
-    return Cast<UWeaponComponent>(GetBaseWeaponComponent());
+    return Cast<UPlayerWeaponComponent>(GetBaseWeaponComponent());
 }

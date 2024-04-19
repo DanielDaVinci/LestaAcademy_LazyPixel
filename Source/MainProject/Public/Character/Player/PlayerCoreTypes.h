@@ -26,7 +26,7 @@ enum EStatePriority: int32
 };
 
 UENUM()
-enum EStateResult
+enum EStateResult: int32
 {
     Aborted = 0,
     Successed = 1

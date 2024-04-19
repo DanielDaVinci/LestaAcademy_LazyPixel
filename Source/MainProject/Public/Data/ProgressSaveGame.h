@@ -11,20 +11,21 @@ struct FProgressData
 {
     GENERATED_BODY()
 
-    UPROPERTY(SaveGame, EditAnywhere, Category = "Data|Environment")
-    uint8 LevelIndex;
+    UPROPERTY(EditAnywhere, Category = "Data|Environment")
+    uint32 LevelIndex = 0;
 
-    UPROPERTY(SaveGame, EditAnywhere, Category = "Data|Environment")
-    uint8 RoomIndex;
+    UPROPERTY(EditAnywhere, Category = "Data|Environment")
+    uint32 RoomIndex = -1;
 
-    UPROPERTY(SaveGame, EditAnywhere, Category = "Data|Player Properties")
-    float PlayerHealth;
+    UPROPERTY(EditAnywhere, Category = "Data|Player Properties")
+    float HealthPercent = 1.0f;
 
-    UPROPERTY(SaveGame, EditAnywhere, Category = "Data|Player Properties")
-    float AbilityCharge;
+    UPROPERTY(EditAnywhere, Category = "Data|Player Properties")
+    float AbilityCharge = 0.0f;
 
-    UPROPERTY(SaveGame, EditAnywhere, Category = "Data|Player Properties")
-    uint8 BulletsNum; 
+    UPROPERTY(EditAnywhere, Category = "Data|Player Properties")
+    uint32 BulletsNum = 0;
+    
 };
 
 UCLASS()
@@ -33,6 +34,8 @@ class MAINPROJECT_API UProgressSaveGame : public USaveGame
 	GENERATED_BODY()
 
 public:
-    UPROPERTY(SaveGame, EditAnywhere, SaveGame)
+    UPROPERTY(EditAnywhere, SaveGame)
     FProgressData ProgressData;
+    
+    FString GetLevelName() const;
 };
