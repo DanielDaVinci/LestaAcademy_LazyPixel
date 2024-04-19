@@ -10,6 +10,7 @@
 #include "Components/LightComponent.h"
 #include "Engine/StaticMeshActor.h"
 #include "Environment/Components/WavesSystemComponent.h"
+#include "GameFramework/PlayerStart.h"
 #include "Kismet/GameplayStatics.h"
 #include "NavMesh/NavMeshBoundsVolume.h"
 
@@ -18,24 +19,35 @@ ARoom::ARoom()
 	PrimaryActorTick.bCanEverTick = false;
 
     pSceneComponent = CreateDefaultSubobject<USceneComponent>("SceneComponent");
-    pSceneComponent->SetMobility(EComponentMobility::Stationary);
+    pSceneComponent->SetMobility(EComponentMobility::Static);
     SetRootComponent(pSceneComponent);
 
     pRoomCollisionComponent = CreateDefaultSubobject<UBoxComponent>("RoomCollisionComponent");
     pRoomCollisionComponent->SetupAttachment(GetRootComponent());
-    pRoomCollisionComponent->SetMobility(EComponentMobility::Stationary);
+    pRoomCollisionComponent->SetMobility(EComponentMobility::Static);
     pRoomCollisionComponent->InitBoxExtent(FVector(300.0f, 300.0f, 50.0f));
     pRoomCollisionComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
     pRoomCollisionComponent->SetCollisionObjectType(ECC_WorldStatic);
     pRoomCollisionComponent->SetCollisionResponseToAllChannels(ECR_Ignore);
     pRoomCollisionComponent->SetCollisionResponseToChannel(ECC_Enemy, ECR_Overlap);
 
+    pPlayerStartComponent = CreateDefaultSubobject<UChildActorComponent>("PlayerStartComponent");
+    pPlayerStartComponent->SetupAttachment(GetRootComponent());
+    pPlayerStartComponent->SetMobility(EComponentMobility::Static);
+    pPlayerStartComponent->SetChildActorClass(APlayerStart::StaticClass());
+    pPlayerStartComponent->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
+    if (const auto playerStart =  Cast<APlayerStart>(pPlayerStartComponent->GetChildActor()))
+    {
+        playerStart->AutoReceiveInput = EAutoReceiveInput::Player0;
+        playerStart->InputPriority = 10;
+    }
+
     pWavesSystemComponent = CreateDefaultSubobject<UWavesSystemComponent>("WavesSystemComponent");
 }
 
 void ARoom::TurnOffLight()
 {
-    for (auto& sources: lightSources)
+    for (const auto& sources: lightSources)
     {
         sources->GetLightComponent()->SetVisibility(false);
     }
@@ -43,13 +55,13 @@ void ARoom::TurnOffLight()
 
 void ARoom::TurnOnLight()
 {
-    for (auto& sources: lightSources)
+    for (const auto& sources: lightSources)
     {
         sources->GetLightComponent()->SetVisibility(true);
     }
 }
 
-void ARoom::SetCeilingVisibility(bool Visible)
+void ARoom::SetCeilingVisibility(bool Visible) const
 {
     if (!roomCeiling)
         return;
@@ -70,20 +82,23 @@ void ARoom::BeginPlay()
 
 void ARoom::BindEvents()
 {
-    pWavesSystemComponent->OnAllWavesEndEvent.AddUObject(this, &ARoom::OnAllWavesEnd);
+    if (pWavesSystemComponent)
+    {
+        pWavesSystemComponent->OnAllWavesEndEvent.AddUObject(this, &ARoom::OnAllWavesEnd);
+    }
 }
 
 void ARoom::OnPlayerEnter()
 {
     m_isEntered = true;
-    OnPlayerEnterEvent.Broadcast(this);
+    OnPlayerEnterEvent.Broadcast();
     
     pWavesSystemComponent->StartWaves();
 }
 
 void ARoom::OnAllWavesEnd()
 {
-    OnAllEnemiesDied.Broadcast(this);
+    OnAllEnemiesDied.Broadcast();
 }
 
 void ARoom::BindInputDoorsForEnter()
@@ -197,6 +212,26 @@ void ARoom::OpenInputDoors()
     }
 }
 
+void ARoom::SetAsStart()
+{
+    if (!pPlayerStartComponent)
+        return;
+
+    if (const auto playerStart = Cast<APlayerStart>(pPlayerStartComponent->GetChildActor()))
+    {
+        playerStart->InputPriority = -1;
+    }
+}
+
+void ARoom::HideEnemiesInRoom()
+{
+    const auto enemies = GetOverlapActorsInRoom<AAIBaseCharacter>(AAIBaseCharacter::StaticClass());
+    for (const auto& enemy: enemies)
+    {
+        enemy->Destroy();
+    }
+}
+
 void ARoom::DestroyActorsInRoom() const
 {
     if (!GetWorld())
@@ -222,8 +257,6 @@ void ARoom::DestroyActorsInRoom() const
         if (actor == roomCeiling)
             continue;
         
-        UE_LOG(LogTemp, Display, TEXT("Finded: %s"), *actor->GetName());
-        
         bool isInside = false;
         for (const auto& box: volumes)
         {
@@ -234,7 +267,6 @@ void ARoom::DestroyActorsInRoom() const
 
         if (isInside)
         {
-            UE_LOG(LogTemp, Display, TEXT("Deleted: %s"), *actor->GetName());
             actor->Destroy();
         }   
     }

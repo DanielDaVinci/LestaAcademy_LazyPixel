@@ -16,12 +16,15 @@ UCLASS()
 class MAINPROJECT_API AGun : public ABaseWeapon
 {
     GENERATED_BODY()
+    
+    friend class UDataSaveComponent;
 
 public:
     void MakeShoot(const FVector& Point);
-
+    
     int32 GetBullets() const { return m_currentBullets; }
     int32 GetMaxBullets() const { return maxBullets; }
+    
     FName GetMuzzleSocketName() const { return muzzleSocketName; }
     bool IsAmmoEmpty() const { return m_currentBullets <= 0; }
 
@@ -49,4 +52,6 @@ protected:
 private:
     int32 m_currentBullets;
     uint8 m_nProjTrailCol = 0;
+
+    void SetBullets(int32 BulletsNum);
 };

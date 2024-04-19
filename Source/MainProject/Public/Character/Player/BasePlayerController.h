@@ -45,6 +45,9 @@ public:
     FVector GetWorldPointUnderMouse() const;
     FVector GetDirectionToMouseHit(const FVector& StartPoint) const;
 
+protected:
+    virtual void BeginPlay() override;
+
 public:
     virtual void SetupInputComponent() override;
 

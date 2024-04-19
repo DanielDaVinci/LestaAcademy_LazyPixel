@@ -28,11 +28,12 @@ void AGun::MakeShoot(const FVector& Point)
     
     if (!isInfiniteAmmo)
     {
-        m_currentBullets--;
-        OnAmmoChanged.Broadcast(m_currentBullets);
+        SetBullets(m_currentBullets - 1);
         
         if (IsAmmoEmpty())
+        {
             OnEmptyAmmo.Broadcast();
+        }
     }
 }
 
@@ -41,4 +42,10 @@ void AGun::BeginPlay()
     Super::BeginPlay();
 
     m_currentBullets = maxBullets;
+}
+
+void AGun::SetBullets(int32 BulletsNum)
+{
+    m_currentBullets = FMath::Clamp(BulletsNum, 0, GetMaxBullets());
+    OnAmmoChanged.Broadcast(m_currentBullets);
 }

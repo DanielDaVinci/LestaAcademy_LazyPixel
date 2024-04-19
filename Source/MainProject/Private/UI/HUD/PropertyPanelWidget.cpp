@@ -8,7 +8,7 @@
 #include "Character/Player/PlayerCharacter.h"
 #include "Character/Player/Components/AbilityComponent.h"
 #include "Character/Player/Components/HealthComponent.h"
-#include "Character/Player/Components/WeaponComponent.h"
+#include "Character/Player/Components/PlayerWeaponComponent.h"
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
 
@@ -114,10 +114,10 @@ UHealthComponent* UPropertyPanelWidget::GetHealthComponent() const
     return pCharacter ? pCharacter->GetHealthComponent() : nullptr;
 }
 
-UWeaponComponent* UPropertyPanelWidget::GetWeaponComponent() const
+UPlayerWeaponComponent* UPropertyPanelWidget::GetWeaponComponent() const
 {
     const auto pCharacter = GetOwningPlayerCharacter();
-    return pCharacter ? Cast<UWeaponComponent>(pCharacter->GetBaseWeaponComponent()) : nullptr;
+    return pCharacter ? Cast<UPlayerWeaponComponent>(pCharacter->GetBaseWeaponComponent()) : nullptr;
 }
 
 UAbilityComponent* UPropertyPanelWidget::GetAbilityComponent() const

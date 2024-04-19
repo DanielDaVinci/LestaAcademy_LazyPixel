@@ -11,7 +11,7 @@ class UStrongAttackAbility;
 class UAbilityComponent;
 class AGun;
 class APlayerCharacter;
-class UWeaponComponent;
+class UPlayerWeaponComponent;
 class UTextBlock;
 class UHealthWidget;
 class UHealthComponent;
@@ -50,7 +50,7 @@ protected:
 protected:
     APlayerCharacter* GetOwningPlayerCharacter() const;
     UHealthComponent* GetHealthComponent() const;
-    UWeaponComponent* GetWeaponComponent() const;
+    UPlayerWeaponComponent* GetWeaponComponent() const;
     UAbilityComponent* GetAbilityComponent() const;
     
     AGun* GetRangeWeapon() const;

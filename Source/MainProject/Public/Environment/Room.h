@@ -9,14 +9,11 @@
 #include "GameFramework/Actor.h"
 #include "Room.generated.h"
 
+class UCapsuleComponent;
 class UWavesSystemComponent;
 class AAIBaseCharacter;
 class AEnemySpawner;
 class ADoor;
-class ARoom;
-
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnPlayerEnterSignature, ARoom*)
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnAllEnemiesDiedSignature, ARoom*)
 
 UCLASS()
 class MAINPROJECT_API ARoom : public AActor
@@ -26,7 +23,10 @@ class MAINPROJECT_API ARoom : public AActor
 public:	
 	ARoom();
 
+    DECLARE_MULTICAST_DELEGATE(FOnPlayerEnterSignature);
     FOnPlayerEnterSignature OnPlayerEnterEvent;
+
+    DECLARE_MULTICAST_DELEGATE(FOnAllEnemiesDiedSignature);
     FOnAllEnemiesDiedSignature OnAllEnemiesDied;
     
     bool IsEntered() const { return m_isEntered; }
@@ -34,21 +34,30 @@ public:
     void TurnOffLight();
     void TurnOnLight();
 
-    void SetCeilingVisibility(bool Visible);
+    void SetCeilingVisibility(bool Visible) const;
 
     void CloseAllDoors();
     void OpenAllDoors();
     void OpenOutputDoors();
     void OpenInputDoors();
 
+    void SetAsStart();
+
+    void HideEnemiesInRoom();
     void DestroyActorsInRoom() const;
 
+    template<class T> requires std::is_base_of_v<AActor, T>
+    TArray<T*> GetOverlapActorsInRoom(TSubclassOf<T> ClassFilter = nullptr);
+    
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName="Scene Component")
     USceneComponent* pSceneComponent;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName="Room Collision Component")
     UBoxComponent* pRoomCollisionComponent;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+    UChildActorComponent* pPlayerStartComponent;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName="Waves System Component")
     UWavesSystemComponent* pWavesSystemComponent;
@@ -93,3 +102,20 @@ protected:
 private:
     void BindLightSources();
 };
+
+template <class T> requires std::is_base_of_v<AActor, T>
+TArray<T*> ARoom::GetOverlapActorsInRoom(TSubclassOf<T> ClassFilter)
+{
+    TArray<AActor*> overlappingActors;
+    UpdateOverlaps(false);
+    GetOverlappingActors(overlappingActors, ClassFilter);
+
+    TArray<T*> castActors;
+    for (const auto& actor: overlappingActors)
+    {
+        if (const auto castActor = Cast<T>(actor))
+            castActors.Add(castActor);
+    }
+
+    return castActors;
+}

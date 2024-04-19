@@ -13,13 +13,15 @@ UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class MAINPROJECT_API UHealthComponent : public UActorComponent
 {
     GENERATED_BODY()
+    
+    friend class UDataSaveComponent;
 
 public:
     UHealthComponent();
 
     FOnHealthChanged OnHealthChanged;
     FOnDeath OnDied;
-
+    
     float GetHealth() const { return m_health; }
     float GetMaxHealth() const { return maxHealth; }
     float GetPercentHealth() const { return GetHealth() / GetMaxHealth(); }
@@ -38,9 +40,9 @@ protected:
 private:
     float m_health = 0.0f;
 
+    void SetHealth(float Health);
+
     UFUNCTION()
     void OnTakeAnyDamage(AActor* DamageActor, float Damage, const UDamageType* DamageType,
         AController* InstigateBy, AActor* DamageCauser);
-
-    void SetHealth(float Health);
 };

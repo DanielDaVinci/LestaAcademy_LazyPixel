@@ -9,7 +9,7 @@
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnAbilityChargeChangedSignature, float)
 
-class UWeaponComponent;
+class UPlayerWeaponComponent;
 class ABasePlayerController;
 class UPlayerMovementComponent;
 class ACollisionCube;
@@ -19,6 +19,8 @@ UCLASS()
 class MAINPROJECT_API UStrongAttackAbility : public UActiveAbility
 {
     GENERATED_BODY()
+
+    friend class UDataSaveComponent;
 
 public:
     FOnAbilityChargeChangedSignature OnAbilityChargeChanged;
@@ -76,7 +78,7 @@ private:
     void SetAbilityCharge(float ChargeAmount);
     void AddAbilityCharge(float ChargeAmount);
 
-    void ChangeMeleeMaterilal();
+    void ChangeMeleeMaterial();
 
 protected:
     virtual bool NativeActivate() override;
@@ -101,7 +103,7 @@ protected:
     ABasePlayerController* GetBasePlayerController() const;
     UPlayerMovementComponent* GetPlayerMovementComponent() const;
     UStateMachineComponent* GetStateMachineComponent() const;
-    UWeaponComponent* GetWeaponComponent() const;
+    UPlayerWeaponComponent* GetWeaponComponent() const;
 
     bool IsAbilityCharged() const;
 };

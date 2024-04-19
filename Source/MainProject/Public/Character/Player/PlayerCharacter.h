@@ -5,14 +5,19 @@
 #include "CoreMinimal.h"
 #include "Camera/CameraComponent.h"
 #include "Character/BaseCharacter.h"
+#include "Interface/PrePostBeginInterface.h"
 #include "PlayerCharacter.generated.h"
 
+class UDataSaveComponent;
+class UPlayerWeaponComponent;
+class UProgressSaveGame;
+class USaveGame;
 class ABasePlayerController;
 class UCameraComponent;
 class USpringArmComponent;
 
 UCLASS()
-class MAINPROJECT_API APlayerCharacter : public ABaseCharacter
+class MAINPROJECT_API APlayerCharacter : public ABaseCharacter, public IPrePostBeginInterface
 {
     GENERATED_BODY()
 
@@ -28,8 +33,16 @@ protected:
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName="CameraComponent")
     UCameraComponent* pCameraComponent;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName="DataSaveComponent")
+    UDataSaveComponent* pDataSaveComponent;
     
     virtual void BeginPlay() override;
+
+private:
+    void BindEvents();
+
+    void PreSaveCurrentSlot(USaveGame* SaveGame);
 
 public:
     virtual void Tick(float DeltaTime) override;
@@ -64,5 +77,5 @@ private:
 
 public:
     ABasePlayerController* GetPlayerController() const;
-    UWeaponComponent* GetWeaponComponent() const; 
+    UPlayerWeaponComponent* GetPlayerWeaponComponent() const; 
 };

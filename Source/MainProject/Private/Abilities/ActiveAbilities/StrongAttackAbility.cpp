@@ -8,7 +8,7 @@
 #include "Character/Player/BasePlayerController.h"
 #include "Character/Player/Components/PlayerMovementComponent.h"
 #include "Character/Player/Components/StateMachineComponent.h"
-#include "Character/Player/Components/WeaponComponent.h"
+#include "Character/Player/Components/PlayerWeaponComponent.h"
 #include "Common/Objects/CollisionCube.h"
 #include "Engine/DamageEvents.h"
 #include "Kismet/GameplayStatics.h"
@@ -102,7 +102,7 @@ void UStrongAttackAbility::SetAbilityCharge(float ChargeAmount)
     }
 
     if (IsAbilityCharged())
-        ChangeMeleeMaterilal();
+        ChangeMeleeMaterial();
 }
 
 void UStrongAttackAbility::AddAbilityCharge(float ChargeAmount)
@@ -110,7 +110,7 @@ void UStrongAttackAbility::AddAbilityCharge(float ChargeAmount)
     SetAbilityCharge(GetCurrentAbilityCharge() + ChargeAmount);
 }
 
-void UStrongAttackAbility::ChangeMeleeMaterilal()
+void UStrongAttackAbility::ChangeMeleeMaterial()
 {
     const auto weaponComponent = GetWeaponComponent();
     ASword* pMeleeWeapon = weaponComponent->FindWeapon<ASword>();
@@ -224,7 +224,7 @@ void UStrongAttackAbility::OnAttackPartEndState(EStateResult StateResult)
     m_pCubeCollision->Disable();
     GetCharacter()->GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Enemy, ECR_Block);
     pPlayerMovementComponent->SetEnableMovementInput(true);
-    ChangeMeleeMaterilal();
+    ChangeMeleeMaterial();
 }
 
 ABasePlayerController* UStrongAttackAbility::GetBasePlayerController() const
@@ -242,9 +242,9 @@ UStateMachineComponent* UStrongAttackAbility::GetStateMachineComponent() const
     return GetCharacter() ? GetCharacter()->GetStateMachineComponent() : nullptr;
 }
 
-UWeaponComponent* UStrongAttackAbility::GetWeaponComponent() const
+UPlayerWeaponComponent* UStrongAttackAbility::GetWeaponComponent() const
 {
-    return GetCharacter() ? Cast<UWeaponComponent>(GetCharacter()->GetBaseWeaponComponent()) : nullptr;
+    return GetCharacter() ? Cast<UPlayerWeaponComponent>(GetCharacter()->GetBaseWeaponComponent()) : nullptr;
 }
 
 bool UStrongAttackAbility::IsAbilityCharged() const

@@ -33,13 +33,10 @@ protected:
 
     // Dynamic Enemies 
 protected:
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room|Enemies|Dynamic")
-    TArray<AAIBaseCharacter*> sceneEnemies;
-    
     void BindSceneEnemies();
     
 private:
-    void FindEnemiesInRoom();
+    TArray<AAIBaseCharacter*> FindEnemiesInRoom() const;
 
     
     // Manual Enemies
@@ -60,15 +57,16 @@ private:
     // Common
 protected:
     void OnEnemyDied();
+    void CheckEnemyCount();
     void OnWaveEnd();
     
     ARoom* GetOwningRoom() const;
     
 private:
-    int32 m_currentAliveEnemies;
-    int32 m_currentWaveIndex;
+    int32 m_currentAliveEnemies = 0;
+    int32 m_currentWaveIndex = -1;
 
-    void BindEnemiesOnDeath(const TArray<AAIBaseCharacter*>& Enemies);
+    void BindEnemiesOnDeath(const TArray<AAIBaseCharacter*>&& Enemies);
     void BindOneEnemyOnDeath(const AAIBaseCharacter* Enemy);
 
     void CloseDoorAllSpawners(int32 WaveIndex);

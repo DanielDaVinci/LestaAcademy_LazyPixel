@@ -3,7 +3,7 @@
 
 #include "Pickups/WeaponPickup.h"
 #include "Character/Player/PlayerCharacter.h"
-#include "Character/Player/Components/WeaponComponent.h"
+#include "Character/Player/Components/PlayerWeaponComponent.h"
 
 AWeaponPickup::AWeaponPickup()
 {
@@ -27,7 +27,7 @@ void AWeaponPickup::PickUpHandle(APlayerCharacter* Character)
 
     if (const auto playerCharacter = Cast<APlayerCharacter>(Character))
     {
-        if (const auto weaponComponent = playerCharacter->GetWeaponComponent())
+        if (const auto weaponComponent = playerCharacter->GetPlayerWeaponComponent())
         {
             weaponComponent->PickUpWeapon(weaponClass);
             Destroy();

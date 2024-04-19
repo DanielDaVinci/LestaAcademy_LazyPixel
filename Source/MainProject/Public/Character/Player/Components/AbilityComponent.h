@@ -3,15 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Abilities/BaseAbility.h"
+#include "Abilities/ActiveAbility.h"
 #include "Character/BaseCharacter.h"
 #include "Components/ActorComponent.h"
 #include "AbilityComponent.generated.h"
 
+class UBaseAbility;
 class UDashAbility;
 class ABaseCharacter;
 class UPassiveAbility;
-class UActiveAbility;
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class MAINPROJECT_API UAbilityComponent : public UActorComponent
@@ -21,7 +21,9 @@ class MAINPROJECT_API UAbilityComponent : public UActorComponent
 public:
     UAbilityComponent();
 
-    UActiveAbility* GetCustomAbility() const { return m_customAbility;  }
+    template<class T> requires std::is_base_of_v<UActiveAbility, T>
+    T* GetCustomAbility() const;
+    UActiveAbility* GetCustomAbility() const { return GetCustomAbility<UActiveAbility>();  }
 
 protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Ability")
@@ -56,7 +58,7 @@ private:
     template<typename T>
     TArray<T*> InitArrayAbilities(const TArray<TSubclassOf<T>>& Classes);
 
-    template<typename T>
+    template<typename T> requires std::is_base_of_v<UBaseAbility, T>
     T* InitAbility(const TSubclassOf<T>& Class);
 
     template<typename T>
@@ -73,6 +75,12 @@ private:
 
     ABaseCharacter* GetCharacter() const { return Cast<ABaseCharacter>(GetOwner()); }
 };
+
+template <class T> requires std::is_base_of_v<UActiveAbility, T>
+T* UAbilityComponent::GetCustomAbility() const
+{
+    return Cast<T>(m_customAbility);
+}
 
 template <typename T>
 TArray<T*> UAbilityComponent::InitArrayAbilities(const TArray<TSubclassOf<T>>& Classes)
@@ -91,11 +99,9 @@ TArray<T*> UAbilityComponent::InitArrayAbilities(const TArray<TSubclassOf<T>>& C
     return abilities;
 }
 
-template <typename T>
+template <typename T> requires std::is_base_of_v<UBaseAbility, T>
 T* UAbilityComponent::InitAbility(const TSubclassOf<T>& Class)
 {
-    static_assert(std::is_base_of_v<UBaseAbility, T>, "Type parameter of this class must derive from UBaseAbility");
-    
     const auto character = GetCharacter();
     if (!character || !Class)
         return nullptr;

@@ -5,18 +5,23 @@
 #include "CoreMinimal.h"
 #include "Character/Player/PlayerCoreTypes.h"
 #include "Components/ActorComponent.h"
+#include "Interface/PrePostBeginInterface.h"
 #include "Weapon/BaseWeapon.h"
 #include "BaseWeaponComponent.generated.h"
 
+class USaveGame;
 DECLARE_MULTICAST_DELEGATE(FOnAfterSpawnAllWeaponsSignature)
 
 class ABaseWeapon;
 class AProjectile;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class MAINPROJECT_API UBaseWeaponComponent : public UActorComponent
+class MAINPROJECT_API UBaseWeaponComponent
+    : public UActorComponent
 {
 	GENERATED_BODY()
+
+    friend class UDataSaveComponent;
 
 public:	
 	UBaseWeaponComponent();
@@ -28,16 +33,27 @@ public:
 protected:
     UPROPERTY(EditDefaultsOnly, Category = "Weapon")
     TArray<FWeaponData> weaponData;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+    TArray<TSubclassOf<ABaseWeapon>> startWeapons;
     
     virtual void BeginPlay() override;
+    virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
     // Weapons
 private:
     virtual void SpawnAllWeapons();
+    virtual void SpawnStarWeapons();
+    void DestroyWeapons();
 
-protected:    
+protected:
+    virtual ABaseWeapon* AddWeapon(const TSubclassOf<ABaseWeapon>& WeaponClass);
+    
     ABaseWeapon* SpawnWeapon(const TSubclassOf<ABaseWeapon>& WeaponClass) const;
     void AttachWeapon(ABaseWeapon* Weapon, const FName& SocketName) const;
+
+    FWeaponData* FindDataByChildWeaponClass(const TSubclassOf<ABaseWeapon>& WeaponClass);
+    FWeaponData* FindDataByBaseWeaponClass(const TSubclassOf<ABaseWeapon>& WeaponClass);
     
 protected:
     UPROPERTY()
@@ -51,9 +67,9 @@ public:
     T* FindWeapon() const;
     
     // Animations and notifies
-private:
+protected:
     virtual void InitAnimations();
-    void SubscribeAnimationNotifies(ABaseWeapon* Weapon);
+    void SubscribeAnimationNotifies(const ABaseWeapon* Weapon);
 
 protected:
     virtual void OnSubscribeToNotifies(const FAnimNotifyEvent& NotifyEvent);

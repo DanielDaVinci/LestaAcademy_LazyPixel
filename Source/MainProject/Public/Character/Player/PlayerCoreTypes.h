@@ -73,4 +73,13 @@ public:
     {
         return Priority < Other.Priority || (Priority == Other.Priority && Id > Other.Id);
     }
+
+    static class Comparator
+    {
+    public:
+        bool operator () (FState* left, FState* right) const
+        {
+            return *left < *right;
+        }
+    };
 };
