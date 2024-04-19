@@ -22,9 +22,6 @@ bool UDashAbility::NativeActivate()
     if (!pStateMachineComponent || !pPlayerMovementComponent)
         return false;
 
-    if (pPlayerMovementComponent->GetInputDirection() == FVector2D::ZeroVector)
-        return false;
-
     FState dashState(
         "DashAbility",
         dashDuration,
@@ -45,7 +42,10 @@ void UDashAbility::OnStartDashState()
     if (!GetWorld() || !pCharacter || !pCharacter->GetCapsuleComponent() || !pCharacter->GetMesh() || !pPlayerMovementComponent)
         return;
     
-    const FVector dashDirection = pPlayerMovementComponent->GetWorldInputDirection();
+    FVector dashDirection = pPlayerMovementComponent->GetWorldInputDirection();
+    if (dashDirection.IsZero())
+        dashDirection = pCharacter->GetMesh()->GetRightVector();
+
     pPlayerMovementComponent->FixCharacterRotation(dashDirection.Rotation());
     pPlayerMovementComponent->SetEnableMovementInput(false);
 

@@ -18,8 +18,9 @@ public class MainProject : ModuleRules
 			"NavigationSystem",
 			"GameplayTasks",
 			"UMG",
-			"Niagara"
-		});
+			"Niagara",
+            "DismembermentSystem"
+        });
 
 		// Uncomment if you are using Slate UI
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });

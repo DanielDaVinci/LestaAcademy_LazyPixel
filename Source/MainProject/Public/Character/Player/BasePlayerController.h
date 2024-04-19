@@ -16,7 +16,7 @@ DECLARE_MULTICAST_DELEGATE(FOnMeleeAttackSignature);
 DECLARE_MULTICAST_DELEGATE(FOnRangeAttackSignature);
 DECLARE_MULTICAST_DELEGATE(FOnDashSignature);
 DECLARE_MULTICAST_DELEGATE(FOnCustomAbilitySignature);
-DECLARE_MULTICAST_DELEGATE(FOnInteractSignature);
+DECLARE_DELEGATE(FOnInteractSignature);
 
 UCLASS()
 class MAINPROJECT_API ABasePlayerController : public APlayerController

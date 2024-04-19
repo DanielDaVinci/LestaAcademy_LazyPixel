@@ -38,7 +38,7 @@ void ABasePickup::NotifyActorBeginOverlap(AActor* OtherActor)
     if (!playerController) return;
 
     pInteractWidget->SetVisibility(true);
-    playerController->OnInteract.AddUObject(this, &ABasePickup::PickUpHandle, Cast<APlayerCharacter>(OtherActor));
+    playerController->OnInteract.BindUObject(this, &ABasePickup::PickUpHandle, Cast<APlayerCharacter>(OtherActor));
 }
 
 void ABasePickup::NotifyActorEndOverlap(AActor* OtherActor) 
@@ -49,7 +49,12 @@ void ABasePickup::NotifyActorEndOverlap(AActor* OtherActor)
     if (!playerController) return;
 
     pInteractWidget->SetVisibility(false);
-    playerController->OnInteract.RemoveAll(this);
+    playerController->OnInteract.Unbind();
+}
+
+void ABasePickup::DisableCollision() 
+{
+    pCollisionComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 ABasePlayerController* ABasePickup::GetPlayerController(AActor* Character) const

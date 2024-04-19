@@ -39,6 +39,14 @@ UBaseWeaponComponent* ABaseCharacter::GetBaseWeaponComponent() const
     return pWeaponComponent;
 }
 
+void ABaseCharacter::ResetCollisions() const 
+{
+    UCapsuleComponent* pCapsuleComponent = GetCapsuleComponent();
+    ECollisionEnabled::Type origCollision = pCapsuleComponent->GetCollisionEnabled();
+    pCapsuleComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    pCapsuleComponent->SetCollisionEnabled(origCollision);
+}
+
 void ABaseCharacter::PostInitializeComponents()
 {
     Super::PostInitializeComponents();

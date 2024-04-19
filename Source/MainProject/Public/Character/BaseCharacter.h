@@ -30,6 +30,7 @@ public:
     bool IsDead() const;
     UHealthComponent* GetHealthComponent() const;
     UBaseWeaponComponent* GetBaseWeaponComponent() const;
+    void ResetCollisions() const;
 
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName = "AbilityComponent")

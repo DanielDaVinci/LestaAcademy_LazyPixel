@@ -6,6 +6,7 @@
 #include "Components/WidgetComponent.h"
 #include "Character/Player/PlayerCharacter.h"
 #include "Character/Player/Components/HealthComponent.h"
+#include "Components/TimelineComponent.h"
 
 AHealthStation::AHealthStation()
 {
@@ -17,9 +18,25 @@ AHealthStation::AHealthStation()
 
     pRectLightComponent = CreateDefaultSubobject<URectLightComponent>("RectLightComponent");
     pRectLightComponent->SetupAttachment(pBaseMeshComponent);
+
+    pTimelineComponent = CreateDefaultSubobject<UTimelineComponent>("TimelineComponent");
 }
 
-void AHealthStation::NotifyActorBeginOverlap(AActor* OtherActor) 
+void AHealthStation::BeginPlay() 
+{
+    Super::BeginPlay();
+
+    if (!pCurveFloat)
+        return;
+
+    FOnTimelineFloat ProgressFunction;
+    ProgressFunction.BindUFunction(this, FName("HandleTimeline"));
+    pTimelineComponent->AddInterpFloat(pCurveFloat, ProgressFunction);
+    pTimelineComponent->SetLooping(true);
+    pTimelineComponent->Play();
+}
+
+void AHealthStation::NotifyActorBeginOverlap(AActor* OtherActor)
 {
     if (isUsed) return;
 
@@ -34,5 +51,15 @@ void AHealthStation::PickUpHandle(APlayerCharacter* Character)
     pInteractWidget->SetVisibility(false);
     pHealthDisplayMeshComponent->SetVisibility(false);
     pRectLightComponent->SetIntensity(0.0f);
+    pTimelineComponent->Stop();
     isUsed = true;
+
+    DisableCollision();
+    Character->ResetCollisions();
+}
+
+void AHealthStation::HandleTimeline(float Value) 
+{
+    //UE_LOG(LogTemp, Display, TEXT("%f"), Value);
+    pHealthDisplayMeshComponent->AddLocalRotation(FRotator(0.0f, Value, 0.0f));
 }

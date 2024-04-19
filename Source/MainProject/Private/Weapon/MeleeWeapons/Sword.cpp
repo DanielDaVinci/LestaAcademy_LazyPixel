@@ -44,17 +44,6 @@ void ASword::OnMeleeWeaponOverlap(UPrimitiveComponent* OverlappedComponent, AAct
     alreadyDamagedActors.Add(OtherActor);
 }
 
-void ASword::OnOffCollision() 
-{
-    if (!pBoxCollision)
-        return;
-
-    if (pBoxCollision->GetCollisionEnabled() == ECollisionEnabled::NoCollision)
-        pBoxCollision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-    else
-        pBoxCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-}
-
 void ASword::ClearDamagedActors()
 {
     DisableAttackCollision();

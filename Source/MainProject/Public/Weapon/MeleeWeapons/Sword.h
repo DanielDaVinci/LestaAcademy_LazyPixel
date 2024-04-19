@@ -24,7 +24,6 @@ public:
     void EnableAttackCollision() const;
     void DisableAttackCollision() const;
 
-    void OnOffCollision();
     void ClearDamagedActors();
 
     void ChangeMaterial(bool isCharged);
