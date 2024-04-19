@@ -122,25 +122,6 @@ void UPlayerWeaponComponent::MeleeAttack()
     meleeState.OnEndState.AddUObject(this, &UPlayerWeaponComponent::OnEndComboState, m_nextComboIndex);
     
     pStateMachine->AddState(meleeState);
-    m_nextComboIndex++;
-}
-
-void UPlayerWeaponComponent::PlayMeleeWeaponComboAnim(ASword* Weapon, int32 ComboIndex) const
-{
-    const auto pCharacter = GetPlayerCharacter();
-    if (!pCharacter || !pCharacter->GetMesh() || !Weapon || !Weapon->GetAttackMontage())
-        return;
-
-    const auto comboInfo = Weapon->GetComboInfo();
-    if (!comboInfo.IsValidIndex(ComboIndex))
-        return;
-    
-    pCharacter->GetMesh()->GetAnimInstance()->SetRootMotionMode(comboInfo[ComboIndex].RootMotionMode);
-    
-    pCharacter->PlayAnimMontage(
-        Weapon->GetAttackMontage(),
-        Weapon->GetAttackMontage()->GetSectionLength(ComboIndex) / comboInfo[ComboIndex].AnimationTime,
-        comboInfo[ComboIndex].AttackSectionName);
 }
 
 void UPlayerWeaponComponent::OnStartComboState(int32 ComboIndex)

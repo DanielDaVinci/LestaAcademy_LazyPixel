@@ -25,6 +25,7 @@ protected:
     AFloorManager* floorManager;
 
     virtual void StartPlay() override;
+    virtual void BeginPlay() override;
     
 protected:
     virtual void PrePlayerStart();

@@ -208,6 +208,7 @@ void AFloorManager::OnPlayerEnterEndRoom()
 
     currentSlot->ProgressData.LevelIndex += 1;
     currentSlot->ProgressData.RoomIndex = -1;
+    gameInstance->SaveCurrentSlot();
     gameInstance->AsyncLevelLoad("/Game/Levels/" + nextLevel->GetName());
 }
 
