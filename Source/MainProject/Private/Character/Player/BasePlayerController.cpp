@@ -8,6 +8,8 @@
 ABasePlayerController::ABasePlayerController()
 {
     bShowMouseCursor = true;
+
+    CurrentMouseCursor = EMouseCursor::Crosshairs;
 }
 
 FVector2D ABasePlayerController::GetMouseVector() const
