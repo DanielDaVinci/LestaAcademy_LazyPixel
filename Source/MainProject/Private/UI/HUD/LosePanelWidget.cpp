@@ -11,8 +11,6 @@
 void ULosePanelWidget::NativeOnInitialized()
 {
     Super::NativeOnInitialized();
-
-    GetOwningPlayer()->CurrentMouseCursor = EMouseCursor::Default;
     
     BindActions();
     BindEvents();

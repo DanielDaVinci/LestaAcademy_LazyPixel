@@ -13,12 +13,12 @@ class MAINPROJECT_API AGameHUD : public AHUD
 	GENERATED_BODY()
 
 protected:
-
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Game|UI")
     TSubclassOf<UUserWidget> MainWidgetClass;
-
+    
     virtual void BeginPlay() override;
     
 private:
     void AddMainWidgetToViewport() const;
+    
 };

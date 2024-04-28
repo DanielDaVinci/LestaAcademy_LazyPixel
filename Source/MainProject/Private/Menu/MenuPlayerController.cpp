@@ -13,5 +13,6 @@ void AMenuPlayerController::BeginPlay()
 {
     Super::BeginPlay();
 
+    CurrentMouseCursor = EMouseCursor::Default;
     SetInputMode(FInputModeUIOnly());
 }

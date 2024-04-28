@@ -8,8 +8,6 @@
 ABasePlayerController::ABasePlayerController()
 {
     bShowMouseCursor = true;
-
-    CurrentMouseCursor = EMouseCursor::Crosshairs;
 }
 
 FVector2D ABasePlayerController::GetMouseVector() const
@@ -51,6 +49,7 @@ void ABasePlayerController::BeginPlay()
 {
     Super::BeginPlay();
 
+    CurrentMouseCursor = EMouseCursor::Crosshairs;
     SetInputMode(FInputModeGameOnly());
     UGameplayStatics::SetViewportMouseCaptureMode(GetWorld(), EMouseCaptureMode::CapturePermanently_IncludingInitialMouseDown);
 }
