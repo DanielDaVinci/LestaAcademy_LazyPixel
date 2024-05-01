@@ -49,7 +49,7 @@ void UHealthWidget::BindEvents()
 {
     if (const auto pHealthComponent = GetHealthComponent())
     {
-        pHealthComponent->OnHealthChanged.AddUObject(this, &UHealthWidget::OnHealthChanged);
+        pHealthComponent->OnHealthChanged.AddDynamic(this, &UHealthWidget::OnHealthChanged);
     }
 }
 

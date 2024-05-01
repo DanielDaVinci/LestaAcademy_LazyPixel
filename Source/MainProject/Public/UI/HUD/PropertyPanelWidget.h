@@ -39,6 +39,7 @@ private:
     void BindEvents();
 
 protected:
+    UFUNCTION()
     void OnHealthChanged(float DeltaHealth);
     void OnAbilityChargeChanged(float ChargeAmount);
     

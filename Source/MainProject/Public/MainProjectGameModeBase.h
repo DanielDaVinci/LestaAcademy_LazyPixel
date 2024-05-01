@@ -16,8 +16,7 @@ class MAINPROJECT_API AMainProjectGameModeBase : public AGameModeBase
 
 public:
     AMainProjectGameModeBase();
-
-public:
+    
     AFloorManager* GetFloorManager() const { return floorManager; }
 
 protected:

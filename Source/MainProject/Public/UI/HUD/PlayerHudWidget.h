@@ -30,6 +30,7 @@ private:
     void BindActions();
     
 protected:
+    UFUNCTION()
     void OnHealthChanged(float DeltaHealth);
     
 protected:

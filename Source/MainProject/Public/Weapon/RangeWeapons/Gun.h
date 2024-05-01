@@ -49,6 +49,9 @@ protected:
 
     virtual void BeginPlay() override;
 
+    UFUNCTION(BlueprintImplementableEvent)
+    void OnMakeShoot(int32 Bullets);
+
 private:
     int32 m_currentBullets;
     uint8 m_nProjTrailCol = 0;

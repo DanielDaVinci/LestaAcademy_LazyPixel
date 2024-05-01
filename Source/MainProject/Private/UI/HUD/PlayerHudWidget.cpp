@@ -19,7 +19,7 @@ void UPlayerHudWidget::BindActions()
     if (!pHealthComponent)
         return;
     
-    pHealthComponent->OnHealthChanged.AddUObject(this, &UPlayerHudWidget::OnHealthChanged);
+    pHealthComponent->OnHealthChanged.AddDynamic(this, &UPlayerHudWidget::OnHealthChanged);
 }
 
 void UPlayerHudWidget::OnHealthChanged(float DeltaHealth)

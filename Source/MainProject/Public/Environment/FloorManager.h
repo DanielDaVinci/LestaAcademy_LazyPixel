@@ -16,12 +16,6 @@ class MAINPROJECT_API AFloorManager : public AActor, public IPrePostBeginInterfa
 	GENERATED_BODY()
 	
 public:
-    DECLARE_MULTICAST_DELEGATE(FOnPlayerEnterRoomSignature);
-    FOnPlayerEnterRoomSignature OnPlayerEnterRoomEvent;
-
-    DECLARE_MULTICAST_DELEGATE(FOnClearRoomSignature)
-    FOnClearRoomSignature OnClearRoomEvent;
-    
 	AFloorManager();
 
 protected:
@@ -42,6 +36,11 @@ protected:
     
     virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
+    UFUNCTION(BlueprintNativeEvent)
+    void OnPlayerEnterRoom(int32 Index);
+    UFUNCTION(BlueprintNativeEvent)
+    void OnClearRoom(int32 Index);
+
 private:
     int32 m_currentRoomIndex = -1;
     
@@ -50,9 +49,6 @@ private:
     void ApplySavedData();
     
     void SaveData();
-    
-    void OnPlayerEnterRoom(int32 Index);
-    void OnClearRoom(int32 Index);
 
     void SetupRoomForStartup(int32 Index);
     void SetupRoomForEnter(int32 Index);

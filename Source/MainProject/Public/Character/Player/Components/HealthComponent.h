@@ -6,7 +6,6 @@
 #include "Components/ActorComponent.h"
 #include "HealthComponent.generated.h"
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnHealthChanged, float);
 DECLARE_MULTICAST_DELEGATE(FOnDeath);
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
@@ -19,7 +18,10 @@ class MAINPROJECT_API UHealthComponent : public UActorComponent
 public:
     UHealthComponent();
 
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthChanged, float, DeltaHealth);
+    UPROPERTY(BlueprintAssignable)
     FOnHealthChanged OnHealthChanged;
+    
     FOnDeath OnDied;
     
     float GetHealth() const { return m_health; }

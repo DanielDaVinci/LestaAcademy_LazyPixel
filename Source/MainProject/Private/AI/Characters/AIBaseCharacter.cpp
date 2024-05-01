@@ -34,8 +34,8 @@ void AAIBaseCharacter::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
 
-    pHealthComponent->OnHealthChanged.AddUObject(this, &AAIBaseCharacter::PlayImpactAnim);
-    pHealthComponent->OnHealthChanged.AddUObject(this, &AAIBaseCharacter::PlayImpactFX);
+    pHealthComponent->OnHealthChanged.AddDynamic(this, &AAIBaseCharacter::PlayImpactAnim);
+    pHealthComponent->OnHealthChanged.AddDynamic(this, &AAIBaseCharacter::PlayImpactFX);
     SetRandomMaterial();
 
     TArray<FConstraintInstance*> physConstraints = GetMesh()->Constraints;

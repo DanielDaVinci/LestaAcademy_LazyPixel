@@ -43,8 +43,11 @@ protected:
 private:
     FName dismemberedBone;
 
+    UFUNCTION()
     void PlayImpactAnim(float DeltaHealth);
+    UFUNCTION()
     void PlayImpactFX(float DeltaHealth);
+    
     void SetRandomMaterial();
     void EnableRagdoll() const; 
 };

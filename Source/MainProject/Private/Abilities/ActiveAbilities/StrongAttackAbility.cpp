@@ -142,6 +142,11 @@ void UStrongAttackAbility::OnCustomAbilityButtonReleased()
     pStateMachine->SkipCurrentState();
 }
 
+void UStrongAttackAbility::OnMouseMove_Implementation(FVector2D MouseVector)
+{
+    RotateCharacterToMouse();
+}
+
 void UStrongAttackAbility::OnPreparePartEndState(EStateResult StateResult)
 {
     const auto pPlayerMovementComponent = GetPlayerMovementComponent();
@@ -157,11 +162,6 @@ void UStrongAttackAbility::OnPreparePartEndState(EStateResult StateResult)
 
     if (StateResult == EStateResult::Successed)
         StartAttackPart();
-}
-
-void UStrongAttackAbility::OnMouseMove(FVector2D MouseVector)
-{
-    RotateCharacterToMouse();
 }
 
 void UStrongAttackAbility::RotateCharacterToMouse() const

@@ -23,7 +23,7 @@ void UPropertyPanelWidget::BindEvents()
 {
     if (const auto pHealthComponent = GetHealthComponent())
     {
-        pHealthComponent->OnHealthChanged.AddUObject(this, &UPropertyPanelWidget::OnHealthChanged);
+        pHealthComponent->OnHealthChanged.AddDynamic(this, &UPropertyPanelWidget::OnHealthChanged);
         SetCurrentHealthText(true);
     }
 
