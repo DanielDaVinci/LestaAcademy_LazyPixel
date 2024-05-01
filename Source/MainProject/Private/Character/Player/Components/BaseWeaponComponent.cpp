@@ -136,13 +136,20 @@ void UBaseWeaponComponent::InitAnimations()
 
 void UBaseWeaponComponent::SubscribeAnimationNotifies(const ABaseWeapon* Weapon)
 {
-    if (!Weapon || !Weapon->GetAttackMontage())
+    if (!Weapon) 
         return;
 
-    const auto notifyEvents = Weapon->GetAttackMontage()->Notifies;
-    for (const auto& notifyEvent: notifyEvents)
+    const TArray<UAnimMontage*> animMontages = Weapon->GetAttackMontages();
+    if (animMontages.IsEmpty())
+        return;
+
+    for (const auto montage : animMontages)
     {
-        OnSubscribeToNotifies(notifyEvent);
+        const auto notifyEvents = montage->Notifies;
+        for (const auto& notifyEvent : notifyEvents)
+        {
+            OnSubscribeToNotifies(notifyEvent);
+        }
     }
 }
 

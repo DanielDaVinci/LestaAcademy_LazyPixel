@@ -4,6 +4,7 @@
 #include "Character/Player/Components/HealthComponent.h"
 
 #include "AI/Characters/AIBaseCharacter.h"
+#include "AI/Characters/BossAICharacter.h"
 #include "Character/BaseCharacter.h"
 #include "GameFramework/Actor.h"
 
@@ -17,7 +18,7 @@ void UHealthComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-    if (GetOwner()->IsA<AAIBaseCharacter>())
+    if (GetOwner()->IsA<AAIBaseCharacter>() || GetOwner()->IsA<ABossAICharacter>())
     {
         m_health = GetMaxHealth();
     }
