@@ -7,11 +7,7 @@
 #include "Character/Player/Components/AIWeaponComponent.h"
 #include "Character/Player/Components/HealthComponent.h"
 #include "Components/CapsuleComponent.h"
-#include "Environment/Room.h"
-#include "Kismet/GameplayStatics.h"
-#include "Kismet/KismetSystemLibrary.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "NiagaraFunctionLibrary.h"
 #include "Gore/GoreComponent.h"
 #include "PhysicsEngine/ConstraintInstance.h"
 

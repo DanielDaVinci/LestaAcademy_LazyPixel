@@ -24,7 +24,7 @@ void UBaseWeaponComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-    SpawnStarWeapons();
+    SpawnStartWeapons();
     InitAnimations();
 }
 
@@ -51,7 +51,7 @@ void UBaseWeaponComponent::SpawnAllWeapons()
     }
 }
 
-void UBaseWeaponComponent::SpawnStarWeapons()
+void UBaseWeaponComponent::SpawnStartWeapons()
 {
     for (const auto weaponClass: startWeapons)
     {

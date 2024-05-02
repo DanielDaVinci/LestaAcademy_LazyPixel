@@ -43,7 +43,7 @@ protected:
     // Weapons
 private:
     virtual void SpawnAllWeapons();
-    virtual void SpawnStarWeapons();
+    virtual void SpawnStartWeapons();
     void DestroyWeapons();
 
 protected:

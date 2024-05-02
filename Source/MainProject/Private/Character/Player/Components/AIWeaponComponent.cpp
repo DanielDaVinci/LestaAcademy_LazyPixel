@@ -11,7 +11,7 @@ void UAIWeaponComponent::BeginPlay()
     Super::BeginPlay();
 }
 
-void UAIWeaponComponent::SpawnAllWeapons() 
+void UAIWeaponComponent::SpawnStartWeapons() 
 {
     if (!weaponData.Num()) return;
 

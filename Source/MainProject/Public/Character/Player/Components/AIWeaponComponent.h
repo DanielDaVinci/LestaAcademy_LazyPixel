@@ -19,5 +19,5 @@ protected:
     virtual void OnRangeAttackAnim() override;
 
 private:
-    virtual void SpawnAllWeapons() override;
+    virtual void SpawnStartWeapons() override;
 };

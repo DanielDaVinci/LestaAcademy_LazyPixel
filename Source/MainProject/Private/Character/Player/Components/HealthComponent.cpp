@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Lazy Pixel. All Rights Reserved.
 
 
 #include "Character/Player/Components/HealthComponent.h"
@@ -6,7 +6,7 @@
 #include "AI/Characters/AIBaseCharacter.h"
 #include "AI/Characters/BossAICharacter.h"
 #include "Character/BaseCharacter.h"
-#include "GameFramework/Actor.h"
+#include "NiagaraFunctionLibrary.h"
 
 UHealthComponent::UHealthComponent()
 {
@@ -63,5 +63,9 @@ void UHealthComponent::SetHealth(float Health)
 void UHealthComponent::Heal(float HealthValue)
 {
     SetHealth(GetHealth() + HealthValue);
+
+    ABaseCharacter* pCharacter = Cast<ABaseCharacter>(GetOwner());
+    UNiagaraFunctionLibrary::SpawnSystemAttached(healEffect, pCharacter->GetMesh(), "", GetOwner()->GetActorLocation(),
+        GetOwner()->GetActorRotation(), EAttachLocation::KeepRelativeOffset, true);
 }
 

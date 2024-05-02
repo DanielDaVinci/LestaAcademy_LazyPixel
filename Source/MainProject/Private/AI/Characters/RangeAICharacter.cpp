@@ -46,7 +46,7 @@ bool ARangeAICharacter::UpdateDropRate()
     }
 
     if (initRate == minDropRate || initRate == maxDropRate)
-        InitDropRate();
+        ResetDropRate();
 
     return result;
 }
