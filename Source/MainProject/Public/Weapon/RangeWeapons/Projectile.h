@@ -7,6 +7,7 @@
 #include "MainProjectCoreTypes.h"
 #include "Projectile.generated.h"
 
+class AGun;
 class USphereComponent;
 class UProjectileMovementComponent;
 
@@ -20,6 +21,7 @@ public:
 
     void SetShootDirection(const FVector& Direction) { m_shotDirection = Direction; }
     void InitProperties(const FProjectileProperties& projProperties);
+    void SetRangeWeaponCreator(AGun* RangeWeapon);
 
 protected:
     UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Weapon", DisplayName = "CollisionComponent")
@@ -38,6 +40,9 @@ private:
     void OnProjectileHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse,
         const FHitResult& Hit);
 
+    UPROPERTY()
+    AGun* m_rangeWeaponCreator;
+    
     FVector m_shotDirection;
     float m_damage;
 };

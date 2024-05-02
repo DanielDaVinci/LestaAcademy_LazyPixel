@@ -19,7 +19,9 @@ public class MainProject : ModuleRules
 			"GameplayTasks",
 			"UMG",
 			"Niagara",
-            "DismembermentSystem"
+            "DismembermentSystem",
+            "Wwise",
+            "WwiseNiagara"
         });
 
 		// Uncomment if you are using Slate UI

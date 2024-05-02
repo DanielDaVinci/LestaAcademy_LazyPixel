@@ -5,6 +5,7 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/DamageEvents.h"
+#include "Weapon/RangeWeapons/Gun.h"
 
 AProjectile::AProjectile()
 {
@@ -30,6 +31,11 @@ void AProjectile::InitProperties(const FProjectileProperties& projProperties)
         pCollisionComponent->SetCollisionResponseToChannel(ECC_Enemy, ECR_Ignore);
 }
 
+void AProjectile::SetRangeWeaponCreator(AGun* RangeWeapon)
+{
+    m_rangeWeaponCreator = RangeWeapon;
+}
+
 void AProjectile::BeginPlay()
 {
     Super::BeginPlay();
@@ -43,7 +49,6 @@ void AProjectile::BeginPlay()
 
 void AProjectile::OnProjectileHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-    OtherActor->TakeDamage(m_damage, FDamageEvent(), UGameplayStatics::GetPlayerController(GetWorld(), 0), this);
-
+    OtherActor->TakeDamage(m_damage, FDamageEvent(), UGameplayStatics::GetPlayerController(GetWorld(), 0), m_rangeWeaponCreator);
     Destroy();
 }

@@ -14,6 +14,8 @@
 #include "NiagaraFunctionLibrary.h"
 #include "Gore/GoreComponent.h"
 #include "PhysicsEngine/ConstraintInstance.h"
+#include "Weapon/MeleeWeapons/Sword.h"
+#include "Weapon/RangeWeapons/Gun.h"
 
 AAIBaseCharacter::AAIBaseCharacter(const FObjectInitializer& ObjInit)
     : Super(ObjInit.SetDefaultSubobjectClass<UAIWeaponComponent>("WeaponComponent"))
@@ -34,13 +36,18 @@ void AAIBaseCharacter::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
 
-    pHealthComponent->OnHealthChanged.AddDynamic(this, &AAIBaseCharacter::PlayImpactAnim);
-    pHealthComponent->OnHealthChanged.AddDynamic(this, &AAIBaseCharacter::PlayImpactFX);
+    BindEvents();
     SetRandomMaterial();
 
     TArray<FConstraintInstance*> physConstraints = GetMesh()->Constraints;
     if (physConstraints.Num())
         dismemberedBone = physConstraints[FMath::RandRange(0, physConstraints.Num() - 1)]->JointName;
+}
+
+void AAIBaseCharacter::BindEvents()
+{
+    pHealthComponent->OnHealthChanged.AddDynamic(this, &AAIBaseCharacter::PlayImpactAnim);
+    pHealthComponent->OnHealthChanged.AddDynamic(this, &AAIBaseCharacter::PlayImpactFX);
 }
 
 void AAIBaseCharacter::OnDeath()
@@ -53,6 +60,20 @@ void AAIBaseCharacter::OnDeath()
     pGoreComponent->DismemberLimb(dismemberedBone, GetActorRotation().Vector() * dismembermentForce * (-1));
 
     EnableRagdoll();
+}
+
+float AAIBaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+    if (Cast<ASword>(DamageCauser))
+    {
+        OnTakeMeleeWeaponDamage();
+    }
+    else if (Cast<AGun>(DamageCauser))
+    {
+        OnTakeRangeWeaponDamage();
+    }
+    
+    return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 }
 
 void AAIBaseCharacter::PlayImpactAnim(float DeltaHealth) 
