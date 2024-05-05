@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "ChoiceSaveSlotUserWidget.generated.h"
 
+class UButton;
 class USlotUserWidget;
 class UHorizontalBox;
 class UImage;
@@ -18,6 +19,9 @@ class MAINPROJECT_API UChoiceSaveSlotUserWidget : public UUserWidget
 protected:
     UPROPERTY(meta = (BindWidget))
     UHorizontalBox* SlotsHorizontalBox;
+
+    UPROPERTY(meta = (BindWidget))
+    UButton* Exit;
     
     void NativeOnInitialized() override;
 
@@ -25,6 +29,9 @@ protected:
     void BindEvents();
 
 private:
-    void PlaySlot(uint8 Index);
-    void DeleteSlot(uint8 Index);
+    void PlaySlot(const FString& SlotName) const;
+    void DeleteSlot(const FString& SlotName, USlotUserWidget* SlotWidget);
+
+    UFUNCTION()
+    void OnExit();
 };

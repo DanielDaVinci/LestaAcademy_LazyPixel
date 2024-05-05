@@ -41,6 +41,8 @@ protected:
     USaveGame* currentSaveGame = nullptr;
 
 public:
+    static bool IsExistsSlot(const FString& SlotName);
+    
     template<class T> requires std::is_base_of_v<USaveGame, T>
     static T* LoadSlot(const FString& SlotName);
     static USaveGame* LoadSlot(const FString& SlotName) { return LoadSlot<USaveGame>(SlotName); }
@@ -53,6 +55,9 @@ public:
     static void SaveSlot(const FString& SlotName, T* SaveGame);
 
     static void DeleteSlot(const FString& SlotName);
+
+private:
+    static FString TakeScreenShot(const FString& ScreenShotName, bool bCaptureUI);
 
 public:
     void AsyncLevelLoad(const FString& LevelPath) const;
@@ -75,7 +80,7 @@ template <class T> requires std::is_base_of_v<USaveGame, T>
 T* UMainProjectGameInstance::SetCurrentSlot(const FString& SlotName)
 {
     T* saveGame = nullptr;
-    if (UGameplayStatics::DoesSaveGameExist(SlotName, 0))
+    if (IsExistsSlot(SlotName))
     {
         saveGame = LoadSlot<T>(SlotName);
     }
@@ -124,10 +129,6 @@ void UMainProjectGameInstance::SaveSlot(const FString& SlotName, T* SaveGame)
     UE_LOG(LogTemp, Error, TEXT("Save slot: %s"), *SlotName);
     if (SaveGame)
     {
-        if (const auto progressSaveGame = Cast<UProgressSaveGame>(SaveGame))
-        {
-            UE_LOG(LogTemp, Error, TEXT("DATA room: %d"), progressSaveGame->ProgressData.RoomIndex);
-        }
         UGameplayStatics::SaveGameToSlot(SaveGame, SlotName, 0);
     }
     else
