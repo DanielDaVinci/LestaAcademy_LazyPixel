@@ -7,6 +7,8 @@
 #include "Weapon/WeaponCoreTypes.h"
 #include "PlayMontage_StateTreeTask.generated.h"
 
+class ABaseCharacter;
+
 USTRUCT()
 struct FPlayMontage_StateTreeTaskInstanceData
 {
@@ -17,6 +19,9 @@ struct FPlayMontage_StateTreeTaskInstanceData
 
 	UPROPERTY(EditAnywhere, meta = (ClampMin = 0.0, Category = "Parameter"))
     float AnimationTime = 1.f;
+
+	UPROPERTY(EditAnywhere, meta = (ClampMin = 0.0, Category = "Parameter"))
+    float Damage = 10.0f;
 
 	UPROPERTY(EditAnywhere, Category = "Parameter")
     AActor* GoalActor = nullptr;
@@ -40,5 +45,5 @@ protected:
 	virtual EStateTreeRunStatus EnterState(FStateTreeExecutionContext& Context, const FStateTreeTransitionResult& Transition) const override;
     virtual EStateTreeRunStatus Tick(FStateTreeExecutionContext& Context, const float DeltaTime) const override;
 
-	ACharacter* GetCharacter(FStateTreeExecutionContext& Context) const;
+	ABaseCharacter* GetCharacter(FStateTreeExecutionContext& Context) const;
 };

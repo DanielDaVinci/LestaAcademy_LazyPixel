@@ -12,8 +12,13 @@ ABossAIController::ABossAIController(const FObjectInitializer& ObjInit)
     StateTreeComponent = CreateDefaultSubobject<UStateTreeComponent>(TEXT("StateTreeComponent"));
 }
 
-void ABossAIController::SendStateTreeEvent() 
+void ABossAIController::StartStateTree() 
 {
-    FGameplayTag Tag = FGameplayTag::RequestGameplayTag("BossHealthChanged");
+    StateTreeComponent->StartLogic();
+}
+
+void ABossAIController::SendStateTreeEvent(FName EventTag)
+{
+    FGameplayTag Tag = FGameplayTag::RequestGameplayTag(EventTag);
     StateTreeComponent->SendStateTreeEvent(Tag);
 }

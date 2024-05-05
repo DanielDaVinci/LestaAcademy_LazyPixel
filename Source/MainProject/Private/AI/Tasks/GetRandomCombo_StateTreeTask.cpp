@@ -38,8 +38,12 @@ EStateTreeRunStatus FGetRandomCombo_StateTreeTask::EnterState(FStateTreeExecutio
     }
 
 	int32 ComboNum = FMath::RandRange(minIndex, maxIndex);
+    if (ComboNum == pCharacter->GetPrevComboIndex())
+        ComboNum == maxIndex ? ComboNum-- : ComboNum++;
+      
     InstanceData.ResultCombo = InstanceData.attackCombos[ComboNum].Combo;
     InstanceData.isLongComboResult = InstanceData.attackCombos[ComboNum].isLongCombo;
+    pCharacter->SetPrevComboIndex(ComboNum);
 
 	if (InstanceData.isLongComboResult)
 	{

@@ -9,6 +9,7 @@
 #include "Character/Player/Components/AIWeaponComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Environment/Room.h"
 #include "Gore/GoreComponent.h"
 
 ABossAICharacter::ABossAICharacter(const FObjectInitializer& ObjInit) 
@@ -32,6 +33,18 @@ void ABossAICharacter::PostInitializeComponents()
 
     pHealthComponent->OnHealthChanged.AddUObject(this, &ABossAICharacter::PlayImpactFX);
     pHealthComponent->OnHealthChanged.AddUObject(this, &ABossAICharacter::SendEventToStateTree);
+    
+    if (enemyRoom)
+        enemyRoom->OnPlayerEnterEvent.AddUObject(this, &ABossAICharacter::StartBossLogic);
+}
+
+void ABossAICharacter::OnDeath() 
+{
+    OnDied();
+
+    GetController()->UnPossess();
+    PlayAnimMontage(deathAnimation);
+    pWeaponComponent->DisableAllWeaponsCollision();
 }
 
 void ABossAICharacter::PlayImpactFX(float DeltaHealth) 
@@ -42,7 +55,36 @@ void ABossAICharacter::PlayImpactFX(float DeltaHealth)
 
 void ABossAICharacter::SendEventToStateTree(float DeltaHealth) 
 {
-    GetBossContoller()->SendStateTreeEvent();
+    //UE_LOG(LogTemp, Warning, TEXT("Boss HP: %.1f"), pHealthComponent->GetHealth());
+    GetBossContoller()->SendStateTreeEvent("BossHealthChanged");
+    CheckHealthForSecondPhase(); 
+    CheckHealthForStrongAttack();
+}
+
+void ABossAICharacter::CheckHealthForStrongAttack() 
+{
+    if ((isFirstPhase && abilityCharged && pHealthComponent->GetPercentHealth() <= 0.75f) || 
+                        (abilityCharged && pHealthComponent->GetPercentHealth() <= 0.25f))
+    {
+        abilityCharged = false;
+        GetBossContoller()->SendStateTreeEvent("StrongAttack");
+    }
+}
+
+void ABossAICharacter::CheckHealthForSecondPhase() 
+{
+    if (isFirstPhase && pHealthComponent->GetPercentHealth() <= 0.5f)
+    {
+        //UE_LOG(LogTemp, Warning, TEXT("Second Phase"));
+        isFirstPhase = false;
+        abilityCharged = true;
+        GetBossContoller()->SendStateTreeEvent("SecondPhase");
+    }
+}
+
+void ABossAICharacter::StartBossLogic() 
+{
+    GetBossContoller()->StartStateTree();
 }
 
 ABossAIController* ABossAICharacter::GetBossContoller() const

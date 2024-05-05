@@ -57,10 +57,10 @@ EStateTreeRunStatus FAttack_StateTreeTask::Tick(FStateTreeExecutionContext& Cont
     AActor& ReferenceActor = Context.GetExternalData(ActorHandle);
     ABaseCharacter* pCharacter = Cast<ABaseCharacter>(&ReferenceActor);
     
-    const float Distance = FVector::Distance(InstanceData.GoalActor->GetActorLocation(), pCharacter->GetActorLocation());
+    //const float Distance = FVector::Distance(InstanceData.GoalActor->GetActorLocation(), pCharacter->GetActorLocation());
    
     if (!pCharacter->GetMesh()->GetAnimInstance()->IsAnyMontagePlaying() && 
-        Distance < InstanceData.AttackRadius &&
+       /* Distance < InstanceData.AttackRadius &&*/
         InstanceData.Combo.IsValidIndex(InstanceData.index))
     {
         const auto pSword = pCharacter->GetBaseWeaponComponent()->FindWeapon<ASword>();

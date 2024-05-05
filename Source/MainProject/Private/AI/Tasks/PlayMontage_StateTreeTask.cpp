@@ -4,7 +4,9 @@
 
 #include "StateTreeExecutionContext.h"
 #include "StateTreeLinker.h"
-#include "GameFramework/Character.h"
+#include "Character/BaseCharacter.h"
+#include "Character/Player/Components/BaseWeaponComponent.h"
+#include "Weapon/MeleeWeapons/Sword.h"
 
 
 bool FPlayMontage_StateTreeTask::Link(FStateTreeLinker& Linker)
@@ -16,8 +18,11 @@ bool FPlayMontage_StateTreeTask::Link(FStateTreeLinker& Linker)
 EStateTreeRunStatus FPlayMontage_StateTreeTask::EnterState(FStateTreeExecutionContext& Context, const FStateTreeTransitionResult& Transition) const
 {
 	const FInstanceDataType& InstanceData = Context.GetInstanceData(*this);
-	
-    GetCharacter(Context)->PlayAnimMontage(InstanceData.AnimMontage, InstanceData.AnimMontage->GetPlayLength() / InstanceData.AnimationTime);
+    ABaseCharacter* pCharacter = GetCharacter(Context);
+
+    const auto pSword = pCharacter->GetBaseWeaponComponent()->FindWeapon<ASword>();
+    pSword->SetDamage(InstanceData.Damage);
+    pCharacter->PlayAnimMontage(InstanceData.AnimMontage, InstanceData.AnimMontage->GetPlayLength() / InstanceData.AnimationTime);
 
 	return EStateTreeRunStatus::Running;
 }
@@ -25,7 +30,7 @@ EStateTreeRunStatus FPlayMontage_StateTreeTask::EnterState(FStateTreeExecutionCo
 EStateTreeRunStatus FPlayMontage_StateTreeTask::Tick(FStateTreeExecutionContext& Context, const float DeltaTime) const
 {
     const FInstanceDataType& InstanceData = Context.GetInstanceData(*this);
-    ACharacter* pCharacter = GetCharacter(Context);
+    ABaseCharacter* pCharacter = GetCharacter(Context);
 
 	if (InstanceData.GoalActor && InstanceData.isNeedRotation)
         pCharacter->SetActorRotation((InstanceData.GoalActor->GetActorLocation() - pCharacter->GetActorLocation()).Rotation());
@@ -36,8 +41,8 @@ EStateTreeRunStatus FPlayMontage_StateTreeTask::Tick(FStateTreeExecutionContext&
     return EStateTreeRunStatus::Succeeded;
 }
 
-ACharacter* FPlayMontage_StateTreeTask::GetCharacter(FStateTreeExecutionContext& Context) const
+ABaseCharacter* FPlayMontage_StateTreeTask::GetCharacter(FStateTreeExecutionContext& Context) const
 {
     AActor& ReferenceActor = Context.GetExternalData(ActorHandle);
-    return Cast<ACharacter>(&ReferenceActor);
+    return Cast<ABaseCharacter>(&ReferenceActor);
 }

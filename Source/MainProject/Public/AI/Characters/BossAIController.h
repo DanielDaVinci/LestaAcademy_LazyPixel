@@ -19,5 +19,6 @@ public:
 	UPROPERTY(EditDefaultsOnly)
     UStateTreeComponent* StateTreeComponent;
 
-	void SendStateTreeEvent();
+	void StartStateTree();
+	void SendStateTreeEvent(FName EventTag);
 };
