@@ -36,6 +36,7 @@ void UHealthComponent::OnTakeAnyDamage(AActor* DamageActor, float Damage, const 
         return;
 
     SetHealth(m_health - Damage);
+    OnTakeDamage.Broadcast();
 
     if (IsDead())
     {
@@ -67,5 +68,6 @@ void UHealthComponent::Heal(float HealthValue)
     ABaseCharacter* pCharacter = Cast<ABaseCharacter>(GetOwner());
     UNiagaraFunctionLibrary::SpawnSystemAttached(healEffect, pCharacter->GetMesh(), "", GetOwner()->GetActorLocation(),
         GetOwner()->GetActorRotation(), EAttachLocation::KeepRelativeOffset, true);
+    OnHeal.Broadcast();
 }
 

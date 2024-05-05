@@ -8,6 +8,8 @@
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnHealthChanged, float);
 DECLARE_MULTICAST_DELEGATE(FOnDeath);
+DECLARE_MULTICAST_DELEGATE(FOnTakeDamage);
+DECLARE_MULTICAST_DELEGATE(FOnHeal);
 
 class UNiagaraSystem;
 
@@ -23,7 +25,9 @@ public:
 
     FOnHealthChanged OnHealthChanged;
     FOnDeath OnDied;
-    
+    FOnTakeDamage OnTakeDamage;
+    FOnHeal OnHeal;
+
     float GetHealth() const { return m_health; }
     float GetMaxHealth() const { return maxHealth; }
     float GetPercentHealth() const { return GetHealth() / GetMaxHealth(); }

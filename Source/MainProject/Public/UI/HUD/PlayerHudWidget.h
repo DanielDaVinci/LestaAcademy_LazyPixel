@@ -10,6 +10,7 @@
 
 class UPropertyPanelWidget;
 class ULosePanelWidget;
+class UImpactWidget;
 class ABaseCharacter;
 
 UCLASS()
@@ -21,6 +22,9 @@ protected:
     UPROPERTY(meta = (BindWidget))
     ULosePanelWidget* pLosePanel;
     
+    UPROPERTY(meta = (BindWidget))
+    UImpactWidget* pImpactWidget;
+
     UPROPERTY(meta = (BindWidgetAnim), Transient)
     UWidgetAnimation* pDamageIndicatorAnimation;
 
