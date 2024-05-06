@@ -8,6 +8,7 @@
 #include "Components/HorizontalBox.h"
 #include "Components/Image.h"
 #include "Kismet/GameplayStatics.h"
+#include "Menu/Widgets/LoadUserWidget.h"
 #include "Menu/Widgets/SlotUserWidget.h"
 
 void UChoiceSaveSlotUserWidget::NativeOnInitialized()
@@ -42,15 +43,15 @@ void UChoiceSaveSlotUserWidget::BindEvents()
 
 void UChoiceSaveSlotUserWidget::PlaySlot(const FString& SlotName) const
 {
-    const auto projectGameInstance = Cast<UMainProjectGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+    const auto projectGameInstance = GetGameInstance<UMainProjectGameInstance>();
     if (!projectGameInstance)
         return;
-    
+
     const auto progressSaveGame = projectGameInstance->SetCurrentSlot<UProgressSaveGame>(SlotName);
     if (!progressSaveGame)
         return;
-        
-    projectGameInstance->AsyncLevelLoad(progressSaveGame->GetLevelName());
+    
+    projectGameInstance->AsyncLevelLoad(progressSaveGame->GetLevelPath());
 }
 
 void UChoiceSaveSlotUserWidget::DeleteSlot(const FString& SlotName, USlotUserWidget* SlotWidget)

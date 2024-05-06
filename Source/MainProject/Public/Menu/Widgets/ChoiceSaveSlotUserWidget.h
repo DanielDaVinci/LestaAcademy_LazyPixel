@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "ChoiceSaveSlotUserWidget.generated.h"
 
+class ULoadUserWidget;
 class UButton;
 class USlotUserWidget;
 class UHorizontalBox;
@@ -17,6 +18,9 @@ class MAINPROJECT_API UChoiceSaveSlotUserWidget : public UUserWidget
 	GENERATED_BODY()
 
 protected:
+    UPROPERTY(meta = (BindWidget))
+    ULoadUserWidget* LoadUserWidget;
+    
     UPROPERTY(meta = (BindWidget))
     UHorizontalBox* SlotsHorizontalBox;
 

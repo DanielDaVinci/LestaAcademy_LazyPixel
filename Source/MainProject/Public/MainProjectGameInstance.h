@@ -60,10 +60,14 @@ private:
     static FString TakeScreenShot(const FString& ScreenShotName, bool bCaptureUI);
 
 public:
-    void AsyncLevelLoad(const FString& LevelPath) const;
+    DECLARE_MULTICAST_DELEGATE(FOnPreAsyncLevelLoadSignature);
+    FOnPreAsyncLevelLoadSignature OnPreAsyncLevelLoad;
     
-private:
-    void AsyncLevelLoadFinished(const FString& LevelName) const;
+    DECLARE_MULTICAST_DELEGATE_OneParam(FOnSuccessAsyncLevelLoadSignature, const FString&);
+    FOnSuccessAsyncLevelLoadSignature OnSuccessAsyncLevelLoad;
+    
+    void AsyncLevelLoad(const FString& LevelPath) const;
+    void LevelLoad(const FString& LevelName) const;
     
 };
 

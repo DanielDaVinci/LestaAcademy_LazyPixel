@@ -44,6 +44,7 @@ FString UMainProjectGameInstance::TakeScreenShot(const FString& ScreenShotName, 
 
 void UMainProjectGameInstance::AsyncLevelLoad(const FString& LevelPath) const
 {
+    OnPreAsyncLevelLoad.Broadcast();
     LoadPackageAsync(LevelPath, FLoadPackageAsyncDelegate::CreateLambda([this](const FName& PackageName, UPackage* LoadedPackage, EAsyncLoadingResult::Type Result)
     {
         if (Result == EAsyncLoadingResult::Succeeded)
@@ -53,12 +54,12 @@ void UMainProjectGameInstance::AsyncLevelLoad(const FString& LevelPath) const
             packageString.FindLastChar('/', symbolIndex);
 
             const FString levelName = packageString.Mid(symbolIndex + 1, packageString.Len() - symbolIndex - 1);
-            AsyncLevelLoadFinished(levelName);
+            OnSuccessAsyncLevelLoad.Broadcast(levelName);
         }
     }), 0, PKG_ContainsMap);
 }
 
-void UMainProjectGameInstance::AsyncLevelLoadFinished(const FString& LevelName) const
+void UMainProjectGameInstance::LevelLoad(const FString& LevelName) const
 {
     if (!GetWorld())
         return;

@@ -40,5 +40,6 @@ public:
     UPROPERTY(EditAnywhere, SaveGame)
     FProgressData ProgressData;
     
+    FString GetLevelPath() const;
     FString GetLevelName() const;
 };
