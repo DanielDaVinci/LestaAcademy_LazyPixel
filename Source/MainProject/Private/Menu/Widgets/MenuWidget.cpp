@@ -44,6 +44,7 @@ void UMenuWidget::OnStartGame()
 {
     if (ChoiceSaveSlotUserWidget)
     {
+        ChoiceSaveSlotUserWidget->UpdateWidgetSlots();
         ChoiceSaveSlotUserWidget->SetVisibility(ESlateVisibility::Visible);
     }
 }

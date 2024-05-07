@@ -24,7 +24,7 @@ void UPropertyPanelWidget::BindEvents()
     if (const auto pHealthComponent = GetHealthComponent())
     {
         pHealthComponent->OnHealthChanged.AddUObject(this, &UPropertyPanelWidget::OnHealthChanged);
-        SetCurrentHealthText(true);
+        SetCurrentHealthText();
     }
 
     if (const auto pWeaponComponent = GetWeaponComponent())
@@ -61,19 +61,13 @@ void UPropertyPanelWidget::OnAbilityChargeChanged(float ChargeAmount)
     SetCurrentAbilityCharge();
 }
 
-void UPropertyPanelWidget::SetCurrentHealthText(bool isInitial)
+void UPropertyPanelWidget::SetCurrentHealthText() const
 {
     const auto pHealthComponent = GetHealthComponent();
     if (!pHealthComponent)
         return;
     
-    if (isInitial)
-        pHealthText->SetText(FText::FromString(
-            FString::Printf(TEXT("%d / %d"), 
-                int32(pHealthComponent->GetMaxHealth()), 
-                int32(pHealthComponent->GetMaxHealth()))));
-    else
-        pHealthText->SetText(FText::FromString(
+    pHealthText->SetText(FText::FromString(
             FString::Printf(TEXT("%d / %d"), 
                 int32(pHealthComponent->GetHealth()), 
                 int32(pHealthComponent->GetMaxHealth()))

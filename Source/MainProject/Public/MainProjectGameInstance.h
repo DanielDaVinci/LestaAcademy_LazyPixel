@@ -59,6 +59,9 @@ public:
 private:
     static FString TakeScreenShot(const FString& ScreenShotName, bool bCaptureUI);
 
+    UFUNCTION(Exec)
+    static void SetSlotParameters(const FString& SlotName, int32 LevelIndex, int32 RoomIndex);
+
 public:
     DECLARE_MULTICAST_DELEGATE(FOnPreAsyncLevelLoadSignature);
     FOnPreAsyncLevelLoadSignature OnPreAsyncLevelLoad;

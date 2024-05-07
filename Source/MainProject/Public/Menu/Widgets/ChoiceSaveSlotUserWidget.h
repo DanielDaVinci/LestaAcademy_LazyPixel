@@ -16,6 +16,9 @@ UCLASS()
 class MAINPROJECT_API UChoiceSaveSlotUserWidget : public UUserWidget
 {
 	GENERATED_BODY()
+    
+public:
+    void UpdateWidgetSlots();
 
 protected:
     UPROPERTY(meta = (BindWidget))

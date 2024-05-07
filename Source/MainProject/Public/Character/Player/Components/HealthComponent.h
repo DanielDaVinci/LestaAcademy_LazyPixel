@@ -25,8 +25,6 @@ public:
 
     FOnHealthChanged OnHealthChanged;
     FOnDeath OnDied;
-    FOnTakeDamage OnTakeDamage;
-    FOnHeal OnHeal;
 
     float GetHealth() const { return m_health; }
     float GetMaxHealth() const { return maxHealth; }
@@ -49,7 +47,7 @@ protected:
 private:
     float m_health = 0.0f;
 
-    void SetHealth(float Health);
+    void SetHealth(float Health, bool bCallBroadcast = true);
 
     UFUNCTION()
     void OnTakeAnyDamage(AActor* DamageActor, float Damage, const UDamageType* DamageType,

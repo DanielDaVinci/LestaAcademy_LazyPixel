@@ -41,8 +41,6 @@ void UHealthWidget::InitializeBars()
         pHealthBox->AddChild(spacer);
         spacer->SetSlateChildSize(0.1f, ESlateSizeRule::Fill);
     }
-
-    SetCurrentHealth(true);
 }
 
 void UHealthWidget::BindEvents()
@@ -50,6 +48,7 @@ void UHealthWidget::BindEvents()
     if (const auto pHealthComponent = GetHealthComponent())
     {
         pHealthComponent->OnHealthChanged.AddUObject(this, &UHealthWidget::OnHealthChanged);
+        SetCurrentHealth();
     }
 }
 
@@ -58,16 +57,13 @@ void UHealthWidget::OnHealthChanged(float DeltaHealth)
     SetCurrentHealth();
 }
 
-void UHealthWidget::SetCurrentHealth(bool isInitial)
+void UHealthWidget::SetCurrentHealth()
 {
     const auto pHealthComponent = GetHealthComponent();
     if (!pHealthComponent)
         return;
 
-    if (isInitial)
-        SetHealth(pHealthComponent->GetMaxHealth(), pHealthComponent->GetMaxHealth() / cellsCount);
-    else
-        SetHealth(pHealthComponent->GetHealth(), pHealthComponent->GetMaxHealth() / cellsCount);
+    SetHealth(pHealthComponent->GetHealth(), pHealthComponent->GetMaxHealth() / cellsCount);
 }
 
 void UHealthWidget::SetHealth(float Health, float OneCellHealth)

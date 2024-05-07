@@ -42,6 +42,16 @@ FString UMainProjectGameInstance::TakeScreenShot(const FString& ScreenShotName, 
 #endif
 }
 
+void UMainProjectGameInstance::SetSlotParameters(const FString& SlotName, int32 LevelIndex, int32 RoomIndex)
+{
+    const auto& progressSaveGame = IsExistsSlot(SlotName) ?
+        LoadSlot<UProgressSaveGame>(SlotName) : CreateSlot<UProgressSaveGame>(SlotName);
+    
+    progressSaveGame->ProgressData.LevelIndex = LevelIndex - 1;
+    progressSaveGame->ProgressData.RoomIndex = RoomIndex - 1;
+    SaveSlot(SlotName, progressSaveGame);
+}
+
 void UMainProjectGameInstance::AsyncLevelLoad(const FString& LevelPath) const
 {
     OnPreAsyncLevelLoad.Broadcast();

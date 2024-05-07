@@ -42,7 +42,9 @@ void UDataSaveComponent::PreBeginSetupSavedData(const UProgressSaveGame* Progres
     if (!ProgressSaveGame)
         return;
 
-    
+    LoadDataForHealthComponent(ProgressSaveGame);
+    LoadDataForAbilityComponent(ProgressSaveGame);
+    LoadDataForWeaponComponent(ProgressSaveGame);
 }
 
 void UDataSaveComponent::PostBeginSetupSavedData(const UProgressSaveGame* ProgressSaveGame)
@@ -83,7 +85,7 @@ void UDataSaveComponent::LoadDataForHealthComponent(const UProgressSaveGame* Pro
     if (const auto pHealthComponent = pPlayerCharacter->GetHealthComponent())
     {
         const float health = pHealthComponent->GetMaxHealth() * ProgressSaveGame->ProgressData.HealthPercent;
-        pHealthComponent->SetHealth(health);
+        pHealthComponent->SetHealth(health, false);
     }
 }
 

@@ -36,7 +36,6 @@ void UHealthComponent::OnTakeAnyDamage(AActor* DamageActor, float Damage, const 
         return;
 
     SetHealth(m_health - Damage);
-    OnTakeDamage.Broadcast();
 
     if (IsDead())
     {
@@ -47,13 +46,17 @@ void UHealthComponent::OnTakeAnyDamage(AActor* DamageActor, float Damage, const 
     }
 }
 
-void UHealthComponent::SetHealth(float Health)
+void UHealthComponent::SetHealth(float Health, bool bCallBroadcast)
 {
     const float previousHealth = m_health;
     m_health = FMath::Clamp(Health, 0.0, maxHealth);
 
     const float deltaHealth = m_health - previousHealth;
-    OnHealthChanged.Broadcast(deltaHealth);
+
+    if (bCallBroadcast)
+    {
+        OnHealthChanged.Broadcast(deltaHealth);
+    }
 
     if (FMath::IsNearlyZero(m_health))
     {
@@ -65,9 +68,8 @@ void UHealthComponent::Heal(float HealthValue)
 {
     SetHealth(GetHealth() + HealthValue);
 
-    ABaseCharacter* pCharacter = Cast<ABaseCharacter>(GetOwner());
+    const ABaseCharacter* pCharacter = Cast<ABaseCharacter>(GetOwner());
     UNiagaraFunctionLibrary::SpawnSystemAttached(healEffect, pCharacter->GetMesh(), "", GetOwner()->GetActorLocation(),
         GetOwner()->GetActorRotation(), EAttachLocation::KeepRelativeOffset, true);
-    OnHeal.Broadcast();
 }
 

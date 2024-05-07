@@ -44,7 +44,7 @@ private:
     UPROPERTY()
     TArray<UHealthCellWidget*> m_healthCells;
     
-    void SetCurrentHealth(bool isInitial = false);
+    void SetCurrentHealth();
     void SetHealth(float Health, float OneCellHealth);
 
 protected:

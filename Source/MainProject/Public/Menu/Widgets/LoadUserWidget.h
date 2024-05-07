@@ -48,7 +48,7 @@ protected:
     float finishingAnimationDuration = 1.0f;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-    float finishingAnimationTimeRate = 0.01f;
+    float finishingAnimationTimeRate = 0.05f;
 
 private:
     FTimerHandle m_finishAnimationTimerHandle;

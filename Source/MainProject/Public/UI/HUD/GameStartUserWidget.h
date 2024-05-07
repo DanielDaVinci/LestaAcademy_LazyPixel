@@ -27,7 +27,7 @@ protected:
     float startingDuration = 1.0f;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-    float startingTimeRate = 0.01f;
+    float startingTimeRate = 0.05f;
 
 private:
     FTimerHandle m_startingAnimationTimerHandle;

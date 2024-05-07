@@ -11,6 +11,21 @@
 #include "Menu/Widgets/LoadUserWidget.h"
 #include "Menu/Widgets/SlotUserWidget.h"
 
+void UChoiceSaveSlotUserWidget::UpdateWidgetSlots()
+{
+    uint8 SlotsCount = 0;
+    for (const auto& HorizontalBoxChild: SlotsHorizontalBox->GetAllChildren())
+    {
+        if (USlotUserWidget* SlotWidget = Cast<USlotUserWidget>(HorizontalBoxChild))
+        {
+            const FString slotName = "Slot " + FString::FromInt(SlotsCount);
+            SlotWidget->SetSlot(slotName);
+            
+            SlotsCount++;
+        }
+    }
+}
+
 void UChoiceSaveSlotUserWidget::NativeOnInitialized()
 {
     Super::NativeOnInitialized();

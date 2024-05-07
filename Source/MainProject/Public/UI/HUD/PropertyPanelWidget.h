@@ -42,7 +42,7 @@ protected:
     void OnHealthChanged(float DeltaHealth);
     void OnAbilityChargeChanged(float ChargeAmount);
     
-    void SetCurrentHealthText(bool isInitial = false);
+    void SetCurrentHealthText() const;
     void SetCurrentAbilityCharge();
 
     void OnRangeAmmoChanged(int32 RemainingBullets);

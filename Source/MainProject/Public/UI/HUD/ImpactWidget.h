@@ -7,6 +7,7 @@
 #include "Character/Player/Components/HealthComponent.h"
 #include "ImpactWidget.generated.h"
 
+class APlayerCharacter;
 /**
  * 
  */
@@ -26,9 +27,16 @@ protected:
     UWidgetAnimation* CriticalAnimation;
 
     virtual void NativeOnInitialized() override;
-    void OnTakeDamage();
-    void OnHeal();
 
 private:
-    UHealthComponent* HealthComponent;
+    void BindEvents();
+
+    void OnHealthChanged(float DeltaHealth);
+    void OnTakeDamage();
+    void OnHeal();
+    
+protected:
+    APlayerCharacter* GetPlayerCharacter() const;
+    UHealthComponent* GetHealthComponent() const;
+    
 };

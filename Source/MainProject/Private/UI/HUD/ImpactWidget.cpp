@@ -10,21 +10,22 @@ void UImpactWidget::NativeOnInitialized()
 {
     Super::NativeOnInitialized();
 
-    const auto player = Cast<APlayerCharacter>(GetOwningPlayerPawn());
-    HealthComponent = player->GetHealthComponent();
-    HealthComponent->OnTakeDamage.AddUObject(this, &UImpactWidget::OnTakeDamage);
-    HealthComponent->OnHeal.AddUObject(this, &UImpactWidget::OnHeal);
+    BindEvents();
 }
 
 void UImpactWidget::OnTakeDamage()
 {
-    if (HealthComponent->GetHealth() <= 0.0f && IsAnimationPlaying(CriticalAnimation))
+    const auto pHealthComponent = GetHealthComponent();
+    if (!pHealthComponent)
+        return;
+    
+    if (pHealthComponent->GetPercentHealth() <= 0.0f && IsAnimationPlaying(CriticalAnimation))
     {
         StopAnimation(CriticalAnimation);
         return;
     }
 
-    if (HealthComponent->GetPercentHealth() < 0.3f && !IsAnimationPlaying(CriticalAnimation))
+    if (pHealthComponent->GetPercentHealth() <= 0.3f && !IsAnimationPlaying(CriticalAnimation))
     {
         PlayAnimation(CriticalAnimation, 0, 999);
         return;
@@ -41,4 +42,35 @@ void UImpactWidget::OnHeal()
         StopAnimation(CriticalAnimation);
         PlayAnimation(HealAnimation);
     }
+}
+
+void UImpactWidget::BindEvents()
+{
+    if (const auto pHealthComponent = GetHealthComponent())
+    {
+        pHealthComponent->OnHealthChanged.AddUObject(this, &UImpactWidget::OnHealthChanged);
+    }
+}
+
+void UImpactWidget::OnHealthChanged(float DeltaHealth)
+{
+    if (DeltaHealth >= 0.0f)
+    {
+        OnHeal();
+    }
+    else
+    {
+        OnTakeDamage();
+    }
+}
+
+APlayerCharacter* UImpactWidget::GetPlayerCharacter() const
+{
+    return Cast<APlayerCharacter>(GetOwningPlayerPawn());
+}
+
+UHealthComponent* UImpactWidget::GetHealthComponent() const
+{
+    const auto playerCharacter = GetPlayerCharacter();
+    return playerCharacter ? playerCharacter->GetHealthComponent() : nullptr;
 }
