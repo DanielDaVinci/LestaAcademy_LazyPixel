@@ -61,8 +61,8 @@ void ABaseCharacter::BeginPlay()
      check(pHealthComponent);
  }
 
-void ABaseCharacter::OnDeath()
-{
+ void ABaseCharacter::OnDeath()
+ {
     OnDied();
     
     pWeaponComponent->DisableAllWeaponsCollision();

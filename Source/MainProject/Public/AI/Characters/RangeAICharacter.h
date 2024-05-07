@@ -15,7 +15,7 @@ class MAINPROJECT_API ARangeAICharacter : public AAIBaseCharacter
 
 public:
     ARangeAICharacter(const FObjectInitializer& ObjInit);
-    static void InitDropRate() { curDropRate = maxDropRate / 2.f; }
+    static void InitDropRate() { curDropRate = minDropRate; }
     
 protected:
     UPROPERTY(EditDefaultsOnly, Category = "PickupType")
@@ -34,6 +34,7 @@ private:
     inline static const float maxDropRate = 100.0f;
     inline static float curDropRate;
 
+    static void ResetDropRate() { curDropRate = maxDropRate / 2.f; }
     bool UpdateDropRate();
     void SpawnPickup() const;
 };

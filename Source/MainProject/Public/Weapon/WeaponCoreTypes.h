@@ -24,6 +24,21 @@ struct FComboElement
 };
 
 USTRUCT(BlueprintType)
+struct FBossComboElement
+{
+    GENERATED_BODY()
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Animation")
+    UAnimMontage* AnimMontage;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Animation", meta = (ClampMin = "0.0"))
+    float AnimationTime = 0.5f;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Damage")
+    float Damage = 10.0f;
+};
+
+USTRUCT(BlueprintType)
 struct FProjectileProperties
 {
     GENERATED_BODY()

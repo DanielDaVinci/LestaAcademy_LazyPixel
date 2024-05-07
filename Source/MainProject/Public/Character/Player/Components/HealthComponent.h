@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Lazy Pixel. All Rights Reserved.
 
 #pragma once
 
@@ -8,6 +8,10 @@
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnHealthChanged, float);
 DECLARE_MULTICAST_DELEGATE(FOnDeath);
+DECLARE_MULTICAST_DELEGATE(FOnTakeDamage);
+DECLARE_MULTICAST_DELEGATE(FOnHeal);
+
+class UNiagaraSystem;
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class MAINPROJECT_API UHealthComponent : public UActorComponent
@@ -21,7 +25,9 @@ public:
 
     FOnHealthChanged OnHealthChanged;
     FOnDeath OnDied;
-    
+    FOnTakeDamage OnTakeDamage;
+    FOnHeal OnHeal;
+
     float GetHealth() const { return m_health; }
     float GetMaxHealth() const { return maxHealth; }
     float GetPercentHealth() const { return GetHealth() / GetMaxHealth(); }
@@ -34,6 +40,9 @@ public:
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ClampMin = "0.0", ClampMax = "1000.0"))
     float maxHealth = 100.0f;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
+    UNiagaraSystem* healEffect;
 
     virtual void BeginPlay() override;
 

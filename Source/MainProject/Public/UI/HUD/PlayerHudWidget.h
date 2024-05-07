@@ -13,6 +13,7 @@ class ULoadUserWidget;
 class UGameMenuUserWidget;
 class UPropertyPanelWidget;
 class ULosePanelWidget;
+class UImpactWidget;
 class ABaseCharacter;
 
 UCLASS()
@@ -33,6 +34,9 @@ protected:
     UPROPERTY(meta = (BindWidget))
     UGameMenuUserWidget* pGameMenuUserWidget;
     
+    UPROPERTY(meta = (BindWidget))
+    UImpactWidget* pImpactWidget;
+
     UPROPERTY(meta = (BindWidgetAnim), Transient)
     UWidgetAnimation* pDamageIndicatorAnimation;
 

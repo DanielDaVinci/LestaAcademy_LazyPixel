@@ -1,6 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 using UnrealBuildTool;
+using UnrealBuildTool.Rules;
 
 public class MainProject : ModuleRules
 {
@@ -16,7 +17,10 @@ public class MainProject : ModuleRules
 			"InputCore",
 			"AIModule",
 			"NavigationSystem",
-			"GameplayTasks",
+			"StateTreeModule",
+            "GameplayStateTreeModule",
+            "GameplayTags",
+            "GameplayTasks",
 			"UMG",
 			"Niagara",
             "DismembermentSystem"

@@ -20,7 +20,9 @@ public:
     float GetAttackSpeed() const { return attackSpeed; }
     float GetRange() const { return range; }
 
-    UAnimMontage* GetAttackMontage() const { return attackAnimation; }
+    //UAnimMontage* GetAttackMontage() const { return attackAnimation; }
+    UAnimMontage* GetAttackMontage() const { return attackAnimations.IsEmpty() ? nullptr : attackAnimations[0]; }
+    TArray<UAnimMontage*> GetAttackMontages() const { return attackAnimations; }
 
     void DisableMeshCollision() const;
     void EnableMeshCollision() const;
@@ -44,8 +46,10 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon Properties", meta=(ClampMin="0.0"))
     float range = 2000.f;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon Properties|Animation")
-    UAnimMontage* attackAnimation;
+    /*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon Properties|Animation")
+    UAnimMontage* attackAnimation;*/
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Properties|Animation")
+    TArray<UAnimMontage*> attackAnimations;
 
 protected:
     void GiveDamage(AActor* DamageTaker);
