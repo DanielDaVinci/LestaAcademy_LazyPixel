@@ -106,10 +106,8 @@ void AFloorManager::SaveData()
     gameInstance->SaveCurrentSlot();
 }
 
-void AFloorManager::OnPlayerEnterRoom(int32 Index)
+void AFloorManager::OnPlayerEnterRoom_Implementation(int32 Index)
 {
-    OnPlayerEnterRoomEvent.Broadcast();
-    
     if (!priorityQueueRooms.IsValidIndex(Index))
         return;
     
@@ -124,10 +122,8 @@ void AFloorManager::OnPlayerEnterRoom(int32 Index)
     CleanRoom(m_currentRoomIndex - 2);
 }
 
-void AFloorManager::OnClearRoom(int32 Index)
+void AFloorManager::OnClearRoom_Implementation(int32 Index)
 {
-    OnClearRoomEvent.Broadcast();
-    
     SetupRoomForEnter(Index + 1);
     SaveData();
 }
@@ -190,7 +186,7 @@ void AFloorManager::CleanRoom(int32 Index)
     if (!room)
         return;
 
-    // room->DestroyActorsInRoom();
+    room->DestroyActorsInRoom();
 }
 
 void AFloorManager::OnPlayerEnterEndRoom()

@@ -22,6 +22,9 @@ class MAINPROJECT_API APlayerCharacter : public ABaseCharacter, public IPrePostB
     GENERATED_BODY()
 
 public:
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlayerDeadSignature);
+    FOnPlayerDeadSignature OnPlayerDead;
+    
     APlayerCharacter(const FObjectInitializer& ObjInit);
     
     FVector2D GetCameraForwardVector2D() const { return FVector2D(pCameraComponent->GetForwardVector()).GetSafeNormal(); }
@@ -61,6 +64,7 @@ protected:
     float deathTimeDilation = 0.3f;
 
     void OnMouseMove(FVector2D MouseVector);
+    
     virtual void OnDeath() override;
     
 private:

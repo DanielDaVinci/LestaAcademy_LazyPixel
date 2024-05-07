@@ -40,11 +40,24 @@ protected:
     virtual void PostInitializeComponents() override;
     virtual void OnDeath() override;
 
+    virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+
+    UFUNCTION(BlueprintImplementableEvent)
+    void OnTakeRangeWeaponDamage();
+
+    UFUNCTION(BlueprintImplementableEvent)
+    void OnTakeMeleeWeaponDamage();
+
 private:
     FName dismemberedBone;
 
+    void BindEvents();
+
+    UFUNCTION()
     void PlayImpactAnim(float DeltaHealth);
+    UFUNCTION()
     void PlayImpactFX(float DeltaHealth);
+    
     void SetRandomMaterial();
-    void EnableRagdoll() const; 
+    void EnableRagdoll() const;
 };

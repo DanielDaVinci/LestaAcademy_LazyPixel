@@ -48,6 +48,14 @@ void UPlayerWeaponComponent::BindEvents()
             OnMeleeAttackHasHit.Broadcast(); 
         });
     }
+
+    OnPickupWeapon.AddWeakLambda(this, [this](UClass* WeaponClass)
+    {
+       if (WeaponClass == AGun::StaticClass())
+       {
+           OnPickupRangeWeapon.Broadcast();
+       }
+    });
 }
 
 void UPlayerWeaponComponent::OnSubscribeToNotifies(const FAnimNotifyEvent& NotifyEvent)

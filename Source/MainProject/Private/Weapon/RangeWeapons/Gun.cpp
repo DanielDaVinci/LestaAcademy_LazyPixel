@@ -35,6 +35,8 @@ void AGun::MakeShoot(const FVector& Point)
             OnEmptyAmmo.Broadcast();
         }
     }
+
+    OnMakeShoot(GetBullets());
 }
 
 void AGun::BeginPlay()

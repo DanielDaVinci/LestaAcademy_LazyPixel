@@ -44,6 +44,14 @@
 		{
 			"Name": "StateTree",
 			"Enabled": true
+		},
+		{
+			"Name": "Wwise",
+			"Enabled": true
+		},
+		{
+			"Name": "WwiseNiagara",
+			"Enabled": true
 		}
 	]
 }

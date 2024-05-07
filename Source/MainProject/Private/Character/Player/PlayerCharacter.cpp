@@ -148,7 +148,8 @@ void APlayerCharacter::OnMouseMove(FVector2D MouseVector)
 void APlayerCharacter::OnDeath() 
 {
     Super::OnDeath();
-    
+
+    OnPlayerDead.Broadcast();
     UGameplayStatics::SetGlobalTimeDilation(GetWorld(), deathTimeDilation);
 }
 

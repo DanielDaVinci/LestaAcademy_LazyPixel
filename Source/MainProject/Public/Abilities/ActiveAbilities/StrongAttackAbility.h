@@ -86,6 +86,9 @@ protected:
     void OnPreparePartStartState();
     void OnPreparePartEndState(EStateResult StateResult);
 
+    UFUNCTION(BlueprintNativeEvent)
+    void OnMouseMove(FVector2D MouseVector);
+
     void StartAttackPart();
     
     void OnAttackPartStartState();
@@ -95,7 +98,6 @@ private:
     FTimerHandle m_rotationTimer;
 
     void OnCustomAbilityButtonReleased();
-    void OnMouseMove(FVector2D MouseVector);
     
     void RotateCharacterToMouse() const;
 

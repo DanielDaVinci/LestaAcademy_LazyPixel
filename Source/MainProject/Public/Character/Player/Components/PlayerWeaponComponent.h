@@ -58,8 +58,9 @@ private:
 
     // Range weapon
 public:
-    DECLARE_MULTICAST_DELEGATE_OneParam(FOnRangeWeaponChangeSignature, AGun*);
-    FOnRangeWeaponChangeSignature OnRangeWeaponChange;
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPickupRangeWeaponSignature);
+    UPROPERTY(BlueprintAssignable)
+    FOnPickupRangeWeaponSignature OnPickupRangeWeapon;
     
     AGun* GetRangeWeapon() const { return FindWeapon<AGun>(); }
     
@@ -79,9 +80,13 @@ protected:
     virtual void OnRangeAttackAnim() override;
 
 public:
-    template<typename T>
-    void PickUpWeapon(const TSubclassOf<T>& WeaponClass);
+    DECLARE_MULTICAST_DELEGATE_OneParam(FOnPickupWeaponSignature, UClass*);
+    FOnPickupWeaponSignature OnPickupWeapon;
     
+    template<typename T> requires std::is_base_of_v<ABaseWeapon, T>
+    void PickUpWeapon(const TSubclassOf<T>& WeaponClass);
+
+public:
     APlayerCharacter* GetPlayerCharacter() const;
     ABasePlayerController* GetPlayerController() const;
     UPlayerMovementComponent* GetPlayerMovementComponent() const;
@@ -89,7 +94,7 @@ public:
     
 };
 
-template <typename T>
+template <typename T> requires std::is_base_of_v<ABaseWeapon, T>
 void UPlayerWeaponComponent::PickUpWeapon(const TSubclassOf<T>& WeaponClass)
 {
     DropWeapon(WeaponClass);
@@ -97,7 +102,8 @@ void UPlayerWeaponComponent::PickUpWeapon(const TSubclassOf<T>& WeaponClass)
     const auto weapon = AddWeapon(WeaponClass);
     if (!weapon)
         return;
-    
+
+    OnPickupWeapon.Broadcast(T::StaticClass());
     OnAfterSpawnAllWeapons.Broadcast();
     SubscribeOnDropRangeWeapon();
 }
