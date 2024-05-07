@@ -4,6 +4,12 @@
 #include "Menu/Widgets/SettingsWidget.h"
 
 #include "Components/Button.h"
+#include "Components/Image.h"
+
+void USettingsWidget::SetBackgroundVisibility(ESlateVisibility InVisibility) const
+{
+    BackgroundImage->SetVisibility(InVisibility);
+}
 
 void USettingsWidget::NativeOnInitialized()
 {

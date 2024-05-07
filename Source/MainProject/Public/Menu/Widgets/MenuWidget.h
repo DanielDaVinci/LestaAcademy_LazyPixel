@@ -11,6 +11,7 @@ class UExitWidget;
 class USettingsWidget;
 class UAboutUsWidget;
 class UButton;
+
 UCLASS()
 class MAINPROJECT_API UMenuWidget : public UUserWidget
 {

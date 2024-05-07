@@ -15,6 +15,7 @@ class MAINPROJECT_API UExitWidget : public UUserWidget
 protected:
     UPROPERTY(meta = (BindWidget))
     UButton* Agree;
+    
     UPROPERTY(meta = (BindWidget))
     UButton* Deny;
 

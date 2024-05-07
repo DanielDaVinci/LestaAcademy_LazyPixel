@@ -17,6 +17,9 @@ struct FProgressData
     UPROPERTY(EditAnywhere, Category = "Data|Environment")
     uint32 RoomIndex = -1;
 
+    UPROPERTY(EditAnywhere, Category = "Data|UI")
+    FString ScreenShotPath = "";
+
     UPROPERTY(EditAnywhere, Category = "Data|Player Properties")
     float HealthPercent = 1.0f;
 
@@ -37,5 +40,6 @@ public:
     UPROPERTY(EditAnywhere, SaveGame)
     FProgressData ProgressData;
     
+    FString GetLevelPath() const;
     FString GetLevelName() const;
 };

@@ -4,9 +4,11 @@
 #include "Menu/Widgets/ChoiceSaveSlotUserWidget.h"
 
 #include "MainProjectGameInstance.h"
+#include "Components/Button.h"
 #include "Components/HorizontalBox.h"
 #include "Components/Image.h"
 #include "Kismet/GameplayStatics.h"
+#include "Menu/Widgets/LoadUserWidget.h"
 #include "Menu/Widgets/SlotUserWidget.h"
 
 void UChoiceSaveSlotUserWidget::NativeOnInitialized()
@@ -18,37 +20,51 @@ void UChoiceSaveSlotUserWidget::NativeOnInitialized()
 
 void UChoiceSaveSlotUserWidget::BindEvents()
 {
-    uint8 SlotsCount = 0;
-    for (uint8 i = 0; i < SlotsHorizontalBox->GetChildrenCount(); i++)
+    if (Exit)
     {
-        if (const auto& SlotWidget = Cast<USlotUserWidget>(SlotsHorizontalBox->GetChildAt(i)))
+        Exit->OnClicked.AddDynamic(this, &UChoiceSaveSlotUserWidget::OnExit);
+    }
+    
+    uint8 SlotsCount = 0;
+    for (const auto& HorizontalBoxChild: SlotsHorizontalBox->GetAllChildren())
+    {
+        if (USlotUserWidget* SlotWidget = Cast<USlotUserWidget>(HorizontalBoxChild))
         {
-            SlotWidget->OnSlotClicked.AddUObject(this, &UChoiceSaveSlotUserWidget::PlaySlot, SlotsCount);
-            SlotWidget->OnDeleteClicked.AddUObject(this, &UChoiceSaveSlotUserWidget::DeleteSlot, SlotsCount);
+            const FString slotName = "Slot " + FString::FromInt(SlotsCount);
+            SlotWidget->SetSlot(slotName);
+            
+            SlotWidget->OnSlotClicked.AddUObject(this, &UChoiceSaveSlotUserWidget::PlaySlot);
+            SlotWidget->OnDeleteClicked.AddUObject(this, &UChoiceSaveSlotUserWidget::DeleteSlot, SlotWidget);
+            
             SlotsCount++;
         }
     }
 }
 
-void UChoiceSaveSlotUserWidget::PlaySlot(uint8 Index)
+void UChoiceSaveSlotUserWidget::PlaySlot(const FString& SlotName) const
 {
-    const auto projectGameInstance = Cast<UMainProjectGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+    const auto projectGameInstance = GetGameInstance<UMainProjectGameInstance>();
     if (!projectGameInstance)
         return;
 
-    const FString slotName = "Slot " + FString::FromInt(Index);
-    const auto progressSaveGame = projectGameInstance->SetCurrentSlot<UProgressSaveGame>(slotName);
+    const auto progressSaveGame = projectGameInstance->SetCurrentSlot<UProgressSaveGame>(SlotName);
     if (!progressSaveGame)
         return;
-        
-    projectGameInstance->AsyncLevelLoad(progressSaveGame->GetLevelName());
+    
+    projectGameInstance->AsyncLevelLoad(progressSaveGame->GetLevelPath());
 }
 
-void UChoiceSaveSlotUserWidget::DeleteSlot(uint8 Index)
+void UChoiceSaveSlotUserWidget::DeleteSlot(const FString& SlotName, USlotUserWidget* SlotWidget)
 {
     const auto projectGameInstance = Cast<UMainProjectGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
     if (!projectGameInstance)
         return;
 
-    projectGameInstance->DeleteSlot("Slot " + FString::FromInt(Index));
+    projectGameInstance->DeleteSlot(SlotName);
+    SlotWidget->SetSlot(SlotName);
+}
+
+void UChoiceSaveSlotUserWidget::OnExit()
+{
+    SetVisibility(ESlateVisibility::Hidden);
 }

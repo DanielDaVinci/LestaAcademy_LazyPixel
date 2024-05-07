@@ -53,6 +53,7 @@ void ULosePanelWidget::OnPlayerDied()
     GetWorld()->GetTimerManager().SetTimer(deathTimer, [this]()
     {
         SetVisibility(ESlateVisibility::Visible);
+        
     }, losePanelDelay, false);
 }
 

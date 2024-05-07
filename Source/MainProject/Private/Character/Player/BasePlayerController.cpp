@@ -7,6 +7,7 @@
 
 ABasePlayerController::ABasePlayerController()
 {
+    PrimaryActorTick.bTickEvenWhenPaused = true;
     bShowMouseCursor = true;
 }
 
@@ -45,12 +46,23 @@ FVector ABasePlayerController::GetDirectionToMouseHit(const FVector& StartPoint)
     return GetWorldPointUnderMouse() - StartPoint;
 }
 
+void ABasePlayerController::SetGameModeControl()
+{
+    CurrentMouseCursor = EMouseCursor::Crosshairs;
+    SetInputMode(FInputModeGameOnly());
+}
+
+void ABasePlayerController::SetUIModeControl()
+{
+    CurrentMouseCursor = EMouseCursor::Default;
+    SetInputMode(FInputModeUIOnly());
+}
+
 void ABasePlayerController::BeginPlay()
 {
     Super::BeginPlay();
 
-    CurrentMouseCursor = EMouseCursor::Crosshairs;
-    SetInputMode(FInputModeGameOnly());
+    SetGameModeControl();
     UGameplayStatics::SetViewportMouseCaptureMode(GetWorld(), EMouseCaptureMode::CapturePermanently_IncludingInitialMouseDown);
 }
 
@@ -68,6 +80,8 @@ void ABasePlayerController::SetupInputComponent()
     InputComponent->BindAction("CustomAbility", IE_Pressed, this, &ABasePlayerController::HandleCustomAbilityPressed);
     InputComponent->BindAction("CustomAbility", IE_Released, this, &ABasePlayerController::HandleCustomAbilityReleased);
     InputComponent->BindAction("Interact", IE_Pressed, this, &ABasePlayerController::HandleInteract);
+
+    InputComponent->BindAction("Escape", IE_Pressed, this, &ABasePlayerController::HandleEscape).bExecuteWhenPaused = true;
 }
 
 void ABasePlayerController::HandleMoveForward(float Amount)
@@ -108,6 +122,11 @@ void ABasePlayerController::HandleCustomAbilityReleased()
 void ABasePlayerController::HandleInteract()
 {
     OnInteract.ExecuteIfBound();
+}
+
+void ABasePlayerController::HandleEscape()
+{
+    OnEscape.Broadcast();
 }
 
 void ABasePlayerController::HandleMouseMove(float Amount)

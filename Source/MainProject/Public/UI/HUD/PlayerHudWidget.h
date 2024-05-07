@@ -8,6 +8,9 @@
 #include "Components/ProgressBar.h"
 #include "PlayerHudWidget.generated.h"
 
+class UGameStartUserWidget;
+class ULoadUserWidget;
+class UGameMenuUserWidget;
 class UPropertyPanelWidget;
 class ULosePanelWidget;
 class ABaseCharacter;
@@ -19,7 +22,16 @@ class MAINPROJECT_API UPlayerHudWidget : public UUserWidget
 
 protected:
     UPROPERTY(meta = (BindWidget))
+    UGameStartUserWidget* pGameStartUserWidget;
+    
+    UPROPERTY(meta = (BindWidget))
+    ULoadUserWidget* pLoadUserWidget;
+    
+    UPROPERTY(meta = (BindWidget))
     ULosePanelWidget* pLosePanel;
+
+    UPROPERTY(meta = (BindWidget))
+    UGameMenuUserWidget* pGameMenuUserWidget;
     
     UPROPERTY(meta = (BindWidgetAnim), Transient)
     UWidgetAnimation* pDamageIndicatorAnimation;

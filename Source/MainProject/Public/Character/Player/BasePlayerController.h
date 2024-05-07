@@ -17,6 +17,7 @@ DECLARE_MULTICAST_DELEGATE(FOnRangeAttackSignature);
 DECLARE_MULTICAST_DELEGATE(FOnDashSignature);
 DECLARE_MULTICAST_DELEGATE(FOnCustomAbilitySignature);
 DECLARE_DELEGATE(FOnInteractSignature);
+DECLARE_MULTICAST_DELEGATE(FOnEscapeSignature);
 
 UCLASS()
 class MAINPROJECT_API ABasePlayerController : public APlayerController
@@ -37,6 +38,8 @@ public:
     FOnCustomAbilitySignature OnCustomAbilityPressed;
     FOnCustomAbilitySignature OnCustomAbilityReleased;
     FOnInteractSignature OnInteract;
+
+    FOnEscapeSignature OnEscape;
 #pragma endregion delegates
     
     FVector2D GetMouseVector() const;
@@ -44,6 +47,9 @@ public:
     
     FVector GetWorldPointUnderMouse() const;
     FVector GetDirectionToMouseHit(const FVector& StartPoint) const;
+
+    void SetGameModeControl();
+    void SetUIModeControl();
 
 protected:
     virtual void BeginPlay() override;
@@ -63,4 +69,6 @@ private:
     void HandleCustomAbilityReleased();
 
     void HandleInteract();
+
+    void HandleEscape();
 };

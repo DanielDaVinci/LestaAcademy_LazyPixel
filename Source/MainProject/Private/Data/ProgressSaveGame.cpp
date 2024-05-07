@@ -3,17 +3,22 @@
 
 #include "Data/ProgressSaveGame.h"
 
+FString UProgressSaveGame::GetLevelPath() const
+{
+    return "/Game/Levels/" + GetLevelName();
+}
+
 FString UProgressSaveGame::GetLevelName() const
 {
     switch (ProgressData.LevelIndex)
     {
         case 0:
-            return "/Game/Levels/FirstLevel";
+            return "FirstLevel";
         case 1:
-            return "/Game/Levels/SecondLevel";
+            return "SecondLevel";
         case 2:
-            return "/Game/Levels/ThirdLevel";
+            return "ThirdLevel";
         default:
-            return "";
+            return "MenuLevel";
     }
 }
