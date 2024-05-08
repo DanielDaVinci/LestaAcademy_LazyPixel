@@ -55,6 +55,7 @@ void UGameMenuUserWidget::OnExitButtonClicked()
     if (!projectGameInstance)
         return;
 
+    UGameplayStatics::SetGamePaused(GetWorld(), false);
     projectGameInstance->AsyncLevelLoad(MenuLevelName);
 }
 

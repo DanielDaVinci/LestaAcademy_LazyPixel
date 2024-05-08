@@ -21,6 +21,8 @@ protected:
     void OnSuccessAsyncLoadLevel(const FString& LevelName);
 
 private:
+    FString m_loadLevelName = "";
+    
     void BindEvents();
     
 protected:

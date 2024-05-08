@@ -31,7 +31,9 @@ protected:
 private:
     void BindEvents();
 
+    UFUNCTION()
     void OnHealthChanged(float DeltaHealth);
+    
     void OnTakeDamage();
     void OnHeal();
     

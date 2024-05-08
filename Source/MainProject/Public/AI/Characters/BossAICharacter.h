@@ -47,8 +47,12 @@ private:
     bool  abilityCharged = true;
     bool  isFirstPhase = true;
 
+    UFUNCTION()
     void PlayImpactFX(float DeltaHealth);
+
+    UFUNCTION()
     void SendEventToStateTree(float DeltaHealth);
+    
     void CheckHealthForStrongAttack();
     void CheckHealthForSecondPhase();
     void StartBossLogic();

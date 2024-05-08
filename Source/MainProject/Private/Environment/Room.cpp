@@ -267,6 +267,7 @@ void ARoom::DestroyActorsInRoom() const
 
         if (isInside)
         {
+            actor->SetActorHiddenInGame(true);
             actor->Destroy();
         }   
     }

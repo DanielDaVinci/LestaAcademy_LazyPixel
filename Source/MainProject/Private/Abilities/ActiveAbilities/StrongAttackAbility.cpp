@@ -113,7 +113,13 @@ void UStrongAttackAbility::AddAbilityCharge(float ChargeAmount)
 void UStrongAttackAbility::ChangeMeleeMaterial()
 {
     const auto weaponComponent = GetWeaponComponent();
+    if (!weaponComponent)
+        return;
+    
     ASword* pMeleeWeapon = weaponComponent->FindWeapon<ASword>();
+    if (!pMeleeWeapon)
+        return;
+    
     pMeleeWeapon->ChangeMaterial(IsAbilityCharged());
 }
 

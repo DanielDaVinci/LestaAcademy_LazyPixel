@@ -25,7 +25,7 @@ public class MainProject : ModuleRules
 			"Niagara",
             "DismembermentSystem",
             "Wwise",
-            "WwiseNiagara"
+            "WwiseNiagara",
         });
 
 		// Uncomment if you are using Slate UI

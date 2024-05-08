@@ -31,8 +31,8 @@ void ABossAICharacter::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
 
-    pHealthComponent->OnHealthChanged.AddUObject(this, &ABossAICharacter::PlayImpactFX);
-    pHealthComponent->OnHealthChanged.AddUObject(this, &ABossAICharacter::SendEventToStateTree);
+    pHealthComponent->OnHealthChanged.AddDynamic(this, &ABossAICharacter::PlayImpactFX);
+    pHealthComponent->OnHealthChanged.AddDynamic(this, &ABossAICharacter::SendEventToStateTree);
     
     if (enemyRoom)
         enemyRoom->OnPlayerEnterEvent.AddUObject(this, &ABossAICharacter::StartBossLogic);

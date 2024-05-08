@@ -191,9 +191,6 @@ void AFloorManager::CleanRoom(int32 Index)
 
 void AFloorManager::OnPlayerEnterEndRoom()
 {
-    if (!nextLevel)
-        return;
-
     const auto gameInstance = GetGameInstance<UMainProjectGameInstance>();
     if (!gameInstance)
         return;
@@ -205,7 +202,8 @@ void AFloorManager::OnPlayerEnterEndRoom()
     currentSlot->ProgressData.LevelIndex += 1;
     currentSlot->ProgressData.RoomIndex = -1;
     gameInstance->SaveCurrentSlot();
-    gameInstance->AsyncLevelLoad("/Game/Levels/" + nextLevel->GetName());
+    
+    gameInstance->AsyncLevelLoad(currentSlot->GetLevelPath());
 }
 
 ARoom* AFloorManager::SafeGetRoom(int32 Index)

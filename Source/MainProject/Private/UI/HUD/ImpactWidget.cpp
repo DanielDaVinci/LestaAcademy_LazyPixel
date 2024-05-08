@@ -48,7 +48,7 @@ void UImpactWidget::BindEvents()
 {
     if (const auto pHealthComponent = GetHealthComponent())
     {
-        pHealthComponent->OnHealthChanged.AddUObject(this, &UImpactWidget::OnHealthChanged);
+        pHealthComponent->OnHealthChanged.AddDynamic(this, &UImpactWidget::OnHealthChanged);
     }
 }
 

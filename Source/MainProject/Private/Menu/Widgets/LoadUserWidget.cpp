@@ -43,6 +43,8 @@ void ULoadUserWidget::OnSuccessAsyncLoadLevel(const FString& LevelName)
     if (!GetWorld())
         return;
 
+    m_loadLevelName = LevelName;
+    
     GetWorld()->GetTimerManager().ClearTimer(m_progressTimerHandle);
     StartFinishAnimation();
 }
@@ -53,6 +55,7 @@ void ULoadUserWidget::StartProgressLoad()
     if (!GetWorld())
         return;
 
+    m_currentProgressTime = 0.0f;
     GetWorld()->GetTimerManager().SetTimer(m_progressTimerHandle, this, &ULoadUserWidget::UpdateProgressTimer,
         loadingPartTimeRate, true,0.0f);
 }
@@ -73,6 +76,9 @@ void ULoadUserWidget::StartFinishAnimation()
     if (!GetWorld())
         return;
 
+    m_currentFinishAnimationTime = 0.0f;
+    GetWorld()->GetTimerManager().ClearTimer(m_finishAnimationTimerHandle);
+    
     GetWorld()->GetTimerManager().SetTimer(m_finishAnimationTimerHandle, this, &ULoadUserWidget::UpdateFinishAnimation,
         finishingAnimationTimeRate, true, 0.0f);
 }
@@ -95,16 +101,12 @@ void ULoadUserWidget::EndFinishAnimation()
 {
     if (!GetWorld())
         return;
-
+    
     GetWorld()->GetTimerManager().ClearTimer(m_finishAnimationTimerHandle);
 
     const auto projectGameInstance = GetGameInstance<UMainProjectGameInstance>();
     if (!projectGameInstance)
         return;
-
-    const auto progressSaveGame = projectGameInstance->GetCurrentSlot<UProgressSaveGame>();
-    if (!progressSaveGame)
-        return;
-
-    projectGameInstance->LevelLoad(progressSaveGame->GetLevelName());
+    
+    projectGameInstance->LevelLoad(m_loadLevelName);
 }

@@ -21,9 +21,6 @@ public:
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Environment")
     TArray<ARoom*> priorityQueueRooms;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Environment|End")
-    UWorld* nextLevel;
     
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Environment|End")
     AEndRoom* endRoom;
@@ -38,6 +35,7 @@ protected:
 
     UFUNCTION(BlueprintNativeEvent)
     void OnPlayerEnterRoom(int32 Index);
+    
     UFUNCTION(BlueprintNativeEvent)
     void OnClearRoom(int32 Index);
 
