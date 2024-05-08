@@ -23,7 +23,7 @@ protected:
     virtual void PreBeginPlay() override;
     virtual void BeginPlay() override;
     virtual void PostBeginPlay() override;
-
+    
     virtual void PreBeginSetupSavedData(const UProgressSaveGame* ProgressSaveGame);
     virtual void PostBeginSetupSavedData(const UProgressSaveGame* ProgressSaveGame);
 
@@ -31,7 +31,7 @@ protected:
 
 private:
     void BindEvents();
-
+    
     void LoadDataForHealthComponent(const UProgressSaveGame* ProgressSaveGame) const;
     void LoadDataForAbilityComponent(const UProgressSaveGame* ProgressSaveGame) const;
     void LoadDataForWeaponComponent(const UProgressSaveGame* ProgressSaveGame) const;

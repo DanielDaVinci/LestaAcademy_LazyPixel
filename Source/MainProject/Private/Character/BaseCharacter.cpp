@@ -17,7 +17,7 @@ ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjInit)
 
     pAbilityComponent = CreateDefaultSubobject<UAbilityComponent>("AbilityComponent");
     pAbilityComponent->bWantsInitializeComponent = true;
-    
+
     pWeaponComponent = CreateDefaultSubobject<UBaseWeaponComponent>("WeaponComponent");
     pHealthComponent = CreateDefaultSubobject<UHealthComponent>("HealthComponent");
 
@@ -39,7 +39,7 @@ UBaseWeaponComponent* ABaseCharacter::GetBaseWeaponComponent() const
     return pWeaponComponent;
 }
 
-void ABaseCharacter::ResetCollisions() const 
+void ABaseCharacter::ResetCollisions() const
 {
     UCapsuleComponent* pCapsuleComponent = GetCapsuleComponent();
     ECollisionEnabled::Type origCollision = pCapsuleComponent->GetCollisionEnabled();
@@ -50,21 +50,17 @@ void ABaseCharacter::ResetCollisions() const
 void ABaseCharacter::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
-    
-    pHealthComponent->OnDied.AddUObject(this, &ABaseCharacter::OnDeath);
+
+    if (pHealthComponent)
+    {
+        pHealthComponent->OnDied.AddUObject(this, &ABaseCharacter::OnDeath);
+    }
 }
 
-void ABaseCharacter::BeginPlay()
- {
-     Super::BeginPlay();
- 
-     check(pHealthComponent);
- }
-
- void ABaseCharacter::OnDeath()
- {
+void ABaseCharacter::OnDeath()
+{
     OnDied();
-    
+
     pWeaponComponent->DisableAllWeaponsCollision();
     GetCharacterMovement()->DisableMovement();
     GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECR_Ignore);
@@ -73,12 +69,6 @@ void ABaseCharacter::BeginPlay()
 
     pWeaponComponent->DisableAllWeaponsCollision();
 }
-
-void ABaseCharacter::Tick(float DeltaTime)
- {
-    Super::Tick(DeltaTime);
-    
- }
 
 UStateMachineComponent* ABaseCharacter::GetStateMachineComponent() const
 {

@@ -26,6 +26,8 @@ class MAINPROJECT_API UPlayerWeaponComponent : public UBaseWeaponComponent
 protected:
 	virtual void BeginPlay() override;
 
+    virtual ABaseWeapon* AddWeapon(const TSubclassOf<ABaseWeapon>& WeaponClass) override;
+
 private:
     void BindInput();
     void BindEvents();
@@ -105,5 +107,4 @@ void UPlayerWeaponComponent::PickUpWeapon(const TSubclassOf<T>& WeaponClass)
 
     OnPickupWeapon.Broadcast(T::StaticClass());
     OnAfterSpawnAllWeapons.Broadcast();
-    SubscribeOnDropRangeWeapon();
 }

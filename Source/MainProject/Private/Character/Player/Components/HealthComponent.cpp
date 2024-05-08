@@ -23,7 +23,7 @@ void UHealthComponent::BeginPlay()
         m_health = GetMaxHealth();
     }
 
-    if(AActor* ComponentOwner = GetOwner())
+    if(const auto ComponentOwner = GetOwner())
     {
         ComponentOwner->OnTakeAnyDamage.AddDynamic(this, &UHealthComponent::OnTakeAnyDamage);
     }
@@ -32,14 +32,15 @@ void UHealthComponent::BeginPlay()
 void UHealthComponent::OnTakeAnyDamage(AActor* DamageActor, float Damage, const UDamageType* DamageType,
         AController* InstigateBy, AActor* DamageCauser)
 {
+    UE_LOG(LogTemp, Error, TEXT("%s: %f"), *GetOwner()->GetName(), m_health);
     if (Damage <= 0.0f || IsDead())
         return;
-
+    
     SetHealth(m_health - Damage);
 
     if (IsDead())
     {
-        if (const auto pCharacterCauser = Cast<ABaseCharacter>(DamageCauser))
+        if (const auto pCharacterCauser = Cast<ABaseCharacter>(InstigateBy->GetPawn()))
         {
             pCharacterCauser->OnKillEnemy.Broadcast();
         }
@@ -69,6 +70,9 @@ void UHealthComponent::Heal(float HealthValue)
     SetHealth(GetHealth() + HealthValue);
 
     const ABaseCharacter* pCharacter = Cast<ABaseCharacter>(GetOwner());
+    if (!pCharacter)
+        return;
+    
     UNiagaraFunctionLibrary::SpawnSystemAttached(healEffect, pCharacter->GetMesh(), "", GetOwner()->GetActorLocation(),
         GetOwner()->GetActorRotation(), EAttachLocation::KeepRelativeOffset, true);
 }

@@ -40,6 +40,9 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Charge Material")
     UMaterialInstance* chargedMaterial;
 
+    virtual void BeginPlay() override;
+    void BindEvents();
+    
     UFUNCTION()
     void OnMeleeWeaponOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
         int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);

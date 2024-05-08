@@ -19,13 +19,18 @@ void UPlayerWeaponComponent::BeginPlay()
 
     BindInput();
     BindEvents();
+}
 
-    if (const auto pRangeWeapon = GetRangeWeapon())
+ABaseWeapon* UPlayerWeaponComponent::AddWeapon(const TSubclassOf<ABaseWeapon>& WeaponClass)
+{
+    const auto& addedWeapon = Super::AddWeapon(WeaponClass);
+    
+    if (Cast<AGun>(addedWeapon))
     {
-        DropWeapon(pRangeWeapon->StaticClass());
-        pRangeWeapon->Destroy();
+        SubscribeOnDropRangeWeapon();
     }
-    //SubscribeOnDropRangeWeapon();
+    
+    return addedWeapon;
 }
 
 void UPlayerWeaponComponent::BindInput()
@@ -220,7 +225,7 @@ void UPlayerWeaponComponent::RangeAttack()
     
     if (!pRangeWeapon || !pPlayerController || !pStateMachine)
         return;
-
+    
     if (pStateMachine->GetCurrentState() && pStateMachine->GetCurrentState()->Name == "RangeState")
         return;
 

@@ -47,16 +47,6 @@ void UDataSaveComponent::PreBeginSetupSavedData(const UProgressSaveGame* Progres
     LoadDataForWeaponComponent(ProgressSaveGame);
 }
 
-void UDataSaveComponent::PostBeginSetupSavedData(const UProgressSaveGame* ProgressSaveGame)
-{
-    if (!ProgressSaveGame)
-        return;
-
-    LoadDataForHealthComponent(ProgressSaveGame);
-    LoadDataForAbilityComponent(ProgressSaveGame);
-    LoadDataForWeaponComponent(ProgressSaveGame);
-}
-
 void UDataSaveComponent::PreSaveCurrentSlot(USaveGame* SaveGame) const
 {
     const auto progressSaveGame = Cast<UProgressSaveGame>(SaveGame);
@@ -66,6 +56,16 @@ void UDataSaveComponent::PreSaveCurrentSlot(USaveGame* SaveGame) const
     SaveDataFromHealthComponent(progressSaveGame);
     SaveDataFromAbilityComponent(progressSaveGame);
     SaveDataFromWeaponComponent(progressSaveGame);
+}
+
+void UDataSaveComponent::PostBeginSetupSavedData(const UProgressSaveGame* ProgressSaveGame)
+{
+    if (!ProgressSaveGame)
+        return;
+
+    LoadDataForHealthComponent(ProgressSaveGame);
+    LoadDataForAbilityComponent(ProgressSaveGame);
+    LoadDataForWeaponComponent(ProgressSaveGame);
 }
 
 void UDataSaveComponent::BindEvents()

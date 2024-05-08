@@ -21,12 +21,25 @@ ASword::ASword()
 
 void ASword::InitBoxCollision()
 {
-    pBoxCollision->OnComponentBeginOverlap.AddDynamic(this, &ASword::OnMeleeWeaponOverlap);
-
     pBoxCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     pBoxCollision->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
     pBoxCollision->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
     pBoxCollision->SetCollisionResponseToChannel(ECC_Enemy, ECollisionResponse::ECR_Overlap);
+}
+
+void ASword::BeginPlay()
+{
+    Super::BeginPlay();
+
+    BindEvents();
+}
+
+void ASword::BindEvents()
+{
+    if (pBoxCollision)
+    {
+        pBoxCollision->OnComponentBeginOverlap.AddDynamic(this, &ASword::OnMeleeWeaponOverlap);
+    }
 }
 
 void ASword::OnMeleeWeaponOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,

@@ -47,15 +47,11 @@ protected:
     UStateMachineComponent* pStateMachineComponent;
 
     virtual void PostInitializeComponents() override;
-    virtual void BeginPlay() override;
     
     virtual void OnDeath();
 
     UFUNCTION(BlueprintImplementableEvent)
     void OnDied();
-
-public:
-    virtual void Tick(float DeltaTime) override;
 
 public:
     UStateMachineComponent* GetStateMachineComponent() const;

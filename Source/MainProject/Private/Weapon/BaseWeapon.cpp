@@ -4,7 +4,7 @@
 #include "Weapon/BaseWeapon.h"
 
 #include "Character/BaseCharacter.h"
-#include "Engine/DamageEvents.h"
+#include "Kismet/GameplayStatics.h"
 
 ABaseWeapon::ABaseWeapon()
 {
@@ -43,6 +43,6 @@ void ABaseWeapon::GiveDamage(AActor* DamageTaker)
     const auto pOwningCharacter = Cast<ABaseCharacter>(GetOwner());
     if (!pOwningCharacter || !pOwningCharacter->GetController())
         return;
-    
-    DamageTaker->TakeDamage(damage, FDamageEvent(), pOwningCharacter->GetController(), this);
+
+    UGameplayStatics::ApplyDamage(DamageTaker, damage, pOwningCharacter->GetController(), this, nullptr);
 }
