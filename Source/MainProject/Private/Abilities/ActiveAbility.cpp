@@ -17,7 +17,10 @@ void UActiveAbility::Activate()
     if (m_currentActivationAmount != 0)
     {
         if (NativeActivate())
+        {
+            OnSuccessActivation();
             m_currentActivationAmount--;
+        }
     }
     
     if (!GetWorld()->GetTimerManager().IsTimerActive(m_reloadTimerHandle))

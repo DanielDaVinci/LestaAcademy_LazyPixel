@@ -26,6 +26,7 @@ public class MainProject : ModuleRules
             "DismembermentSystem",
             "Wwise",
             "WwiseNiagara",
+            "AkAudio"
         });
 
 		// Uncomment if you are using Slate UI

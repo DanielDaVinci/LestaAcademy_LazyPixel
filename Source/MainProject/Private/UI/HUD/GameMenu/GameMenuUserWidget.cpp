@@ -85,8 +85,6 @@ void UGameMenuUserWidget::OpenMenu()
         pBasePlayerController->SetUIModeControl();
     }
 
-    UE_LOG(LogTemp, Error, TEXT("OPEN"));
-
     OnStartMenu();
 }
 

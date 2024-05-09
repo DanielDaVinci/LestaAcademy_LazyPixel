@@ -41,6 +41,8 @@ private:
 protected:
     UFUNCTION()
     void OnHealthChanged(float DeltaHealth);
+    
+    UFUNCTION()
     void OnAbilityChargeChanged(float ChargeAmount);
     
     void SetCurrentHealthText() const;
