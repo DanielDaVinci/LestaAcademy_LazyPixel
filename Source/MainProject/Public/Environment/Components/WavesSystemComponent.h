@@ -8,7 +8,6 @@
 #include "Environment/EnvironmentCoreTypes.h"
 #include "WavesSystemComponent.generated.h"
 
-DECLARE_MULTICAST_DELEGATE(FOnWaveEndSignature)
 DECLARE_MULTICAST_DELEGATE(FOnAllWavesEndSignature)
 
 class ARoom;
@@ -21,10 +20,14 @@ class MAINPROJECT_API UWavesSystemComponent : public UActorComponent
 public:
 	UWavesSystemComponent();
 
+    DECLARE_MULTICAST_DELEGATE_OneParam(FOnWaveEndSignature, int32);
     FOnWaveEndSignature OnWaveEndEvent;
     FOnAllWavesEndSignature OnAllWavesEndEvent;
 
     void StartWaves();
+
+    UFUNCTION(BlueprintCallable)
+    int32 GetWavesNum() const;
 
 protected:
     virtual void BeginPlay() override;
@@ -58,7 +61,7 @@ private:
 protected:
     void OnEnemyDied();
     void CheckEnemyCount();
-    void OnWaveEnd();
+    void OnWaveEnd(int32 WaveIndex);
     
     ARoom* GetOwningRoom() const;
     

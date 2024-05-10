@@ -31,12 +31,17 @@ protected:
     UWidgetComponent* pInteractWidget;
 
     virtual void BeginPlay() override;
+    
     virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
     virtual void NotifyActorEndOverlap(AActor* OtherActor) override;
-    virtual void PickUpHandle(APlayerCharacter* Character){};
+    
+    virtual void OnPickUpHandle(APlayerCharacter* PlayerCharacter){};
+    
+    UFUNCTION(BlueprintImplementableEvent)
+    void OnPickUpEvent();
 
     void DisableCollision();
 
 private:
-    ABasePlayerController* GetPlayerController(AActor* Character) const;
+    ABasePlayerController* GetBasePlayerController(AActor* Character) const;
 };

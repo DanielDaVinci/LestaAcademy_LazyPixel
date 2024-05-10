@@ -69,6 +69,9 @@ protected:
     void OnPlayerEnter();
     void OnAllWavesEnd();
 
+    UFUNCTION(BlueprintImplementableEvent)
+    void OnWaveEnd(int32 WaveIndex);
+
 private:
     bool m_isEntered;
 

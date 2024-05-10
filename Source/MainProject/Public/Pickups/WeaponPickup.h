@@ -25,5 +25,5 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Rotation")
     float rotationYaw = 0.0f;
 
-    virtual void PickUpHandle(APlayerCharacter* Character) override;
+    virtual void OnPickUpHandle(APlayerCharacter* Character) override;
 };

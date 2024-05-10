@@ -20,7 +20,7 @@ void AWeaponPickup::Tick(float DeltaTime)
     AddActorLocalRotation(FRotator(0.0f, rotationYaw, 0.0f));
 }
 
-void AWeaponPickup::PickUpHandle(APlayerCharacter* Character) 
+void AWeaponPickup::OnPickUpHandle(APlayerCharacter* Character) 
 {
     if (!Character)
         return;

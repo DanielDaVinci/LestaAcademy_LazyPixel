@@ -35,10 +35,12 @@ protected:
 
     virtual void BeginPlay() override;
     virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
-    virtual void PickUpHandle(APlayerCharacter* Character) override;
+    virtual void OnPickUpHandle(APlayerCharacter* PlayerCharacter) override;
 
 private:
     bool isUsed = false;
+
+    void BindTimeline();
 
     UFUNCTION()
     void HandleTimeline(float Value);

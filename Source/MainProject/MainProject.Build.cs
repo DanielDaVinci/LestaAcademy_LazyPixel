@@ -23,8 +23,6 @@ public class MainProject : ModuleRules
 			"UMG",
 			"Niagara",
             "DismembermentSystem",
-            "Wwise",
-            "WwiseNiagara",
             "AkAudio"
         });
 

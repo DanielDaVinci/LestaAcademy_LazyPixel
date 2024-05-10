@@ -45,9 +45,7 @@ protected:
     
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon Properties", meta=(ClampMin="0.0"))
     float range = 2000.f;
-
-    /*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon Properties|Animation")
-    UAnimMontage* attackAnimation;*/
+    
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Properties|Animation")
     TArray<UAnimMontage*> attackAnimations;
 

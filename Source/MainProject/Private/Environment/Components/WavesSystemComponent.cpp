@@ -28,6 +28,11 @@ void UWavesSystemComponent::StartWaves()
     CheckEnemyCount();
 }
 
+int32 UWavesSystemComponent::GetWavesNum() const
+{
+    return waves.Num();
+}
+
 void UWavesSystemComponent::BeginPlay()
 {
 	Super::BeginPlay();
@@ -65,7 +70,7 @@ void UWavesSystemComponent::StartWave(int32 WaveIndex)
     
     if (m_currentWaveIndex >= waves.Num())
     {
-        OnWaveEndEvent.Broadcast();
+        OnWaveEndEvent.Broadcast(m_currentWaveIndex);
         return;
     }
 
@@ -181,11 +186,11 @@ void UWavesSystemComponent::CheckEnemyCount()
 {
     if (m_currentAliveEnemies <= 0)
     {
-        OnWaveEndEvent.Broadcast();
+        OnWaveEndEvent.Broadcast(m_currentWaveIndex);
     }
 }
 
-void UWavesSystemComponent::OnWaveEnd()
+void UWavesSystemComponent::OnWaveEnd(int32 WaveIndex)
 {
     CloseDoorAllSpawners(m_currentWaveIndex);
     

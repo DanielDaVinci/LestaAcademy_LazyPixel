@@ -84,6 +84,10 @@ void ARoom::BindEvents()
 {
     if (pWavesSystemComponent)
     {
+        pWavesSystemComponent->OnWaveEndEvent.AddWeakLambda(this, [this](int32 WaveIndex)
+        {
+            OnWaveEnd(WaveIndex);
+        });
         pWavesSystemComponent->OnAllWavesEndEvent.AddUObject(this, &ARoom::OnAllWavesEnd);
     }
 }

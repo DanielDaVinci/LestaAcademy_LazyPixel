@@ -26,28 +26,28 @@ void AHealthStation::BeginPlay()
 {
     Super::BeginPlay();
 
-    if (!pCurveFloat)
-        return;
-
-    FOnTimelineFloat ProgressFunction;
-    ProgressFunction.BindUFunction(this, FName("HandleTimeline"));
-    pTimelineComponent->AddInterpFloat(pCurveFloat, ProgressFunction);
-    pTimelineComponent->SetLooping(true);
-    pTimelineComponent->Play();
+    BindTimeline();
 }
 
 void AHealthStation::NotifyActorBeginOverlap(AActor* OtherActor)
 {
-    if (isUsed) return;
+    if (isUsed) 
+        return;
 
     Super::NotifyActorBeginOverlap(OtherActor);
 }
 
-void AHealthStation::PickUpHandle(APlayerCharacter* Character)
+void AHealthStation::OnPickUpHandle(APlayerCharacter* PlayerCharacter)
 {
-    if (!Character || isUsed) return;
+    if (!PlayerCharacter || isUsed)
+        return;
 
-    Character->GetComponentByClass<UHealthComponent>()->Heal(healAmount);
+    const auto pHealthComponent = PlayerCharacter->GetHealthComponent();
+    if (!pHealthComponent)
+        return;
+    
+    pHealthComponent->Heal(healAmount);
+    
     pInteractWidget->SetVisibility(false);
     pHealthDisplayMeshComponent->SetVisibility(false);
     pRectLightComponent->SetIntensity(0.0f);
@@ -55,7 +55,19 @@ void AHealthStation::PickUpHandle(APlayerCharacter* Character)
     isUsed = true;
 
     DisableCollision();
-    Character->ResetCollisions();
+    PlayerCharacter->ResetCollisions();
+}
+
+void AHealthStation::BindTimeline()
+{
+    if (!pCurveFloat || !pTimelineComponent)
+        return;
+
+    FOnTimelineFloat ProgressFunction;
+    ProgressFunction.BindDynamic(this, &AHealthStation::HandleTimeline);
+    pTimelineComponent->AddInterpFloat(pCurveFloat, ProgressFunction);
+    pTimelineComponent->SetLooping(true);
+    pTimelineComponent->Play();
 }
 
 void AHealthStation::HandleTimeline(float Value) 
