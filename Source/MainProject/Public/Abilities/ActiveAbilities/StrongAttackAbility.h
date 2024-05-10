@@ -7,8 +7,6 @@
 #include "DashAbility.h"
 #include "StrongAttackAbility.generated.h"
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnAbilityChargeChangedSignature, float)
-
 class UPlayerWeaponComponent;
 class ABasePlayerController;
 class UPlayerMovementComponent;
@@ -23,7 +21,8 @@ class MAINPROJECT_API UStrongAttackAbility : public UActiveAbility
     friend class UDataSaveComponent;
 
 public:
-    FOnAbilityChargeChangedSignature OnAbilityChargeChanged;
+    DECLARE_MULTICAST_DELEGATE_OneParam(FOnAbilityChargeChangedSignature, float);
+    FOnAbilityChargeChangedSignature OnAbilityChargeChangedEvent;
     
     float GetMaxAbilityCharge() const { return needMaxAbilityCharge; }
     float GetCurrentAbilityCharge() const { return m_abilityCharge; }
@@ -79,6 +78,10 @@ private:
     void AddAbilityCharge(float ChargeAmount);
 
     void ChangeMeleeMaterial();
+
+protected:
+    UFUNCTION(BlueprintImplementableEvent)
+    void OnAbilityChargeChanged(float Charge);
 
 protected:
     virtual bool NativeActivate() override;

@@ -98,7 +98,8 @@ void UStrongAttackAbility::SetAbilityCharge(float ChargeAmount)
 
     if (!FMath::IsNearlyZero(prevAbilityCharge - m_abilityCharge))
     {
-        OnAbilityChargeChanged.Broadcast(GetCurrentAbilityCharge());
+        OnAbilityChargeChangedEvent.Broadcast(GetCurrentAbilityCharge());
+        OnAbilityChargeChanged(GetCurrentAbilityCharge());
     }
 
     if (IsAbilityCharged())

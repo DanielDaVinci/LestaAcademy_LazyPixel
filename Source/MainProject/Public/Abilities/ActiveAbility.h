@@ -35,6 +35,9 @@ protected:
      */
     virtual bool NativeActivate() { return true; }
 
+    UFUNCTION(BlueprintImplementableEvent)
+    void OnSuccessActivation();
+    
 private:
     FTimerHandle m_reloadTimerHandle;
     float m_currentReloadTime;
