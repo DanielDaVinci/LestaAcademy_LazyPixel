@@ -2,6 +2,8 @@
 
 #include "EnvironmentCoreTypes.generated.h"
 
+class UAkAudioEvent;
+class ARoom;
 class AAIBaseCharacter;
 class AEnemySpawner;
 
@@ -36,4 +38,16 @@ struct FWave
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FSpawnerProperties> Spawners;
+};
+
+USTRUCT(BlueprintType)
+struct FRoomParameter
+{
+    GENERATED_BODY()
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    ARoom* Room = nullptr;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    UAkAudioEvent* AmbientEvent = nullptr;
 };

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "EnvironmentCoreTypes.h"
 #include "Room.h"
 #include "GameFramework/Actor.h"
 #include "Interface/PrePostBeginInterface.h"
@@ -20,7 +21,7 @@ public:
 
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Environment")
-    TArray<ARoom*> priorityQueueRooms;
+    TArray<FRoomParameter> priorityQueueRooms;
     
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Environment|End")
     AEndRoom* endRoom;
@@ -56,7 +57,10 @@ private:
 
     void OnPlayerEnterEndRoom();
 
+    FRoomParameter* SafeGetRoomParameter(int32 Index);
     ARoom* SafeGetRoom(int32 Index);
+    
+    FRoomParameter* SafeGetCurrentRoomParameter();
     ARoom* SafeGetCurrentRoom();
 
 protected:

@@ -2,6 +2,7 @@
 
 #include "Environment/FloorManager.h"
 
+#include "AkAudioDevice.h"
 #include "MainProjectGameInstance.h"
 #include "Environment/EndRoom.h"
 #include "Kismet/GameplayStatics.h"
@@ -46,7 +47,7 @@ void AFloorManager::BindEvents()
 {
     for (auto Iter = priorityQueueRooms.CreateIterator(); Iter; ++Iter)
     {
-        const auto room = *Iter;
+        const auto room = Iter->Room;
         if (!room)
             continue;
         
@@ -65,8 +66,9 @@ void AFloorManager::Preparation()
     if (!priorityQueueRooms.Num())
         return;
     
-    for (const auto& room : priorityQueueRooms)
+    for (const auto& roomParameter : priorityQueueRooms)
     {
+        const auto room = roomParameter.Room;
         if (!room)
             continue;
         
@@ -109,11 +111,8 @@ void AFloorManager::SaveData()
 
 void AFloorManager::OnPlayerEnterRoom_Implementation(int32 Index)
 {
-    if (!priorityQueueRooms.IsValidIndex(Index))
-        return;
-    
-    const auto Room = priorityQueueRooms[Index];
-    if (!Room)
+    const ARoom* room = SafeGetRoom(Index);
+    if (!room)
         return;
     
     m_currentRoomIndex = Index;
@@ -207,12 +206,26 @@ void AFloorManager::OnPlayerEnterEndRoom()
     gameInstance->AsyncLevelLoad(currentSlot->GetLevelPath());
 }
 
-ARoom* AFloorManager::SafeGetRoom(int32 Index)
+FRoomParameter* AFloorManager::SafeGetRoomParameter(int32 Index)
 {
     if (!priorityQueueRooms.IsValidIndex(Index))
         return nullptr;
     
-    return priorityQueueRooms[Index];
+    return &priorityQueueRooms[Index];
+}
+
+ARoom* AFloorManager::SafeGetRoom(int32 Index)
+{
+    const auto roomParameter = SafeGetRoomParameter(Index);
+    if (!roomParameter)
+        return nullptr;
+    
+    return roomParameter->Room;
+}
+
+FRoomParameter* AFloorManager::SafeGetCurrentRoomParameter()
+{
+    return SafeGetRoomParameter(m_currentRoomIndex);
 }
 
 ARoom* AFloorManager::SafeGetCurrentRoom()
