@@ -48,9 +48,6 @@ public:
     FVector GetWorldPointUnderMouse() const;
     FVector GetDirectionToMouseHit(const FVector& StartPoint) const;
 
-    void SetGameModeControl();
-    void SetUIModeControl();
-
 protected:
     virtual void BeginPlay() override;
 
@@ -71,4 +68,9 @@ private:
     void HandleInteract();
 
     void HandleEscape();
+
+public:
+    void SetGameModeControl();
+    void SetUIModeControl();
+    
 };

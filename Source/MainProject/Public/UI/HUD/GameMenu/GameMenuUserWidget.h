@@ -53,8 +53,12 @@ private:
     void OnExitButtonClicked();
 
     void OnPlayerEscapeClicked();
+    virtual FReply NativeOnKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
     void OpenMenu();
     void CloseMenu();
+
+    void BindControllerInput();
+    void UnbindControllerInput();
 
     ABasePlayerController* GetBasePlayerController() const;
 };

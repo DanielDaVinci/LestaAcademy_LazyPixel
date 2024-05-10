@@ -58,4 +58,11 @@ private:
 
     ARoom* SafeGetRoom(int32 Index);
     ARoom* SafeGetCurrentRoom();
+
+protected:
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+    UDataTable* StartHistory;
+
+private:
+    void LaunchStartHistory();
 };

@@ -5,9 +5,10 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Character/Player/Components/HealthComponent.h"
-#include "Components/ProgressBar.h"
 #include "PlayerHudWidget.generated.h"
 
+class ABasePlayerController;
+class UDialogueUserWidget;
 class UGameStartUserWidget;
 class ULoadUserWidget;
 class UGameMenuUserWidget;
@@ -21,6 +22,9 @@ class MAINPROJECT_API UPlayerHudWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
+public:
+    
+    
 protected:
     UPROPERTY(meta = (BindWidget))
     UGameStartUserWidget* pGameStartUserWidget;
@@ -48,9 +52,10 @@ private:
 protected:
     UFUNCTION()
     void OnHealthChanged(float DeltaHealth);
-    
+
 protected:
     ABaseCharacter* GetOwningBaseCharacter() const;
+    ABasePlayerController* GetBasePLayerController() const;
     UHealthComponent* GetHealthComponent() const;
     
 };

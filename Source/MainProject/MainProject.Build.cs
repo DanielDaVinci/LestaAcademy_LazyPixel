@@ -1,7 +1,6 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 using UnrealBuildTool;
-using UnrealBuildTool.Rules;
 
 public class MainProject : ModuleRules
 {

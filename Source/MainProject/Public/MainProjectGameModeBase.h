@@ -27,8 +27,8 @@ protected:
     virtual void BeginPlay() override;
     
 protected:
-    virtual void PrePlayerStart();
-    virtual void PostPlayerStart();
+    virtual void PreStartPlay();
+    virtual void PostStartPlay();
 
 public:
     virtual AActor* FindPlayerStart_Implementation(AController* Player, const FString& IncomingName) override;
