@@ -54,6 +54,11 @@ void ABasePickup::NotifyActorEndOverlap(AActor* OtherActor)
     playerController->OnInteract.Unbind();
 }
 
+void ABasePickup::OnPickUpHandle(APlayerCharacter* PlayerCharacter)
+{
+    OnPickUpEvent();
+}
+
 void ABasePickup::DisableCollision() 
 {
     pCollisionComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);

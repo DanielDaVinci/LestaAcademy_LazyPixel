@@ -56,6 +56,8 @@ void AHealthStation::OnPickUpHandle(APlayerCharacter* PlayerCharacter)
 
     DisableCollision();
     PlayerCharacter->ResetCollisions();
+
+    Super::OnPickUpHandle(PlayerCharacter);
 }
 
 void AHealthStation::BindTimeline()

@@ -6,6 +6,7 @@
 #include "Pickups/BasePickup.h"
 #include "WeaponPickup.generated.h"
 
+class UPlayerWeaponComponent;
 class AGun;
 class ABaseWeapon;
 
@@ -25,5 +26,5 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Rotation")
     float rotationYaw = 0.0f;
 
-    virtual void OnPickUpHandle(APlayerCharacter* Character) override;
+    virtual void OnPickUpHandle(APlayerCharacter* PlayerCharacter) override;
 };

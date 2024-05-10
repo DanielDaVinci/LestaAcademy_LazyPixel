@@ -20,19 +20,16 @@ void AWeaponPickup::Tick(float DeltaTime)
     AddActorLocalRotation(FRotator(0.0f, rotationYaw, 0.0f));
 }
 
-void AWeaponPickup::OnPickUpHandle(APlayerCharacter* Character) 
+void AWeaponPickup::OnPickUpHandle(APlayerCharacter* PlayerCharacter) 
 {
-    if (!Character)
+    Super::OnPickUpHandle(PlayerCharacter);
+    
+    const auto weaponComponent = PlayerCharacter ? PlayerCharacter->GetPlayerWeaponComponent() : nullptr;
+    if (!weaponComponent)
         return;
-
-    if (const auto playerCharacter = Cast<APlayerCharacter>(Character))
-    {
-        if (const auto weaponComponent = playerCharacter->GetPlayerWeaponComponent())
-        {
-            weaponComponent->PickUpWeapon(weaponClass);
-            Destroy();
-            Character->ResetCollisions();
-        }
-        
-    }
+    
+    weaponComponent->PickUpWeapon(weaponClass);
+    PlayerCharacter->ResetCollisions();
+            
+    Destroy();
 }

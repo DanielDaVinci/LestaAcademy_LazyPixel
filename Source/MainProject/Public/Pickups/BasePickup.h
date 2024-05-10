@@ -35,7 +35,7 @@ protected:
     virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
     virtual void NotifyActorEndOverlap(AActor* OtherActor) override;
     
-    virtual void OnPickUpHandle(APlayerCharacter* PlayerCharacter){};
+    virtual void OnPickUpHandle(APlayerCharacter* PlayerCharacter);
     
     UFUNCTION(BlueprintImplementableEvent)
     void OnPickUpEvent();
