@@ -32,11 +32,8 @@ void UGameMenuUserWidget::BindActions()
     {
         pExitButton->OnClicked.AddDynamic(this, &UGameMenuUserWidget::OnExitButtonClicked);
     }
-
-    if (const auto basePlayerController = GetBasePlayerController())
-    {
-        basePlayerController->OnEscape.AddUObject(this, &UGameMenuUserWidget::OnPlayerEscapeClicked);
-    }
+    
+    BindControllerInput();
 }
 
 void UGameMenuUserWidget::OnContinueButtonClicked()
@@ -75,34 +72,59 @@ void UGameMenuUserWidget::OnPlayerEscapeClicked()
     }
 }
 
+FReply UGameMenuUserWidget::NativeOnKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
+{
+    if ((InKeyEvent.GetKey() == EKeys::Escape) || (InKeyEvent.GetKey() == EKeys::F1))
+    {
+        CloseMenu();
+    }
+    
+    return Super::NativeOnKeyDown(InGeometry, InKeyEvent);
+}
+
 void UGameMenuUserWidget::OpenMenu()
 {
-    SetVisibility(ESlateVisibility::Visible);
-    UGameplayStatics::SetGamePaused(GetWorld(), true);
-
     if (const auto pBasePlayerController = GetBasePlayerController())
     {
         pBasePlayerController->SetUIModeControl();
     }
-
-    UE_LOG(LogTemp, Error, TEXT("OPEN"));
+    
+    UGameplayStatics::SetGamePaused(GetWorld(), true);
+    SetVisibility(ESlateVisibility::Visible);
+    SetIsFocusable(true);
+    SetFocus();
 
     OnStartMenu();
 }
 
 void UGameMenuUserWidget::CloseMenu()
 {
-    SetVisibility(ESlateVisibility::Hidden);
-    UGameplayStatics::SetGamePaused(GetWorld(), false);
-
     if (const auto pBasePlayerController = GetBasePlayerController())
     {
         pBasePlayerController->SetGameModeControl();
     }
 
-    UE_LOG(LogTemp, Error, TEXT("CLOSE"));
+    UGameplayStatics::SetGamePaused(GetWorld(), false);
+    SetVisibility(ESlateVisibility::Hidden);
+    SetIsFocusable(false);
 
     OnExitMenu();
+}
+
+void UGameMenuUserWidget::BindControllerInput()
+{
+    if (const auto basePlayerController = GetBasePlayerController())
+    {
+        basePlayerController->OnEscape.AddUObject(this, &UGameMenuUserWidget::OnPlayerEscapeClicked);
+    }
+}
+
+void UGameMenuUserWidget::UnbindControllerInput()
+{
+    if (const auto basePlayerController = GetBasePlayerController())
+    {
+        basePlayerController->OnEscape.RemoveAll(this);
+    }
 }
 
 ABasePlayerController* UGameMenuUserWidget::GetBasePlayerController() const

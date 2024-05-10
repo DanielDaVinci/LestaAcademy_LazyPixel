@@ -3,9 +3,9 @@
 #include "Environment/FloorManager.h"
 
 #include "MainProjectGameInstance.h"
-#include "MainProjectGameModeBase.h"
 #include "Environment/EndRoom.h"
 #include "Kismet/GameplayStatics.h"
+#include "UI/HUD/DialogueUserWidget.h"
 
 AFloorManager::AFloorManager()
 {
@@ -34,6 +34,7 @@ void AFloorManager::BeginPlay()
 void AFloorManager::PostBeginPlay()
 {
     Preparation();
+    LaunchStartHistory();
 }
 
 void AFloorManager::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -217,4 +218,18 @@ ARoom* AFloorManager::SafeGetRoom(int32 Index)
 ARoom* AFloorManager::SafeGetCurrentRoom()
 {
     return SafeGetRoom(m_currentRoomIndex);
+}
+
+void AFloorManager::LaunchStartHistory()
+{
+    if (!StartHistory)
+        return;
+
+    const auto DialogueWidget = UDialogueUserWidget::GetSingleton();
+    UE_LOG(LogTemp, Error, TEXT("%hs"), DialogueWidget ? "YES" : "NO");
+    if (!DialogueWidget)
+        return;
+
+
+    DialogueWidget->SetDialogueData(StartHistory);
 }

@@ -12,7 +12,7 @@ void AGameHUD::BeginPlay()
     AddMainWidgetToViewport();
 }
 
-void AGameHUD::AddMainWidgetToViewport() const
+void AGameHUD::AddMainWidgetToViewport()
 {
     if (!MainWidgetClass)
         return;
@@ -21,5 +21,6 @@ void AGameHUD::AddMainWidgetToViewport() const
     if (!MainWidgetClass)
         return;
 
+    m_mainWidget = mainWidget;
     mainWidget->AddToViewport();
 }

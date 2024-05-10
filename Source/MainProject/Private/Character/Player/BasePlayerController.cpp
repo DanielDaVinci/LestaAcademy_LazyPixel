@@ -49,7 +49,10 @@ FVector ABasePlayerController::GetDirectionToMouseHit(const FVector& StartPoint)
 void ABasePlayerController::SetGameModeControl()
 {
     CurrentMouseCursor = EMouseCursor::Crosshairs;
-    SetInputMode(FInputModeGameOnly());
+    
+    FInputModeGameOnly InputGameMode;
+    InputGameMode.SetConsumeCaptureMouseDown(false);
+    SetInputMode(InputGameMode);
 }
 
 void ABasePlayerController::SetUIModeControl()
@@ -81,7 +84,7 @@ void ABasePlayerController::SetupInputComponent()
     InputComponent->BindAction("CustomAbility", IE_Released, this, &ABasePlayerController::HandleCustomAbilityReleased);
     InputComponent->BindAction("Interact", IE_Pressed, this, &ABasePlayerController::HandleInteract);
 
-    InputComponent->BindAction("Escape", IE_Pressed, this, &ABasePlayerController::HandleEscape).bExecuteWhenPaused = true;
+    InputComponent->BindAction("Escape", IE_Pressed, this, &ABasePlayerController::HandleEscape);
 }
 
 void ABasePlayerController::HandleMoveForward(float Amount)

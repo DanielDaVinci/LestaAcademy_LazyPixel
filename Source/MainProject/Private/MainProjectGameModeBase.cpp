@@ -10,6 +10,7 @@
 #include "AI/Characters/RangeAICharacter.h"
 #include "GameFramework/PlayerStart.h"
 #include "Kismet/GameplayStatics.h"
+#include "UI/HUD/DialogueUserWidget.h"
 
 AMainProjectGameModeBase::AMainProjectGameModeBase()
 {
@@ -19,11 +20,11 @@ AMainProjectGameModeBase::AMainProjectGameModeBase()
 
 void AMainProjectGameModeBase::StartPlay()
 {
-    PrePlayerStart();
+    PreStartPlay();
     
     Super::StartPlay();
     
-    PostPlayerStart();
+    PostStartPlay();
 }
 
 void AMainProjectGameModeBase::BeginPlay()
@@ -32,7 +33,7 @@ void AMainProjectGameModeBase::BeginPlay()
     ARangeAICharacter::InitDropRate();
 }
 
-void AMainProjectGameModeBase::PrePlayerStart()
+void AMainProjectGameModeBase::PreStartPlay()
 {
     if (!GetWorld())
         return;
@@ -58,7 +59,7 @@ void AMainProjectGameModeBase::PrePlayerStart()
     }
 }
 
-void AMainProjectGameModeBase::PostPlayerStart()
+void AMainProjectGameModeBase::PostStartPlay()
 {
     for (FActorIterator Iter(GetWorld()); Iter; ++Iter)
     {
