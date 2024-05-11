@@ -3,6 +3,7 @@
 
 #include "UI/HUD/GameStartUserWidget.h"
 
+#include "Character/Player/BasePlayerController.h"
 #include "Components/BackgroundBlur.h"
 
 void UGameStartUserWidget::NativeOnInitialized()
@@ -28,7 +29,7 @@ void UGameStartUserWidget::StartStartingAnimation()
 {
     if (!GetWorld())
         return;
-
+    
     GetWorld()->GetTimerManager().SetTimer(m_startingAnimationTimerHandle, this, &UGameStartUserWidget::UpdateStartingAnimation,
         startingTimeRate, true, 0.0f);
 }
@@ -54,4 +55,9 @@ void UGameStartUserWidget::EndStartingAnimation()
 
     GetWorld()->GetTimerManager().ClearTimer(m_startingAnimationTimerHandle);
     SetVisibility(ESlateVisibility::Hidden);
+}
+
+ABasePlayerController* UGameStartUserWidget::GetBasePlayerController() const
+{
+    return Cast<ABasePlayerController>(GetOwningPlayer());
 }

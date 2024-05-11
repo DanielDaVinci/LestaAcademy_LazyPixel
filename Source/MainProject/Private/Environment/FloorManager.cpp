@@ -5,12 +5,15 @@
 #include "AkAudioDevice.h"
 #include "MainProjectGameInstance.h"
 #include "Environment/EndRoom.h"
+#include "Environment/Room.h"
+#include "Environment/Components/GamePlotComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "UI/HUD/DialogueUserWidget.h"
 
 AFloorManager::AFloorManager()
 {
     PrimaryActorTick.bCanEverTick = false;
+
+    pGamePlotComponent = CreateDefaultSubobject<UGamePlotComponent>("GamePlotComponent");
 }
 
 void AFloorManager::PostInitializeComponents()
@@ -35,12 +38,21 @@ void AFloorManager::BeginPlay()
 void AFloorManager::PostBeginPlay()
 {
     Preparation();
-    LaunchStartHistory();
 }
 
 void AFloorManager::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
     Super::EndPlay(EndPlayReason);
+}
+
+void AFloorManager::OnWaveEnd(int32 WaveIndex, int32 RoomIndex)
+{
+    OnLevelRoomWaveEnd.Broadcast(RoomIndex, WaveIndex);
+}
+
+void AFloorManager::OnFirstKill(int32 RoomIndex)
+{
+    OnLevelRoomFirstKill.Broadcast(RoomIndex);
 }
 
 void AFloorManager::BindEvents()
@@ -52,7 +64,9 @@ void AFloorManager::BindEvents()
             continue;
         
         room->OnPlayerEnterEvent.AddUObject(this, &AFloorManager::OnPlayerEnterRoom, Iter.GetIndex());
-        room->OnAllEnemiesDied.AddUObject(this, &AFloorManager::OnClearRoom, Iter.GetIndex());
+        room->OnWaveEndEvent.AddUObject(this, &AFloorManager::OnWaveEnd, Iter.GetIndex());
+        room->OnFirstKillEvent.AddUObject(this, &AFloorManager::OnFirstKill, Iter.GetIndex());
+        room->OnAllEnemiesDiedEvent.AddUObject(this, &AFloorManager::OnClearRoom, Iter.GetIndex());
     }
 
     if (endRoom)
@@ -116,6 +130,7 @@ void AFloorManager::OnPlayerEnterRoom_Implementation(int32 Index)
         return;
     
     m_currentRoomIndex = Index;
+    OnPlayerEnterLevelRoom.Broadcast(Index);
     
     SetupRoomForFight(m_currentRoomIndex);
     SetupRoomAfterExit(m_currentRoomIndex - 1);
@@ -231,18 +246,4 @@ FRoomParameter* AFloorManager::SafeGetCurrentRoomParameter()
 ARoom* AFloorManager::SafeGetCurrentRoom()
 {
     return SafeGetRoom(m_currentRoomIndex);
-}
-
-void AFloorManager::LaunchStartHistory()
-{
-    if (!StartHistory)
-        return;
-
-    const auto DialogueWidget = UDialogueUserWidget::GetSingleton();
-    UE_LOG(LogTemp, Error, TEXT("%hs"), DialogueWidget ? "YES" : "NO");
-    if (!DialogueWidget)
-        return;
-
-
-    DialogueWidget->SetDialogueData(StartHistory);
 }

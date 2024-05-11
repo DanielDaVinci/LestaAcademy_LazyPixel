@@ -9,8 +9,6 @@
 #include "Environment/FloorManager.h"
 #include "AI/Characters/RangeAICharacter.h"
 #include "GameFramework/PlayerStart.h"
-#include "Kismet/GameplayStatics.h"
-#include "UI/HUD/DialogueUserWidget.h"
 
 AMainProjectGameModeBase::AMainProjectGameModeBase()
 {

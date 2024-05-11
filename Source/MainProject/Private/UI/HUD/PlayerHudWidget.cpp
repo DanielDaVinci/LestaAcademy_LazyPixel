@@ -3,24 +3,15 @@
 
 #include "UI/HUD/PlayerHudWidget.h"
 
-#include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Character/BaseCharacter.h"
 #include "Character/Player/BasePlayerController.h"
-#include "UI/HUD/DialogueUserWidget.h"
+#include "UI/HUD/Dialogue/DialogueSystemUserWidget.h"
 
 void UPlayerHudWidget::NativeOnInitialized()
 {
     Super::NativeOnInitialized();
 
     BindActions();
-    if (const auto asd = GetBasePLayerController())
-    {
-        // asd->SetShowMouseCursor(false);
-        asd->SetUIModeControl();
-        asd->SetGameModeControl();
-        // asd->SetShowMouseCursor(true);
-        UWidgetBlueprintLibrary::SetFocusToGameViewport();
-    }
 }
 
 void UPlayerHudWidget::BindActions()

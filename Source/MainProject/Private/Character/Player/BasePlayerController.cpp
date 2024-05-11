@@ -49,6 +49,7 @@ FVector ABasePlayerController::GetDirectionToMouseHit(const FVector& StartPoint)
 void ABasePlayerController::SetGameModeControl()
 {
     CurrentMouseCursor = EMouseCursor::Crosshairs;
+    CurrentGameMode = EGameMode::Game;
     
     FInputModeGameOnly InputGameMode;
     InputGameMode.SetConsumeCaptureMouseDown(false);
@@ -58,6 +59,7 @@ void ABasePlayerController::SetGameModeControl()
 void ABasePlayerController::SetUIModeControl()
 {
     CurrentMouseCursor = EMouseCursor::Default;
+    CurrentGameMode = EGameMode::UI;
     SetInputMode(FInputModeUIOnly());
 }
 
@@ -134,5 +136,8 @@ void ABasePlayerController::HandleEscape()
 
 void ABasePlayerController::HandleMouseMove(float Amount)
 {
+    if (CurrentGameMode != EGameMode::Game)
+        return;
+    
     OnMouseMove.Broadcast(GetMouseVector());
 }

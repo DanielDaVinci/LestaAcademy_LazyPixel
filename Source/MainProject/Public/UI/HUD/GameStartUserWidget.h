@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "GameStartUserWidget.generated.h"
 
+class ABasePlayerController;
 class UBackgroundBlur;
 
 UCLASS()
@@ -36,4 +37,6 @@ private:
     void StartStartingAnimation();
     void UpdateStartingAnimation();
     void EndStartingAnimation();
+
+    ABasePlayerController* GetBasePlayerController() const;
 };

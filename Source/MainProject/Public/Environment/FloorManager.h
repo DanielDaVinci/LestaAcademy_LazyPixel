@@ -4,11 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "EnvironmentCoreTypes.h"
-#include "Room.h"
 #include "GameFramework/Actor.h"
 #include "Interface/PrePostBeginInterface.h"
 #include "FloorManager.generated.h"
 
+class UGamePlotComponent;
 class AEndRoom;
 
 UCLASS()
@@ -17,9 +17,21 @@ class MAINPROJECT_API AFloorManager : public AActor, public IPrePostBeginInterfa
 	GENERATED_BODY()
 	
 public:
+    DECLARE_MULTICAST_DELEGATE_OneParam(FOnPlayerEnterLevelRoomSignature, int32);
+    FOnPlayerEnterLevelRoomSignature OnPlayerEnterLevelRoom;
+
+    DECLARE_MULTICAST_DELEGATE_TwoParams(FOnLevelRoomWaveEndSignature, int32, int32);
+    FOnLevelRoomWaveEndSignature OnLevelRoomWaveEnd;
+    
+    DECLARE_MULTICAST_DELEGATE_OneParam(FOnLevelRoomFirstKillSignature, int32);
+    FOnLevelRoomFirstKillSignature OnLevelRoomFirstKill;
+    
 	AFloorManager();
 
 protected:
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName="GamePlotComponent")
+    UGamePlotComponent* pGamePlotComponent;
+    
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Environment")
     TArray<FRoomParameter> priorityQueueRooms;
     
@@ -36,6 +48,10 @@ protected:
 
     UFUNCTION(BlueprintNativeEvent)
     void OnPlayerEnterRoom(int32 Index);
+    
+    void OnWaveEnd(int32 WaveIndex, int32 RoomIndex);
+    
+    void OnFirstKill(int32 RoomIndex);
     
     UFUNCTION(BlueprintNativeEvent)
     void OnClearRoom(int32 Index);
@@ -62,11 +78,4 @@ private:
     
     FRoomParameter* SafeGetCurrentRoomParameter();
     ARoom* SafeGetCurrentRoom();
-
-protected:
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-    UDataTable* StartHistory;
-
-private:
-    void LaunchStartHistory();
 };

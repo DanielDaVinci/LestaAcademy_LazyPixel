@@ -19,6 +19,13 @@ DECLARE_MULTICAST_DELEGATE(FOnCustomAbilitySignature);
 DECLARE_DELEGATE(FOnInteractSignature);
 DECLARE_MULTICAST_DELEGATE(FOnEscapeSignature);
 
+UENUM()
+enum class EGameMode : uint8
+{
+    UI,
+    Game
+};
+
 UCLASS()
 class MAINPROJECT_API ABasePlayerController : public APlayerController
 {
@@ -72,5 +79,8 @@ private:
 public:
     void SetGameModeControl();
     void SetUIModeControl();
+
+private:
+    EGameMode CurrentGameMode = EGameMode::Game;
     
 };

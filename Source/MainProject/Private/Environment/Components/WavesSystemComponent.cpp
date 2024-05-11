@@ -16,7 +16,7 @@ UWavesSystemComponent::UWavesSystemComponent()
 
 void UWavesSystemComponent::StartWaves()
 {
-    if (m_currentAliveEnemies)
+    if (m_currentAliveEnemies > 0)
     {
         m_currentWaveIndex = -1;
     }
@@ -178,6 +178,12 @@ void UWavesSystemComponent::OnSpawnTick(int32 SpawnerIndex)
 
 void UWavesSystemComponent::OnEnemyDied()
 {
+    if (bFirstKill)
+    {
+        bFirstKill = false;
+        OnFirstKillEvent.Broadcast();
+    }
+    
     m_currentAliveEnemies--;
     CheckEnemyCount();
 }

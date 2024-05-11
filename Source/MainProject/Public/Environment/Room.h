@@ -26,8 +26,14 @@ public:
     DECLARE_MULTICAST_DELEGATE(FOnPlayerEnterSignature);
     FOnPlayerEnterSignature OnPlayerEnterEvent;
 
+    DECLARE_MULTICAST_DELEGATE_OneParam(FOnWaveEndSignature, int32);
+    FOnWaveEndSignature OnWaveEndEvent;
+
+    DECLARE_MULTICAST_DELEGATE(FOnFirstKillSignature);
+    FOnFirstKillSignature OnFirstKillEvent;
+
     DECLARE_MULTICAST_DELEGATE(FOnAllEnemiesDiedSignature);
-    FOnAllEnemiesDiedSignature OnAllEnemiesDied;
+    FOnAllEnemiesDiedSignature OnAllEnemiesDiedEvent;
     
     bool IsEntered() const { return m_isEntered; }
 

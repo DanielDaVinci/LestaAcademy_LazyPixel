@@ -8,8 +8,6 @@
 #include "Environment/EnvironmentCoreTypes.h"
 #include "WavesSystemComponent.generated.h"
 
-DECLARE_MULTICAST_DELEGATE(FOnAllWavesEndSignature)
-
 class ARoom;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -22,6 +20,11 @@ public:
 
     DECLARE_MULTICAST_DELEGATE_OneParam(FOnWaveEndSignature, int32);
     FOnWaveEndSignature OnWaveEndEvent;
+
+    DECLARE_MULTICAST_DELEGATE(FOnFirstKillSignature);
+    FOnFirstKillSignature OnFirstKillEvent;
+
+    DECLARE_MULTICAST_DELEGATE(FOnAllWavesEndSignature);
     FOnAllWavesEndSignature OnAllWavesEndEvent;
 
     void StartWaves();
@@ -66,6 +69,7 @@ protected:
     ARoom* GetOwningRoom() const;
     
 private:
+    bool bFirstKill = true;
     int32 m_currentAliveEnemies = 0;
     int32 m_currentWaveIndex = -1;
 

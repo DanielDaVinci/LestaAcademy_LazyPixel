@@ -24,6 +24,9 @@ struct FMonologParameters
     GENERATED_BODY()
 
     UPROPERTY(EditAnywhere)
+    bool bWithAnimation = true;
+
+    UPROPERTY(EditAnywhere)
     UTexture2D* Image = nullptr;
 };
 
@@ -31,6 +34,9 @@ USTRUCT()
 struct FDialogParameters
 {
     GENERATED_BODY()
+
+    UPROPERTY(EditAnywhere)
+    FText Text;
 
     UPROPERTY(EditAnywhere, meta = (InlineEditConditionToggle))
     bool bLeftDisplay = true;
@@ -55,10 +61,7 @@ struct FDialogueTableRow : public FTableRowBase
     GENERATED_BODY()
 
     UPROPERTY(EditAnywhere)
-    FText Text;
-
-    UPROPERTY(EditAnywhere)
-    EDialogueView View;
+    EDialogueView View = EDialogueView::Monolog;
     
     UPROPERTY(EditAnywhere, meta = (EditConditionHides, EditCondition = "View==EDialogueView::Monolog"))
     FMonologParameters MonologParameters;

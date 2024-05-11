@@ -8,7 +8,7 @@
 #include "PlayerHudWidget.generated.h"
 
 class ABasePlayerController;
-class UDialogueUserWidget;
+class UDialogueSystemUserWidget;
 class UGameStartUserWidget;
 class ULoadUserWidget;
 class UGameMenuUserWidget;

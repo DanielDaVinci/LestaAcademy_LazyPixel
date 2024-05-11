@@ -32,7 +32,6 @@ void UHealthComponent::BeginPlay()
 void UHealthComponent::OnTakeAnyDamage(AActor* DamageActor, float Damage, const UDamageType* DamageType,
         AController* InstigateBy, AActor* DamageCauser)
 {
-    UE_LOG(LogTemp, Error, TEXT("%s: %f"), *GetOwner()->GetName(), m_health);
     if (Damage <= 0.0f || IsDead())
         return;
     

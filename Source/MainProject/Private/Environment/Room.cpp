@@ -86,7 +86,12 @@ void ARoom::BindEvents()
     {
         pWavesSystemComponent->OnWaveEndEvent.AddWeakLambda(this, [this](int32 WaveIndex)
         {
+            OnWaveEndEvent.Broadcast(WaveIndex);
             OnWaveEnd(WaveIndex);
+        });
+        pWavesSystemComponent->OnFirstKillEvent.AddWeakLambda(this, [this]()
+        {
+            OnFirstKillEvent.Broadcast();
         });
         pWavesSystemComponent->OnAllWavesEndEvent.AddUObject(this, &ARoom::OnAllWavesEnd);
     }
@@ -102,7 +107,7 @@ void ARoom::OnPlayerEnter()
 
 void ARoom::OnAllWavesEnd()
 {
-    OnAllEnemiesDied.Broadcast();
+    OnAllEnemiesDiedEvent.Broadcast();
 }
 
 void ARoom::BindInputDoorsForEnter()
