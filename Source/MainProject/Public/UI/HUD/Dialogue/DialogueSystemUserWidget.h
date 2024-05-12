@@ -8,6 +8,7 @@
 #include "DialogueSystemUserWidget.generated.h"
 
 
+struct FPlotDialogue;
 class ABasePlayerController;
 class UDialogUserWidget;
 class UMonologUserWidget;
@@ -18,6 +19,12 @@ class MAINPROJECT_API UDialogueSystemUserWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
+    DECLARE_MULTICAST_DELEGATE(FOnStartDialogueSignature);
+    FOnStartDialogueSignature OnStartDialogue;
+
+    DECLARE_MULTICAST_DELEGATE(FOnEndDialogueSignature);
+    FOnEndDialogueSignature OnEndDialogue;
+    
     void SetDialogueData(const UDataTable* DialogueDataTable,
         bool bStartAnimation = true,
         bool bEndAnimation = true,
@@ -57,9 +64,15 @@ private:
     
     void BindInteract();
     void UnbindInteract();
-    
+
+protected:
+    virtual FReply NativeOnKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
     virtual FReply NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
+
+private:
+    bool bKeyDowned = false;
     
+protected:
     void OnInteract();
     bool NextDialogue();
 
@@ -72,8 +85,6 @@ protected:
     void LaunchDialog(const FDialogParameters& DialogParameters) const;
 
 private:
-    const FDialogueTableRow* CurrentDialogRow = nullptr;
-
     void ClearMonolog() const;
     void ClearDialog() const;
     

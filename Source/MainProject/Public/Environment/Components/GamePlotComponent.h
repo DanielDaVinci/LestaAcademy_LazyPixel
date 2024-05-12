@@ -35,8 +35,11 @@ protected:
     void OnPlayerEnterRoom(int32 RoomIndex);
     void OnRoomWaveEnd(int32 RoomIndex, int32 WaveIndex);
     void OnRoomFirstKill(int32 RoomIndex);
+    void OnPlayerInteractEndRoom();
 
     void LaunchPlot(const FPlotDialogue* Plot);
+
+    void LoadNextLevel();
     
 private:
     FTimerHandle launchTimerHandle;

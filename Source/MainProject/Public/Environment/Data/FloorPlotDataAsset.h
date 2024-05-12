@@ -13,6 +13,7 @@ enum class EPlotEvent : uint8
     EnterRoom,
     WaveEnd,
     KillFirstEnemy,
+    InteractEndRoom
 };
 
 USTRUCT()
@@ -35,14 +36,20 @@ struct FPlotDialogue
     UPROPERTY(EditAnywhere)
     EPlotEvent PlotEvent = EPlotEvent::EnterRoom;
 
-    UPROPERTY(EditAnywhere, meta=(ClampMin="0.01", EditConditionHides, EditCondition="PlotEvent!=EPlotEvent::StartGame"))
+    UPROPERTY(EditAnywhere, meta=(ClampMin="0.01", EditConditionHides, EditCondition="PlotEvent!=EPlotEvent::StartGame && PlotEvent!=EPlotEvent::InteractEndRoom"))
     float CallPlotAfterEvent = 0.01f;
 
-    UPROPERTY(EditAnywhere, meta=(ClampMin="0", EditConditionHides, EditCondition="PlotEvent!=EPlotEvent::StartGame"))
+    UPROPERTY(EditAnywhere, meta=(ClampMin="0", EditConditionHides, EditCondition="PlotEvent!=EPlotEvent::StartGame && PlotEvent!=EPlotEvent::InteractEndRoom"))
     int32 RoomIndex = 0;
 
     UPROPERTY(EditAnywhere, meta=(ClampMin="0", EditConditionHides, EditCondition="PlotEvent==EPlotEvent::WaveEnd"))
     int32 WaveIndex = 0;
+
+    DECLARE_MULTICAST_DELEGATE(FOnStartPlotSignature);
+    FOnStartPlotSignature OnStartPlot;
+
+    DECLARE_MULTICAST_DELEGATE(FOnEndPlotSignature);
+    FOnEndPlotSignature OnEndPlot;
 };
 
 UCLASS()

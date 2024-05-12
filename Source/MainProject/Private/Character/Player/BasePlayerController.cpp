@@ -3,6 +3,7 @@
 
 #include "Character/Player/BasePlayerController.h"
 
+#include "InputState.h"
 #include "GameFramework/PlayerInput.h"
 #include "Kismet/GameplayStatics.h"
 

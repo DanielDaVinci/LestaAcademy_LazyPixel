@@ -71,7 +71,7 @@ void AFloorManager::BindEvents()
 
     if (endRoom)
     {
-        endRoom->OnPlayerEnterEvent.AddUObject(this, &AFloorManager::OnPlayerEnterEndRoom);
+        endRoom->OnPlayerInteractEvent.AddUObject(this, &AFloorManager::OnPlayerInteractEndRoom);
     }
 }
 
@@ -209,21 +209,10 @@ void AFloorManager::CleanRoom(int32 Index)
     room->DestroyActorsInRoom();
 }
 
-void AFloorManager::OnPlayerEnterEndRoom()
+void AFloorManager::OnPlayerInteractEndRoom()
 {
-    const auto gameInstance = GetGameInstance<UMainProjectGameInstance>();
-    if (!gameInstance)
-        return;
-    
-    const auto currentSlot = gameInstance->GetCurrentSlot<UProgressSaveGame>();
-    if (!currentSlot)
-        return;
-
-    currentSlot->ProgressData.LevelIndex += 1;
-    currentSlot->ProgressData.RoomIndex = -1;
-    gameInstance->SaveCurrentSlot();
-    
-    gameInstance->AsyncLevelLoad(currentSlot->GetLevelPath());
+    SetupRoomAfterExit(m_currentRoomIndex);
+    OnPlayerInteractEndLevelRoom.Broadcast();
 }
 
 FRoomParameter* AFloorManager::SafeGetRoomParameter(int32 Index)

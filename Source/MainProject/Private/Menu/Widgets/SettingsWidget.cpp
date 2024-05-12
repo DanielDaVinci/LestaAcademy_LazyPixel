@@ -63,7 +63,7 @@ void USettingsWidget::OnMouseSensitivityValueChanged(float Value)
     const auto playerController = GetBasePlayerController();
     if (!playerController)
         return;
-
+    
     playerController->SetMouseSensitivity(Value);
 }
 

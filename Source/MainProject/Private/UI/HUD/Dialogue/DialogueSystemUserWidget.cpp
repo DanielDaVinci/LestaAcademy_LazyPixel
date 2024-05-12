@@ -8,7 +8,6 @@
 #include "UI/HUD/Dialogue/DialogUserWidget.h"
 #include "UI/HUD/Dialogue/MonologUserWidget.h"
 
-
 void UDialogueSystemUserWidget::SetDialogueData(const UDataTable* DialogueDataTable, bool bStartAnimation, bool bEndAnimation, bool bGamePause)
 {
     if (!DialogueDataTable)
@@ -36,10 +35,11 @@ void UDialogueSystemUserWidget::NativeOnInitialized()
 
 void UDialogueSystemUserWidget::StartView()
 {
+    OnStartDialogue.Broadcast();
     ClearMonolog();
     ClearDialog();
 
-    CurrentDialogRow = nullptr;
+    bKeyDowned = false;
     CurrentRowIndex = 0;
     SetDialogueRow(DialogueTableRows[CurrentRowIndex]);
 
@@ -82,6 +82,7 @@ void UDialogueSystemUserWidget::EndView()
     }
 
     SetVisibility(ESlateVisibility::Hidden);
+    OnEndDialogue.Broadcast();
 }
 
 void UDialogueSystemUserWidget::BindInteract()
@@ -105,9 +106,19 @@ void UDialogueSystemUserWidget::UnbindInteract()
     SetIsFocusable(false);
 }
 
-FReply UDialogueSystemUserWidget::NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
+FReply UDialogueSystemUserWidget::NativeOnKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
 {
     if (InKeyEvent.GetKey() == EKeys::E)
+    {
+        bKeyDowned = true;
+    }
+    
+    return Super::NativeOnKeyDown(InGeometry, InKeyEvent);
+}
+
+FReply UDialogueSystemUserWidget::NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
+{
+    if (InKeyEvent.GetKey() == EKeys::E && bKeyDowned)
     {
         OnInteract();
     }
@@ -145,8 +156,6 @@ void UDialogueSystemUserWidget::SetDialogueRow(const FDialogueTableRow* Dialogue
             MonologUserWidget->Clear();
             break;
     }
-
-    CurrentDialogRow = DialogueRow;
 }
 
 void UDialogueSystemUserWidget::LaunchMonolog(const FMonologParameters& MonologParameters)
