@@ -35,20 +35,21 @@ protected:
 
 private:
     void InitializeBars();
-    void BindEvents();
 
 protected:
+    void BindEvents();
+
     UFUNCTION()
     void OnHealthChanged(float DeltaHealth);
 
-private:
     UPROPERTY()
     TArray<UHealthCellWidget*> m_healthCells;
-    
-    void SetCurrentHealth();
-    void SetHealth(float Health, float OneCellHealth);
+
+private:
+    virtual void SetCurrentHealth();
+    virtual void SetHealth(float Health, float OneCellHealth);
 
 protected:
     APlayerCharacter* GetPlayerCharacter() const;
-    UHealthComponent* GetHealthComponent() const;
+    virtual UHealthComponent* GetHealthComponent() const;
 };

@@ -4,7 +4,6 @@
 #include "Character/Player/Components/HealthComponent.h"
 
 #include "AI/Characters/AIBaseCharacter.h"
-#include "AI/Characters/BossAICharacter.h"
 #include "Character/BaseCharacter.h"
 #include "NiagaraFunctionLibrary.h"
 
@@ -18,7 +17,7 @@ void UHealthComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-    if (GetOwner()->IsA<AAIBaseCharacter>() || GetOwner()->IsA<ABossAICharacter>())
+    if (GetOwner()->IsA<AAIBaseCharacter>())
     {
         m_health = GetMaxHealth();
     }
