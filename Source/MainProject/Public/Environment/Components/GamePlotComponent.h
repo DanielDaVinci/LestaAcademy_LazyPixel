@@ -7,6 +7,7 @@
 #include "Interface/PrePostBeginInterface.h"
 #include "GamePlotComponent.generated.h"
 
+class UProgressSaveGame;
 struct FPlotDialogue;
 class UFloorPlotDataAsset;
 class AFloorManager;
@@ -44,5 +45,6 @@ private:
     
 protected:
     AFloorManager* GetOwningFloorManager() const;
+    UProgressSaveGame* GetCurrentProgressSaveGame() const;
     
 };

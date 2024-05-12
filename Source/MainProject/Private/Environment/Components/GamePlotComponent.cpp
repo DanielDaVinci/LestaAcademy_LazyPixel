@@ -3,8 +3,10 @@
 
 #include "Environment/Components/GamePlotComponent.h"
 
+#include "MainProjectGameInstance.h"
 #include "Environment/FloorManager.h"
 #include "Environment/Data/FloorPlotDataAsset.h"
+#include "Kismet/GameplayStatics.h"
 #include "UI/HUD/Dialogue/DialogueSystemUserWidget.h"
 
 UGamePlotComponent::UGamePlotComponent()
@@ -43,8 +45,16 @@ void UGamePlotComponent::OnStartGame()
     UE_LOG(LogTemp, Error, TEXT("StartGame"));
     if (!FloorPlotDataAsset)
         return;
+
+    const auto progressSaveGame = GetCurrentProgressSaveGame();
+    if (!progressSaveGame)
+        return;
+
+    const FProgressData& progressData = progressSaveGame->ProgressData;
+    if (progressData.RoomIndex != -1)
+        return;
     
-    const auto FilteredPlot = FloorPlotDataAsset->GamePlots.FindByPredicate([&](const FPlotDialogue& Plot)
+    const auto FilteredPlot = FloorPlotDataAsset->GamePlots.FindByPredicate([](const FPlotDialogue& Plot)
     {
         return Plot.PlotEvent == EPlotEvent::StartGame;
     });
@@ -125,5 +135,11 @@ void UGamePlotComponent::OnLaunchTimerHandle(const FPlotDialogue* Plot)
 AFloorManager* UGamePlotComponent::GetOwningFloorManager() const
 {
     return Cast<AFloorManager>(GetOwner());
+}
+
+UProgressSaveGame* UGamePlotComponent::GetCurrentProgressSaveGame() const
+{
+    const auto gameInstance = Cast<UMainProjectGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+    return gameInstance ? gameInstance->GetCurrentSlot<UProgressSaveGame>() : nullptr;
 }
 
