@@ -3,28 +3,18 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Character/BaseCharacter.h"
+#include "AI/Characters/AIBaseCharacter.h"
 #include "BossAICharacter.generated.h"
 
-class ARoom;
-class UGoreComponent;
 class ABossAIController;
 class UBossPropertyPanelWidget;
 
 UCLASS()
-class MAINPROJECT_API ABossAICharacter : public ABaseCharacter
+class MAINPROJECT_API ABossAICharacter : public AAIBaseCharacter
 {
 	GENERATED_BODY()
 
 public:
-    ABossAICharacter(const FObjectInitializer& ObjInit);
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName = "GoreComponent")
-    UGoreComponent* pGoreComponent;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
-    ARoom* enemyRoom;
-
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
     UAnimMontage* deathAnimation;
 
@@ -54,9 +44,6 @@ private:
 
     UPROPERTY()
     UBossPropertyPanelWidget* pPropertyWidget = nullptr;
-
-    UFUNCTION()
-    void PlayImpactFX(float DeltaHealth);
 
     UFUNCTION()
     void SendEventToStateTree();

@@ -7,33 +7,15 @@
 #include "AI/Characters/BossAIController.h"
 #include "Character/Player/Components/HealthComponent.h"
 #include "Character/Player/Components/AIWeaponComponent.h"
-#include "Components/CapsuleComponent.h"
-#include "GameFramework/CharacterMovementComponent.h"
 #include "Environment/Room.h"
 #include "Gore/GoreComponent.h"
 #include "Weapon/MeleeWeapons/Sword.h"
 #include "UI/HUD/BossPropertyPanelWidget.h"
 
-ABossAICharacter::ABossAICharacter(const FObjectInitializer& ObjInit) 
-    : Super(ObjInit.SetDefaultSubobjectClass<UAIWeaponComponent>("WeaponComponent"))
-{
-    pGoreComponent = CreateDefaultSubobject<UGoreComponent>("GoreComponent");
-
-    AIControllerClass = ABossAIController::StaticClass();
-    AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
-
-    GetMesh()->SetCollisionObjectType(ECC_Enemy);
-    GetCapsuleComponent()->SetCollisionObjectType(ECC_Enemy);
-    GetCharacterMovement()->bUseControllerDesiredRotation = true;
-
-    bUseControllerRotationYaw = false;
-}
 
 void ABossAICharacter::PostInitializeComponents() 
 {
     Super::PostInitializeComponents();
-
-    pHealthComponent->OnHealthChanged.AddDynamic(this, &ABossAICharacter::PlayImpactFX);
     
     if (enemyRoom)
         enemyRoom->OnPlayerEnterEvent.AddUObject(this, &ABossAICharacter::StartBossLogic);
@@ -55,12 +37,6 @@ void ABossAICharacter::OnDeath()
     PlayAnimMontage(deathAnimation);
     pWeaponComponent->DisableAllWeaponsCollision();
     pPropertyWidget->RemoveFromViewport();
-}
-
-void ABossAICharacter::PlayImpactFX(float DeltaHealth) 
-{
-    pGoreComponent->PreDismemberment(FName("Spine"), GetActorRotation().Vector());
-    pGoreComponent->PostDismemberment(FName("Spine"), GetMesh());
 }
 
 void ABossAICharacter::SendEventToStateTree() 
