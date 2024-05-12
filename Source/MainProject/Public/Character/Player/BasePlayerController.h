@@ -55,6 +55,8 @@ public:
     FVector GetWorldPointUnderMouse() const;
     FVector GetDirectionToMouseHit(const FVector& StartPoint) const;
 
+    void SetMouseSensitivity(float Value) const;
+
 protected:
     virtual void BeginPlay() override;
 

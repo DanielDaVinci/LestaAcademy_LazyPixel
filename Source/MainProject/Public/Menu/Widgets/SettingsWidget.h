@@ -6,6 +6,10 @@
 #include "Blueprint/UserWidget.h"
 #include "SettingsWidget.generated.h"
 
+class ABasePlayerController;
+class APlayerCharacter;
+class USettingSaveGame;
+class USlider;
 class UButton;
 class UImage;
 
@@ -13,23 +17,48 @@ UCLASS()
 class MAINPROJECT_API USettingsWidget : public UUserWidget
 {
 	GENERATED_BODY()
-
-public:
-    void SetBackgroundVisibility(ESlateVisibility InVisibility) const;
     
 protected:
     UPROPERTY(meta = (BindWidget))
-    UImage* BackgroundImage;
+    USlider* MusicSlider;
+
+    UPROPERTY(meta = (BindWidget))
+    USlider* SoundSlider;
+
+    UPROPERTY(meta = (BindWidget))
+    USlider* MouseSensitivitySlider;
     
     UPROPERTY(meta = (BindWidget))
     UButton* Exit;
 
     virtual void NativeOnInitialized() override;
+    virtual void BeginDestroy() override;
+
+    UFUNCTION()
+    void EndPlay(AActor* Actor , EEndPlayReason::Type EndPlayReason);
 
 protected:
     void BindActions();
 
-private:
+    UFUNCTION(BlueprintImplementableEvent)
+    void OnMusicValueChanged(float Value);
+
+    UFUNCTION(BlueprintImplementableEvent)
+    void OnSoundValueChanged(float Value);
+
+    UFUNCTION()
+    void OnMouseSensitivityValueChanged(float Value);
+    
     UFUNCTION()
     void OnExit();
+    
+    void ApplySavedData() const;
+    void SaveData() const;
+
+private:
+    const FString SettingSlotName = "SettingSlot";
+
+private:
+    USettingSaveGame* GetSettingSaveGame() const;
+    ABasePlayerController* GetBasePlayerController() const;
 };

@@ -3,6 +3,7 @@
 
 #include "Character/Player/BasePlayerController.h"
 
+#include "GameFramework/PlayerInput.h"
 #include "Kismet/GameplayStatics.h"
 
 ABasePlayerController::ABasePlayerController()
@@ -46,6 +47,11 @@ FVector ABasePlayerController::GetDirectionToMouseHit(const FVector& StartPoint)
     return GetWorldPointUnderMouse() - StartPoint;
 }
 
+void ABasePlayerController::SetMouseSensitivity(float Value) const
+{
+    PlayerInput.Get()->SetMouseSensitivity(Value);
+}
+
 void ABasePlayerController::SetGameModeControl()
 {
     CurrentMouseCursor = EMouseCursor::Crosshairs;
@@ -68,7 +74,7 @@ void ABasePlayerController::BeginPlay()
     Super::BeginPlay();
 
     SetGameModeControl();
-    UGameplayStatics::SetViewportMouseCaptureMode(GetWorld(), EMouseCaptureMode::CapturePermanently_IncludingInitialMouseDown);
+    // UGameplayStatics::SetViewportMouseCaptureMode(GetWorld(), EMouseCaptureMode::CapturePermanently_IncludingInitialMouseDown);
 }
 
 void ABasePlayerController::SetupInputComponent()

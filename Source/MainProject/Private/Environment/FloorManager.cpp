@@ -107,6 +107,11 @@ void AFloorManager::ApplySavedData()
     
     m_currentRoomIndex = progressSaveGame->ProgressData.RoomIndex;
     SetupRoomForStartup(m_currentRoomIndex);
+    
+    if (m_currentRoomIndex >= 0)
+    {
+        OnPlayerEnterRoom(m_currentRoomIndex);
+    }
 }
 
 void AFloorManager::SaveData()

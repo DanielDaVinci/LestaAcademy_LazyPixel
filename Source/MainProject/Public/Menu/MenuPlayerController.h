@@ -3,14 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Character/Player/BasePlayerController.h"
 #include "GameFramework/PlayerController.h"
 #include "MenuPlayerController.generated.h"
 
-/**
- * 
- */
 UCLASS()
-class MAINPROJECT_API AMenuPlayerController : public APlayerController
+class MAINPROJECT_API AMenuPlayerController : public ABasePlayerController
 {
 	GENERATED_BODY()
 

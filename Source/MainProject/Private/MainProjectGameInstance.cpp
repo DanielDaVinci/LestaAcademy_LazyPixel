@@ -8,16 +8,7 @@ void UMainProjectGameInstance::SaveCurrentSlot() const
 {
     OnPreSaveCurrentSlotEvent.Broadcast(GetCurrentSlot());
     
-    if (currentSaveGame)
-    {
-        if (const auto progressSaveGame = GetCurrentSlot<UProgressSaveGame>())
-        {
-            auto& progressData = progressSaveGame->ProgressData;
-            progressData.ScreenShotPath = TakeScreenShot(currentSlotName, true);
-        }
-    }
     SaveSlot(currentSlotName, currentSaveGame);
-    
     OnPostSaveCurrentSlotEvent.Broadcast(GetCurrentSlot());
 }
 
@@ -30,16 +21,6 @@ void UMainProjectGameInstance::DeleteSlot(const FString& SlotName)
 {
     UE_LOG(LogTemp, Error, TEXT("Delete slot: %s"), *SlotName);
     UGameplayStatics::DeleteGameInSlot(SlotName, 0);
-}
-
-FString UMainProjectGameInstance::TakeScreenShot(const FString& ScreenShotName, bool bCaptureUI)
-{
-    FScreenshotRequest::RequestScreenshot(ScreenShotName, bCaptureUI, false);
-#if UE_GAME
-    return "/Saved/Screenshots/Windows/" + ScreenShotName;
-#elif UE_EDITOR
-    return "/Saved/Screeshots/WindowsEditor/" + ScreenShotName;
-#endif
 }
 
 void UMainProjectGameInstance::SetSlotParameters(const FString& SlotName, int32 LevelIndex, int32 RoomIndex)

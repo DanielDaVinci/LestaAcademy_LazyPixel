@@ -6,13 +6,12 @@
 
 AMenuPlayerController::AMenuPlayerController()
 {
-    SetShowMouseCursor(true);
+    bShowMouseCursor = true;
 }
 
 void AMenuPlayerController::BeginPlay()
 {
     Super::BeginPlay();
 
-    CurrentMouseCursor = EMouseCursor::Default;
-    SetInputMode(FInputModeUIOnly());
+    SetUIModeControl();
 }

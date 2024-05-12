@@ -11,22 +11,19 @@ struct FProgressData
 {
     GENERATED_BODY()
 
-    UPROPERTY(EditAnywhere, Category = "Data|Environment")
+    UPROPERTY()
     uint32 LevelIndex = 0;
 
-    UPROPERTY(EditAnywhere, Category = "Data|Environment")
+    UPROPERTY()
     uint32 RoomIndex = -1;
 
-    UPROPERTY(EditAnywhere, Category = "Data|UI")
-    FString ScreenShotPath = "";
-
-    UPROPERTY(EditAnywhere, Category = "Data|Player Properties")
+    UPROPERTY()
     float HealthPercent = 1.0f;
 
-    UPROPERTY(EditAnywhere, Category = "Data|Player Properties")
+    UPROPERTY()
     float AbilityCharge = 0.0f;
 
-    UPROPERTY(EditAnywhere, Category = "Data|Player Properties")
+    UPROPERTY()
     uint32 BulletsNum = 0;
     
 };
