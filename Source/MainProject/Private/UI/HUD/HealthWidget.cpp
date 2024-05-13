@@ -49,7 +49,6 @@ void UHealthWidget::BindEvents()
     {
         pHealthComponent->OnHealthChanged.AddDynamic(this, &UHealthWidget::OnHealthChanged);
         SetCurrentHealth();
-        
     }
 }
 

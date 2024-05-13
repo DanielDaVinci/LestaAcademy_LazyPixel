@@ -26,6 +26,9 @@ public:
     DECLARE_MULTICAST_DELEGATE_OneParam(FOnLevelRoomFirstKillSignature, int32);
     FOnLevelRoomFirstKillSignature OnLevelRoomFirstKill;
 
+    DECLARE_MULTICAST_DELEGATE(FOnPlayerEnterEndLevelRoomSignature);
+    FOnPlayerEnterEndLevelRoomSignature OnPlayerEnterEndLevelRoom;
+
     DECLARE_MULTICAST_DELEGATE(FOnPlayerInteractEndLevelRoomSignature);
     FOnPlayerInteractEndLevelRoomSignature OnPlayerInteractEndLevelRoom;
     
@@ -73,7 +76,8 @@ private:
     void SetupRoomForFight(int32 Index);
     void SetupRoomAfterExit(int32 Index);
     void CleanRoom(int32 Index);
-    
+
+    void OnPlayerEnterEndRoom();
     void OnPlayerInteractEndRoom();
 
     FRoomParameter* SafeGetRoomParameter(int32 Index);

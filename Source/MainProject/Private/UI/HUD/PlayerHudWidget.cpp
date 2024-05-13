@@ -16,19 +16,7 @@ void UPlayerHudWidget::NativeOnInitialized()
 
 void UPlayerHudWidget::BindActions()
 {
-    const auto pHealthComponent = GetHealthComponent();
-    if (!pHealthComponent)
-        return;
     
-    pHealthComponent->OnHealthChanged.AddDynamic(this, &UPlayerHudWidget::OnHealthChanged);
-}
-
-void UPlayerHudWidget::OnHealthChanged(float DeltaHealth)
-{
-    if (!IsAnimationPlaying(pDamageIndicatorAnimation) && DeltaHealth < 0.0f)
-    {
-        PlayAnimation(pDamageIndicatorAnimation);
-    }
 }
 
 ABaseCharacter* UPlayerHudWidget::GetOwningBaseCharacter() const

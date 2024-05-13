@@ -50,13 +50,14 @@ void ULosePanelWidget::OnMenuButtonClicked()
 
 void ULosePanelWidget::OnPlayerDied()
 {
+    if (const auto playerController = GetBasePlayerController())
+    {
+        playerController->SetUIModeControl();
+    }
+    
     FTimerHandle deathTimer;
     GetWorld()->GetTimerManager().SetTimer(deathTimer, [this]()
     {
-        if (const auto playerController = GetBasePlayerController())
-        {
-            playerController->SetUIModeControl();
-        }
         SetVisibility(ESlateVisibility::Visible);
     }, losePanelDelay, false);
 }

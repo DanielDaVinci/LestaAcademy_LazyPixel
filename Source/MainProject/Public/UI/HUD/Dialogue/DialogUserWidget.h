@@ -19,7 +19,10 @@ class MAINPROJECT_API UDialogUserWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
-    void SetDialog(const FDialogParameters& DialogParameters) const;
+    DECLARE_DELEGATE(FOnAnimationEndSignature);
+    FOnAnimationEndSignature OnAnimationEnd;
+    
+    void SetDialog(const FDialogParameters& DialogParameters);
 
     void Clear() const;
 
@@ -52,4 +55,22 @@ private:
     void DisplayRightPanel(const FPersonParameter& PersonParameter) const;
 
     static void SetZOrder(const UWidget* Widget, int32 ZOrder);
+
+protected:
+    void StartAnimation(const FText& Text, float Duration);
+    void UpdateAnimation(float DeltaTime);
+    void EndAnimation();
+
+    virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
+
+private:
+    bool bInAnimation = false;
+    float AnimationDuration = 0.0f;
+    float AnimationTimeRate = 0.0f;
+    FString DialogString = "";
+    
+    FTimerHandle AnimationTimerHandle;
+    float CurrentAnimationTime = 0.0f;
+    
+    static FString ConvertHotCommands(const FString& Value);
 };

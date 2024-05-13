@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "LoadUserWidget.generated.h"
 
+class ABasePlayerController;
 class UBackgroundBlur;
 class UProgressBar;
 
@@ -59,4 +60,6 @@ private:
     void StartFinishAnimation();
     void UpdateFinishAnimation();
     void EndFinishAnimation();
+
+    ABasePlayerController* GetBasePlayerController() const;
 };

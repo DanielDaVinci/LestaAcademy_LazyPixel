@@ -41,6 +41,12 @@ void AEndRoom::NotifyActorBeginOverlap(AActor* OtherActor)
     if (!playerController)
         return;
 
+    if (!m_bIsEntered)
+    {
+        OnPlayerEnterEvent.Broadcast();
+        m_bIsEntered = true;
+    }
+
     pInteractionWidgetComponent->SetVisibility(true);
     playerController->OnInteract.BindUObject(this, &AEndRoom::OnInteract, playerController);
 }

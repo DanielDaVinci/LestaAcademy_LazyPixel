@@ -16,6 +16,9 @@ class MAINPROJECT_API AEndRoom : public AActor
 	GENERATED_BODY()
 	
 public:
+    DECLARE_MULTICAST_DELEGATE(FOnPlayerEnterSignature)
+    FOnPlayerEnterSignature OnPlayerEnterEvent;
+    
     DECLARE_MULTICAST_DELEGATE(FOnPlayerInteractSignature);
     FOnPlayerInteractSignature OnPlayerInteractEvent;
     

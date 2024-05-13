@@ -4,6 +4,7 @@
 #include "Menu/Widgets/LoadUserWidget.h"
 
 #include "MainProjectGameInstance.h"
+#include "Character/Player/BasePlayerController.h"
 #include "Components/BackgroundBlur.h"
 #include "Components/ProgressBar.h"
 
@@ -33,6 +34,11 @@ void ULoadUserWidget::OnPreAsyncLevelLoad()
     const auto progressSaveGame = projectGameInstance->GetCurrentSlot<UProgressSaveGame>();
     if (!progressSaveGame)
         return;
+
+    if (const auto playerController = GetBasePlayerController())
+    {
+        playerController->SetUIModeControl();
+    }
     
     SetVisibility(ESlateVisibility::Visible);
     StartProgressLoad();
@@ -109,4 +115,9 @@ void ULoadUserWidget::EndFinishAnimation()
         return;
     
     projectGameInstance->LevelLoad(m_loadLevelName);
+}
+
+ABasePlayerController* ULoadUserWidget::GetBasePlayerController() const
+{
+    return Cast<ABasePlayerController>(GetOwningPlayer());
 }

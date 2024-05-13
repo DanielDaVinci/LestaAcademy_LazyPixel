@@ -22,9 +22,6 @@ class MAINPROJECT_API UPlayerHudWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
-public:
-    
-    
 protected:
     UPROPERTY(meta = (BindWidget))
     UGameStartUserWidget* pGameStartUserWidget;
@@ -41,17 +38,10 @@ protected:
     UPROPERTY(meta = (BindWidget))
     UImpactWidget* pImpactWidget;
 
-    UPROPERTY(meta = (BindWidgetAnim), Transient)
-    UWidgetAnimation* pDamageIndicatorAnimation;
-
     virtual void NativeOnInitialized() override;
 
 private:
     void BindActions();
-    
-protected:
-    UFUNCTION()
-    void OnHealthChanged(float DeltaHealth);
 
 protected:
     ABaseCharacter* GetOwningBaseCharacter() const;

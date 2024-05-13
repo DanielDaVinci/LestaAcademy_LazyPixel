@@ -42,7 +42,7 @@ void UDialogueSystemUserWidget::StartView()
     bKeyDowned = false;
     CurrentRowIndex = 0;
     SetDialogueRow(DialogueTableRows[CurrentRowIndex]);
-
+    
     if (bWithGamePause)
     {
         UGameplayStatics::SetGamePaused(GetWorld(), true);
@@ -170,8 +170,14 @@ void UDialogueSystemUserWidget::LaunchMonolog(const FMonologParameters& MonologP
     MonologUserWidget->SetMonolog(MonologParameters);
 }
 
-void UDialogueSystemUserWidget::LaunchDialog(const FDialogParameters& DialogParameters) const
+void UDialogueSystemUserWidget::LaunchDialog(const FDialogParameters& DialogParameters)
 {
+    bCanNext = false;
+    DialogUserWidget->OnAnimationEnd.BindWeakLambda(this, [this]()
+    {
+       bCanNext = true; 
+    });
+    
     DialogUserWidget->SetVisibility(ESlateVisibility::Visible);
     DialogUserWidget->SetDialog(DialogParameters);
 }

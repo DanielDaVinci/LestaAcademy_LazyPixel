@@ -9,10 +9,8 @@
 #include "Components/RichTextBlock.h"
 #include "Components/TextBlock.h"
 
-void UDialogUserWidget::SetDialog(const FDialogParameters& DialogParameters) const
+void UDialogUserWidget::SetDialog(const FDialogParameters& DialogParameters)
 {
-    DialogueText->SetText(DialogParameters.Text);
-    
     if (DialogParameters.bLeftDisplay)
     {
         SetZOrder(RightDialoguePanel, 0);
@@ -27,6 +25,8 @@ void UDialogUserWidget::SetDialog(const FDialogParameters& DialogParameters) con
         LeftDialoguePanel->SetRenderOpacity(0.5f);
         DisplayRightPanel(DialogParameters.RightPersonParameters);
     }
+
+    StartAnimation(DialogParameters.Text, DialogParameters.AnimationDuration);
 }
 
 void UDialogUserWidget::Clear() const
@@ -66,4 +66,60 @@ void UDialogUserWidget::SetZOrder(const UWidget* Widget, int32 ZOrder)
     {
         CanvasPanelSlot->SetZOrder(ZOrder);
     }
+}
+
+void UDialogUserWidget::StartAnimation(const FText& Text, float Duration)
+{
+    DialogString = ConvertHotCommands(Text.ToString());
+    AnimationDuration = Duration;
+    AnimationTimeRate = AnimationDuration / DialogString.Len();
+
+    if (!GetWorld())
+        return;
+
+    DialogueText->SetText({});
+    CurrentAnimationTime = 0.0f;
+    bInAnimation = true;
+}
+
+void UDialogUserWidget::UpdateAnimation(float DeltaTime)
+{
+    CurrentAnimationTime += DeltaTime;
+    const int32 Count = CurrentAnimationTime / AnimationTimeRate;
+
+    if (CurrentAnimationTime >= AnimationDuration)
+    {
+        GetWorld()->GetTimerManager().ClearTimer(AnimationTimerHandle);
+        EndAnimation();
+        return;
+    }
+
+    const FString CurrentText = DialogString.Left(Count - 1) + TEXT("<glitch>") + DialogString[Count] + TEXT("</>");
+    DialogueText->SetText(FText::FromString(CurrentText));
+}
+
+void UDialogUserWidget::EndAnimation()
+{
+    bInAnimation = false;
+    DialogueText->SetText(FText::FromString(DialogString));
+    OnAnimationEnd.ExecuteIfBound();
+}
+
+void UDialogUserWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+{
+    Super::NativeTick(MyGeometry, InDeltaTime);
+
+    if (bInAnimation)
+    {
+        UpdateAnimation(InDeltaTime);
+    }
+}
+
+FString UDialogUserWidget::ConvertHotCommands(const FString& Value)
+{
+    const FString lineBreakCodeFrom = TEXT("{lb}");
+    const FString lineBreakCodeTo = TEXT("\n");
+    const FString Result = Value.Replace(*lineBreakCodeFrom, *lineBreakCodeTo);
+
+    return Result;
 }

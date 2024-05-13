@@ -34,6 +34,12 @@ USTRUCT()
 struct FDialogParameters
 {
     GENERATED_BODY()
+    
+    UPROPERTY(EditAnywhere)
+    bool bWithAnimation = true;
+
+    UPROPERTY(EditAnywhere, meta = (EditConditionHides, EditCondition="bWithAnimation"))
+    float AnimationDuration = 1.0f;
 
     UPROPERTY(EditAnywhere)
     FText Text;

@@ -37,6 +37,7 @@ void UGamePlotComponent::BindEvents()
         FloorManager->OnPlayerEnterLevelRoom.AddUObject(this, &UGamePlotComponent::OnPlayerEnterRoom);
         FloorManager->OnLevelRoomWaveEnd.AddUObject(this, &UGamePlotComponent::OnRoomWaveEnd);
         FloorManager->OnLevelRoomFirstKill.AddUObject(this, &UGamePlotComponent::OnRoomFirstKill);
+        FloorManager->OnPlayerEnterEndLevelRoom.AddUObject(this, &UGamePlotComponent::OnPlayerEnterEndRoom);
         FloorManager->OnPlayerInteractEndLevelRoom.AddUObject(this, &UGamePlotComponent::OnPlayerInteractEndRoom);
     }
 }
@@ -96,6 +97,19 @@ void UGamePlotComponent::OnRoomFirstKill(int32 RoomIndex)
     const auto FilteredPlot = FloorPlotDataAsset->GamePlots.FindByPredicate([&RoomIndex](const FPlotDialogue& Plot)
     {
         return Plot.PlotEvent == EPlotEvent::KillFirstEnemy && Plot.RoomIndex == RoomIndex;
+    });
+
+    LaunchPlot(FilteredPlot);
+}
+
+void UGamePlotComponent::OnPlayerEnterEndRoom()
+{
+    if (!FloorPlotDataAsset)
+        return;
+
+    const auto FilteredPlot = FloorPlotDataAsset->GamePlots.FindByPredicate([](const FPlotDialogue& Plot)
+    {
+        return Plot.PlotEvent == EPlotEvent::EnterEndRoom;
     });
 
     LaunchPlot(FilteredPlot);

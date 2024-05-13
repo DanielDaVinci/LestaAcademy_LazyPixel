@@ -20,7 +20,8 @@ protected:
     UHealthComponent* GetHealthComponent() const override;
 
 private:
-    ABaseCharacter* pOwnerCharacter;
+    UPROPERTY()
+    ABaseCharacter* pOwnerCharacter = nullptr;
 
     void SetCurrentHealth() override;
     void SetHealth(float Health, float OneCellHealth) override;

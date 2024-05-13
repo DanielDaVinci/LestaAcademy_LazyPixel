@@ -13,6 +13,7 @@ enum class EPlotEvent : uint8
     EnterRoom,
     WaveEnd,
     KillFirstEnemy,
+    EnterEndRoom,
     InteractEndRoom
 };
 

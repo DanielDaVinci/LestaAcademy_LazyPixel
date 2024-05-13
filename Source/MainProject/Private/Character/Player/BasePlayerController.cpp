@@ -65,6 +65,7 @@ void ABasePlayerController::SetUIModeControl()
 {
     CurrentMouseCursor = EMouseCursor::Default;
     CurrentGameMode = EGameMode::UI;
+    
     SetInputMode(FInputModeUIOnly());
 }
 
@@ -106,11 +107,17 @@ void ABasePlayerController::HandleMoveRight(float Amount)
 
 void ABasePlayerController::HandleMeleeAttack()
 {
+    if (CurrentGameMode != EGameMode::Game)
+        return;
+    
     OnMeleeAttack.Broadcast();
 }
 
 void ABasePlayerController::HandleRangeAttack()
 {
+    if (CurrentGameMode != EGameMode::Game)
+        return;
+    
     OnRangeAttack.Broadcast();
 }
 

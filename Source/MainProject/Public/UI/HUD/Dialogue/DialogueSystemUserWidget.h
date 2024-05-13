@@ -82,7 +82,7 @@ private:
 protected:
     void SetDialogueRow(const FDialogueTableRow* DialogueRow);
     void LaunchMonolog(const FMonologParameters& MonologParameters);
-    void LaunchDialog(const FDialogParameters& DialogParameters) const;
+    void LaunchDialog(const FDialogParameters& DialogParameters);
 
 private:
     void ClearMonolog() const;

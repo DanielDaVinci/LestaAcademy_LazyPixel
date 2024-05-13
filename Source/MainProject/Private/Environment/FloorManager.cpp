@@ -71,6 +71,7 @@ void AFloorManager::BindEvents()
 
     if (endRoom)
     {
+        endRoom->OnPlayerEnterEvent.AddUObject(this, &AFloorManager::OnPlayerEnterEndRoom);
         endRoom->OnPlayerInteractEvent.AddUObject(this, &AFloorManager::OnPlayerInteractEndRoom);
     }
 }
@@ -209,9 +210,14 @@ void AFloorManager::CleanRoom(int32 Index)
     room->DestroyActorsInRoom();
 }
 
-void AFloorManager::OnPlayerInteractEndRoom()
+void AFloorManager::OnPlayerEnterEndRoom()
 {
     SetupRoomAfterExit(m_currentRoomIndex);
+    OnPlayerEnterEndLevelRoom.Broadcast();
+}
+
+void AFloorManager::OnPlayerInteractEndRoom()
+{
     OnPlayerInteractEndLevelRoom.Broadcast();
 }
 
