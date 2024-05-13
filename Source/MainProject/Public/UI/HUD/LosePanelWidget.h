@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "LosePanelWidget.generated.h"
 
+class ABasePlayerController;
 class UHealthComponent;
 class ABaseCharacter;
 class UButton;
@@ -41,6 +42,7 @@ protected:
     void OnPlayerDied();
 
 protected:
+    ABasePlayerController* GetBasePlayerController() const;
     ABaseCharacter* GetOwningPlayerCharacter() const;
     UHealthComponent* GetHealthComponent() const;
 };

@@ -3,6 +3,7 @@
 
 #include "UI/HUD/LosePanelWidget.h"
 
+#include "Character/Player/BasePlayerController.h"
 #include "Character/Player/PlayerCharacter.h"
 #include "Character/Player/Components/HealthComponent.h"
 #include "Components/Button.h"
@@ -52,9 +53,17 @@ void ULosePanelWidget::OnPlayerDied()
     FTimerHandle deathTimer;
     GetWorld()->GetTimerManager().SetTimer(deathTimer, [this]()
     {
+        if (const auto playerController = GetBasePlayerController())
+        {
+            playerController->SetUIModeControl();
+        }
         SetVisibility(ESlateVisibility::Visible);
-        
     }, losePanelDelay, false);
+}
+
+ABasePlayerController* ULosePanelWidget::GetBasePlayerController() const
+{
+    return Cast<ABasePlayerController>(GetOwningPlayer());
 }
 
 ABaseCharacter* ULosePanelWidget::GetOwningPlayerCharacter() const
