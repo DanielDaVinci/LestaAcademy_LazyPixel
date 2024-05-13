@@ -24,6 +24,7 @@ void AGun::MakeShoot(const FVector& Point)
     projectile->SetOwner(GetOwner());
     projectile->SetShootDirection(shootDirection);
     projectile->InitProperties(projectileProperties);
+    projectile->SetRangeWeaponCreator(this);
     projectile->FinishSpawning(spawnTransform);
     
     if (!isInfiniteAmmo)
