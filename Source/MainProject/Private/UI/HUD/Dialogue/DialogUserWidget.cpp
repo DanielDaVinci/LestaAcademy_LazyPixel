@@ -94,7 +94,9 @@ void UDialogUserWidget::UpdateAnimation(float DeltaTime)
         return;
     }
 
-    const FString CurrentText = DialogString.Left(Count - 1) + TEXT("<glitch>") + DialogString[Count] + TEXT("</>");
+    // const FString CurrentText = DialogString.Left(Count - 1) 
+    //     + TEXT("<glitch>") + DialogString.Mid(Count, 7) + TEXT("</>");
+    const FString CurrentText = DialogString.Left(Count - 1) + GetGlitch(Count, 7);
     DialogueText->SetText(FText::FromString(CurrentText));
 }
 
@@ -122,4 +124,16 @@ FString UDialogUserWidget::ConvertHotCommands(const FString& Value)
     const FString Result = Value.Replace(*lineBreakCodeFrom, *lineBreakCodeTo);
 
     return Result;
+}
+
+FString UDialogUserWidget::GetGlitch(int32 Start, int32 Count)
+{
+    const FString SubString = DialogString.Mid(Start, Count);
+    const int32 lgIndex = SubString.Find("\n");
+    if (lgIndex == INDEX_NONE)
+        return TEXT("<glitch>") + SubString + TEXT("</>");
+
+    return TEXT("<glitch>") + SubString.Mid(0, lgIndex) + TEXT("</>")
+        + "\n"
+        + TEXT("<glitch>") + SubString.Mid(lgIndex + 1, Count - lgIndex - 1) + TEXT("</>");
 }

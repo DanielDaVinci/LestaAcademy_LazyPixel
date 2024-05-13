@@ -73,4 +73,5 @@ private:
     float CurrentAnimationTime = 0.0f;
     
     static FString ConvertHotCommands(const FString& Value);
+    FString GetGlitch(int32 Start, int32 Count);
 };
