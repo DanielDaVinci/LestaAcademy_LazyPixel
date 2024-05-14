@@ -8,6 +8,7 @@
 
 class ABossAIController;
 class UBossPropertyPanelWidget;
+class AEndRoom;
 
 UCLASS()
 class MAINPROJECT_API ABossAICharacter : public AAIBaseCharacter
@@ -20,6 +21,18 @@ public:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
     TSubclassOf<UUserWidget> propertyWidgetClass;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+    TSubclassOf<UUserWidget> winWidgetClass;
+
+    UPROPERTY(EditAnywhere, Category = "Datatables")
+    UDataTable* SecondPhaseDataTable;
+
+    UPROPERTY(EditAnywhere, Category = "Datatables")
+    UDataTable* EpilogueDataTable;
+
+    UPROPERTY(EditAnywhere, Category = "EndLevel")
+    TSubclassOf<AEndRoom> endLevelClass;
 
     uint8 GetShortCounter()      { return shortComboCounter; }
     uint8 GetLongCounter ()      { return longComboCounter;  }
@@ -34,6 +47,18 @@ protected:
     virtual void PostInitializeComponents() override;
     virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
     virtual void OnDeath();
+
+    UFUNCTION()
+    void OnDeathInteract();
+
+    UFUNCTION()
+    void OnWinWidget();
+
+    UFUNCTION(BlueprintImplementableEvent)
+    void OnBossStartFight();
+
+    UFUNCTION(BlueprintImplementableEvent)
+    void OnBossSecondPhase();
 	
 private:
     uint8 shortComboCounter;
@@ -41,6 +66,8 @@ private:
     uint8 prevComboIndex;
     bool  abilityCharged = true;
     bool  isFirstPhase = true;
+    FTimerHandle m_DeathTimer;
+    void OnDeathTimer();
 
     UPROPERTY()
     UBossPropertyPanelWidget* pPropertyWidget = nullptr;
