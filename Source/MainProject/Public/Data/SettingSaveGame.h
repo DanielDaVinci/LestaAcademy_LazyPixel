@@ -16,9 +16,6 @@ struct FSettingData
 
     UPROPERTY()
     float SoundValue = 100.0f;
-
-    UPROPERTY()
-    float MouseSensitivity = 1.0f;
     
 };
 

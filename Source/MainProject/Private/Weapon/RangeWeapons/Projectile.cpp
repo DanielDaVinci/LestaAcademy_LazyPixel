@@ -27,8 +27,13 @@ void AProjectile::InitProperties(const FProjectileProperties& projProperties)
     m_damage = projProperties.damage;
     trailColor = projProperties.trailColor;
     pCollisionComponent->SetCollisionObjectType(projProperties.projType);
+    
     if (projProperties.projType == ECC_Enemy)
+    {
         pCollisionComponent->SetCollisionResponseToChannel(ECC_Enemy, ECR_Ignore);
+        pCollisionComponent->SetCollisionResponseToChannel(ECC_Pawn, ECR_Block);
+    }
+    
 }
 
 void AProjectile::SetRangeWeaponCreator(AGun* RangeWeapon)

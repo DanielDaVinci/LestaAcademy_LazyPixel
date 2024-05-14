@@ -30,6 +30,9 @@ protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI", meta = (ClampMin = "1"))
     int32 cellsCount = 10.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+    bool bIsActive = true;
     
     virtual void NativeOnInitialized() override;
 

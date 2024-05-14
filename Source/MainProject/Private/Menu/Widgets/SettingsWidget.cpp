@@ -51,20 +51,6 @@ void USettingsWidget::BindActions()
     {
         SoundSlider->OnValueChanged.AddDynamic(this, &USettingsWidget::OnSoundValueChanged);
     }
-
-    if (MouseSensitivitySlider)
-    {
-        MouseSensitivitySlider->OnValueChanged.AddDynamic(this, &USettingsWidget::OnMouseSensitivityValueChanged);
-    }
-}
-
-void USettingsWidget::OnMouseSensitivityValueChanged(float Value)
-{
-    const auto playerController = GetBasePlayerController();
-    if (!playerController)
-        return;
-    
-    playerController->SetMouseSensitivity(Value);
 }
 
 void USettingsWidget::OnExit()
@@ -80,7 +66,6 @@ void USettingsWidget::ApplySavedData() const
     
     MusicSlider->SetValue(settingSaveGame->SettingData.MusicValue);
     SoundSlider->SetValue(settingSaveGame->SettingData.SoundValue);
-    MouseSensitivitySlider->SetValue(settingSaveGame->SettingData.MouseSensitivity);
 }
 
 void USettingsWidget::SaveData() const
@@ -91,7 +76,6 @@ void USettingsWidget::SaveData() const
     
     settingSaveGame->SettingData.MusicValue = MusicSlider->GetValue();
     settingSaveGame->SettingData.SoundValue = SoundSlider->GetValue();
-    settingSaveGame->SettingData.MouseSensitivity = MouseSensitivitySlider->GetValue();
     
     const auto gameInstance = GetGameInstance<UMainProjectGameInstance>();
     if (!gameInstance)

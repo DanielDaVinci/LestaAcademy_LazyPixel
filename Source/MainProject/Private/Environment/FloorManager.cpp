@@ -199,6 +199,7 @@ void AFloorManager::SetupRoomAfterExit(int32 Index)
     
     room->SetCeilingVisibility(true);
     room->TurnOffLight();
+    room->CloseAllDoors();
 }
 
 void AFloorManager::CleanRoom(int32 Index)

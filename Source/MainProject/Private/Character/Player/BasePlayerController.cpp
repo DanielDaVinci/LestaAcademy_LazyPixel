@@ -97,11 +97,17 @@ void ABasePlayerController::SetupInputComponent()
 
 void ABasePlayerController::HandleMoveForward(float Amount)
 {
+    if (CurrentGameMode != EGameMode::Game)
+        return;
+    
     OnMoveForward.Broadcast(Amount);
 }
 
 void ABasePlayerController::HandleMoveRight(float Amount)
 {
+    if (CurrentGameMode != EGameMode::Game)
+        return;
+    
     OnMoveRight.Broadcast(Amount);
 }
 
@@ -123,26 +129,41 @@ void ABasePlayerController::HandleRangeAttack()
 
 void ABasePlayerController::HandleDash()
 {
+    if (CurrentGameMode != EGameMode::Game)
+        return;
+    
     OnDash.Broadcast();
 }
 
 void ABasePlayerController::HandleCustomAbilityPressed()
 {
+    if (CurrentGameMode != EGameMode::Game)
+        return;
+    
     OnCustomAbilityPressed.Broadcast();
 }
 
 void ABasePlayerController::HandleCustomAbilityReleased()
 {
+    if (CurrentGameMode != EGameMode::Game)
+        return;
+    
     OnCustomAbilityReleased.Broadcast();
 }
 
 void ABasePlayerController::HandleInteract()
 {
+    if (CurrentGameMode != EGameMode::Game)
+        return;
+    
     OnInteract.ExecuteIfBound();
 }
 
 void ABasePlayerController::HandleEscape()
 {
+    if (CurrentGameMode != EGameMode::Game)
+        return;
+    
     OnEscape.Broadcast();
 }
 

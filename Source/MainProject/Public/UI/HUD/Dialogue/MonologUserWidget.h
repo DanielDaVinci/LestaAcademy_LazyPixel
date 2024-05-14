@@ -7,6 +7,7 @@
 #include "Blueprint/UserWidget.h"
 #include "MonologUserWidget.generated.h"
 
+class ABasePlayerController;
 class UImage;
 class UCanvasPanel;
 
@@ -44,5 +45,7 @@ private:
     
     UFUNCTION()
     void OnFinishedSwitchAnimation();
+
+    ABasePlayerController* GetBasePlayerController() const;
     
 };

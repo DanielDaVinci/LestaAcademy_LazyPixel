@@ -4,12 +4,14 @@
 #include "UI/HUD/Dialogue/MonologUserWidget.h"
 
 #include "Animation/WidgetAnimation.h"
+#include "Character/Player/BasePlayerController.h"
 #include "Components/Image.h"
 #include "UI/HUD/Dialogue/DialogueData.h"
 
 void UMonologUserWidget::SetMonolog(const FMonologParameters& MonologParameters)
 {
     SetMonologParameters(MonologParameters);
+    
     if (MonologParameters.bWithAnimation)
     {
         StartSwitchAnimation();
@@ -67,4 +69,9 @@ void UMonologUserWidget::OnFinishedSwitchAnimation()
     NextMonologImage->SetRenderOpacity(0.0f);
 
     OnAnimationEnd.ExecuteIfBound();
+}
+
+ABasePlayerController* UMonologUserWidget::GetBasePlayerController() const
+{
+    return Cast<ABasePlayerController>(GetOwningPlayer());
 }

@@ -24,9 +24,6 @@ protected:
 
     UPROPERTY(meta = (BindWidget))
     USlider* SoundSlider;
-
-    UPROPERTY(meta = (BindWidget))
-    USlider* MouseSensitivitySlider;
     
     UPROPERTY(meta = (BindWidget))
     UButton* Exit;
@@ -45,9 +42,6 @@ protected:
 
     UFUNCTION(BlueprintImplementableEvent)
     void OnSoundValueChanged(float Value);
-
-    UFUNCTION()
-    void OnMouseSensitivityValueChanged(float Value);
     
     UFUNCTION()
     void OnExit();

@@ -52,7 +52,7 @@ void UDataSaveComponent::PreSaveCurrentSlot(USaveGame* SaveGame) const
     const auto progressSaveGame = Cast<UProgressSaveGame>(SaveGame);
     if (!progressSaveGame)
         return;
-
+    
     SaveDataFromHealthComponent(progressSaveGame);
     SaveDataFromAbilityComponent(progressSaveGame);
     SaveDataFromWeaponComponent(progressSaveGame);
