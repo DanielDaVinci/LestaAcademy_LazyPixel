@@ -22,8 +22,14 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
     TSubclassOf<UUserWidget> propertyWidgetClass;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+    TSubclassOf<UUserWidget> winWidgetClass;
+
     UPROPERTY(EditAnywhere, Category = "Datatables")
     UDataTable* SecondPhaseDataTable;
+
+    UPROPERTY(EditAnywhere, Category = "Datatables")
+    UDataTable* EpilogueDataTable;
 
     UPROPERTY(EditAnywhere, Category = "EndLevel")
     TSubclassOf<AEndRoom> endLevelClass;
@@ -41,6 +47,12 @@ protected:
     virtual void PostInitializeComponents() override;
     virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
     virtual void OnDeath();
+
+    UFUNCTION()
+    void OnDeathInteract();
+
+    UFUNCTION()
+    void OnWinWidget();
 
     UFUNCTION(BlueprintImplementableEvent)
     void OnBossStartFight();

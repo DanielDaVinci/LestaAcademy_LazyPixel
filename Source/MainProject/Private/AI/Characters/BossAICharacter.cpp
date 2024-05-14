@@ -12,6 +12,7 @@
 #include "Gore/GoreComponent.h"
 #include "Weapon/RangeWeapons/Gun.h"
 #include "UI/HUD/BossPropertyPanelWidget.h"
+#include "UI/HUD/WinPanelWidget.h"
 #include "UI/HUD/Dialogue/DialogueSystemUserWidget.h"
 #include "Environment/EndRoom.h"
 
@@ -49,7 +50,23 @@ void ABossAICharacter::OnDeath()
 
 void ABossAICharacter::OnDeathTimer()
 {
-    GetWorld()->SpawnActor<AEndRoom>(endLevelClass, GetMesh()->GetSocketLocation("HeadSocket"), FRotator(), FActorSpawnParameters());
+    AEndRoom* pEndRoom = GetWorld()->SpawnActor<AEndRoom>(endLevelClass, GetMesh()->GetSocketLocation("HeadSocket"), FRotator(), FActorSpawnParameters());
+    pEndRoom->OnPlayerInteractEvent.AddUObject(this, &ABossAICharacter::OnDeathInteract);
+}
+
+void ABossAICharacter::OnDeathInteract() 
+{
+    UDialogueSystemUserWidget::GetSingleton()->SetDialogueData(EpilogueDataTable, true, true, true);
+    UDialogueSystemUserWidget::GetSingleton()->OnEndDialogue.AddUObject(this, &ABossAICharacter::OnWinWidget);
+}
+
+void ABossAICharacter::OnWinWidget() 
+{
+    if (!winWidgetClass)
+        return;
+
+    const auto winWidget = CreateWidget<UWinPanelWidget>(GetWorld(), winWidgetClass);
+    winWidget->AddToViewport();
 }
 
 void ABossAICharacter::SendEventToStateTree() 
