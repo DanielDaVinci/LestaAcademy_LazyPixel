@@ -23,6 +23,7 @@ public:
     FOnPlayerInteractSignature OnPlayerInteractEvent;
     
 	AEndRoom();
+    void SetBoxSize(FVector boxSize);
 
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", DisplayName="Room Collision Component")

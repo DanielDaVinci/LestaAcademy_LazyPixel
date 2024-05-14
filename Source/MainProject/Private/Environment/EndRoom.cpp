@@ -27,6 +27,11 @@ AEndRoom::AEndRoom()
     pInteractionWidgetComponent->SetVisibility(false);
 }
 
+void AEndRoom::SetBoxSize(FVector boxSize) 
+{
+    pRoomCollisionComponent->SetBoxExtent(boxSize);
+}
+
 void AEndRoom::BeginPlay()
 {
     Super::BeginPlay();

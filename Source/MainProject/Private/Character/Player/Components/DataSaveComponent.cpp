@@ -114,7 +114,8 @@ void UDataSaveComponent::LoadDataForWeaponComponent(const UProgressSaveGame* Pro
     {
         if (ProgressSaveGame->ProgressData.BulletsNum > 0)
         {
-            if (const auto& data = pWeaponComponent->FindDataByBaseWeaponClass(AGun::StaticClass()))
+            const auto& data = pWeaponComponent->FindDataByBaseWeaponClass(AGun::StaticClass());
+            if (data && !pWeaponComponent->FindWeapon<AGun>())
             {
                 const auto weapon = pWeaponComponent->AddWeapon(data->WeaponClass);
                 if (const auto pRangeWeapon = Cast<AGun>(weapon))
