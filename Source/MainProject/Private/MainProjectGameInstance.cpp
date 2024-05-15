@@ -19,7 +19,6 @@ bool UMainProjectGameInstance::IsExistsSlot(const FString& SlotName)
 
 void UMainProjectGameInstance::DeleteSlot(const FString& SlotName)
 {
-    UE_LOG(LogTemp, Error, TEXT("Delete slot: %s"), *SlotName);
     UGameplayStatics::DeleteGameInSlot(SlotName, 0);
 }
 

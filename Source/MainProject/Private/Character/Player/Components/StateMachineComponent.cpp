@@ -31,13 +31,6 @@ void UStateMachineComponent::AddState(const FState& State)
         RemoveLastState();
     }
     
-    // if (m_pCurrentState)
-    //     UE_LOG(LogTemp, Error, TEXT("%s"), *m_pCurrentState->Name);
-    // for (SIZE_T i = 0; i < m_queueStates.Num(); i++)
-    // {
-    //     UE_LOG(LogTemp, Warning, TEXT("%s"), *m_queueStates[i]->Name);
-    // }
-    
     if (!InternalGetCurrentState())
     {
         NextState();

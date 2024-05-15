@@ -43,8 +43,8 @@ void UDataSaveComponent::PreBeginSetupSavedData(const UProgressSaveGame* Progres
         return;
 
     LoadDataForHealthComponent(ProgressSaveGame);
-    LoadDataForAbilityComponent(ProgressSaveGame);
-    LoadDataForWeaponComponent(ProgressSaveGame);
+    // LoadDataForAbilityComponent(ProgressSaveGame);
+    // LoadDataForWeaponComponent(ProgressSaveGame);
 }
 
 void UDataSaveComponent::PreSaveCurrentSlot(USaveGame* SaveGame) const
@@ -135,7 +135,6 @@ void UDataSaveComponent::SaveDataFromHealthComponent(UProgressSaveGame* Progress
 
     if (const auto pHealthComponent = pPlayerCharacter->GetHealthComponent())
     {
-        UE_LOG(LogTemp, Error, TEXT("Save health: %f"), pHealthComponent->GetPercentHealth());
         ProgressSaveGame->ProgressData.HealthPercent = pHealthComponent->GetPercentHealth();
     }
 }
@@ -150,7 +149,6 @@ void UDataSaveComponent::SaveDataFromAbilityComponent(UProgressSaveGame* Progres
     {
         if (const auto customAbility = pAbilityComponent->GetCustomAbility<UStrongAttackAbility>())
         {
-            UE_LOG(LogTemp, Error, TEXT("Save Custom ability: %f"), customAbility->GetCurrentAbilityCharge());
             ProgressSaveGame->ProgressData.AbilityCharge = customAbility->GetCurrentAbilityCharge();
         }
     }
@@ -166,12 +164,10 @@ void UDataSaveComponent::SaveDataFromWeaponComponent(UProgressSaveGame* Progress
     {
         if (const auto rangeWeapon = pWeaponComponent->GetRangeWeapon())
         {
-            UE_LOG(LogTemp, Error, TEXT("Save bullets num: %d"), rangeWeapon->GetBullets());
             ProgressSaveGame->ProgressData.BulletsNum = rangeWeapon->GetBullets();
         }
         else
         {
-            UE_LOG(LogTemp, Error, TEXT("Save bullets num: %d"), 0);
             ProgressSaveGame->ProgressData.BulletsNum = 0;
         }
     }

@@ -62,7 +62,6 @@ void APlayerCharacter::PreSaveCurrentSlot(USaveGame* SaveGame)
 
     if (pHealthComponent)
     {
-        UE_LOG(LogTemp, Error, TEXT("Save health: %f"), pHealthComponent->GetPercentHealth());
         progressSaveGame->ProgressData.HealthPercent = pHealthComponent->GetPercentHealth();
     }
 
@@ -70,7 +69,6 @@ void APlayerCharacter::PreSaveCurrentSlot(USaveGame* SaveGame)
     {
         if (const auto customAbility = pAbilityComponent->GetCustomAbility<UStrongAttackAbility>())
         {
-            UE_LOG(LogTemp, Error, TEXT("Save Custom ability: %f"), customAbility->GetCurrentAbilityCharge());
             progressSaveGame->ProgressData.AbilityCharge = customAbility->GetCurrentAbilityCharge();
         }
     }
@@ -79,12 +77,10 @@ void APlayerCharacter::PreSaveCurrentSlot(USaveGame* SaveGame)
     {
         if (const auto rangeWeapon = weaponComponent->GetRangeWeapon())
         {
-            UE_LOG(LogTemp, Error, TEXT("Save bullets num: %d"), rangeWeapon->GetBullets());
             progressSaveGame->ProgressData.BulletsNum = rangeWeapon->GetBullets();
         }
         else
         {
-            UE_LOG(LogTemp, Error, TEXT("Save bullets num: %d"), 0);
             progressSaveGame->ProgressData.BulletsNum = 0;
         }
     }

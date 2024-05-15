@@ -101,8 +101,6 @@ T* UMainProjectGameInstance::SetCurrentSlot(const FString& SlotName)
     {
         SaveSlot(currentSlotName, currentSaveGame);
     }
-    
-    UE_LOG(LogTemp, Error, TEXT("Current slot: %s"), *SlotName);
 
     currentSlotName = SlotName;
     currentSaveGame = saveGame;
@@ -112,7 +110,6 @@ T* UMainProjectGameInstance::SetCurrentSlot(const FString& SlotName)
 template <class T> requires std::is_base_of_v<USaveGame, T>
 T* UMainProjectGameInstance::LoadSlot(const FString& SlotName)
 {
-    UE_LOG(LogTemp, Error, TEXT("Load slot: %s"), *SlotName);
     return Cast<T>(UGameplayStatics::LoadGameFromSlot(SlotName, 0));
 }
 
@@ -131,7 +128,6 @@ T* UMainProjectGameInstance::CreateSlot(const FString& SlotName)
 template <class T> requires std::is_base_of_v<USaveGame, T>
 void UMainProjectGameInstance::SaveSlot(const FString& SlotName, T* SaveGame)
 {
-    UE_LOG(LogTemp, Error, TEXT("Save slot: %s"), *SlotName);
     if (SaveGame)
     {
         UGameplayStatics::SaveGameToSlot(SaveGame, SlotName, 0);
