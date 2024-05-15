@@ -6,6 +6,7 @@
 #include "MainProjectGameInstance.h"
 #include "Components/Button.h"
 #include "Components/CanvasPanel.h"
+#include "Components/Image.h"
 #include "Components/TextBlock.h"
 
 void USlotUserWidget::SetSlot(const FString& SlotName)
@@ -31,6 +32,25 @@ void USlotUserWidget::SetSlot(const FString& SlotName)
 
             const FString RoomTextValue = FString::FromInt(progressData.RoomIndex + 1) + TEXT(" комната");
             RoomText->SetText(FText::FromString(RoomTextValue));
+
+            switch (progressData.LevelIndex)
+            {
+                case 0:
+                    FirstGameImage->SetVisibility(ESlateVisibility::Visible);
+                    SecondGameImage->SetVisibility(ESlateVisibility::Hidden);
+                    ThirdGameImage->SetVisibility(ESlateVisibility::Hidden);
+                    break;
+                case 1:
+                    FirstGameImage->SetVisibility(ESlateVisibility::Hidden);
+                    SecondGameImage->SetVisibility(ESlateVisibility::Visible);
+                    ThirdGameImage->SetVisibility(ESlateVisibility::Hidden);
+                    break;
+                case 2:
+                    FirstGameImage->SetVisibility(ESlateVisibility::Hidden);
+                    SecondGameImage->SetVisibility(ESlateVisibility::Hidden);
+                    ThirdGameImage->SetVisibility(ESlateVisibility::Visible);
+                    break;
+            }
         }
     }
     else

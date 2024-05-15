@@ -29,6 +29,9 @@ AEndRoom::AEndRoom()
 
 void AEndRoom::SetBoxSize(FVector boxSize) 
 {
+    if (!pRoomCollisionComponent)
+        return;
+    
     pRoomCollisionComponent->SetBoxExtent(boxSize);
 }
 

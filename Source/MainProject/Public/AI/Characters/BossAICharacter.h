@@ -61,6 +61,9 @@ protected:
     void OnBossSecondPhase();
 	
 private:
+    UPROPERTY()
+    AEndRoom* pEndRoom = nullptr;
+    
     uint8 shortComboCounter;
     uint8 longComboCounter;
     uint8 prevComboIndex;

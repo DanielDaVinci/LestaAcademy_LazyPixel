@@ -35,7 +35,13 @@ protected:
     UTextBlock* RoomText;
 
     UPROPERTY(meta = (BindWidget))
-    UImage* LastGameImage;
+    UImage* FirstGameImage;
+
+    UPROPERTY(meta = (BindWidget))
+    UImage* SecondGameImage;
+
+    UPROPERTY(meta = (BindWidget))
+    UImage* ThirdGameImage;
 
     UPROPERTY(meta = (BindWidget))
     UCanvasPanel* ExistsGamePanel;

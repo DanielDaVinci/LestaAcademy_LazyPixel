@@ -50,7 +50,10 @@ void ABossAICharacter::OnDeath()
 
 void ABossAICharacter::OnDeathTimer()
 {
-    AEndRoom* pEndRoom = GetWorld()->SpawnActor<AEndRoom>(endLevelClass, GetMesh()->GetSocketLocation("HeadSocket"), FRotator(), FActorSpawnParameters());
+    pEndRoom = GetWorld()->SpawnActor<AEndRoom>(endLevelClass, GetMesh()->GetSocketLocation("HeadSocket"), FRotator(), FActorSpawnParameters());
+    if (!pEndRoom)
+        return;
+    
     pEndRoom->SetBoxSize(FVector(FVector(500.0f, 500.0f, 50.0f)));
     pEndRoom->OnPlayerInteractEvent.AddUObject(this, &ABossAICharacter::OnDeathInteract);
 }
